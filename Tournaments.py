@@ -8,7 +8,6 @@ class Tournament:
         self.total_players = self.__get_total_players__()
         self.total_rounds = self.__get_rounds__()
         self.__get_players_name__()
-        print(self.__print_starteting_info__())
 
 
 
@@ -47,6 +46,7 @@ class Tournament:
         retval += f'You wanted to play {self.total_rounds} rounds.\n'
         retval += f'In total you will play {self.__total_games__()} games'
         return retval
+
 
     def __str__(self):
         retval = ""
