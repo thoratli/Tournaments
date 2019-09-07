@@ -1,7 +1,9 @@
 from Tournaments import *
 from validation import *
 
+from Play import *
 
-nyttmot = Tournament()
-print(nyttmot)
+new_game = Play()
+new_game.start_tournament()
+
 
