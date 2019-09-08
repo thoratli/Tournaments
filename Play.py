@@ -5,7 +5,6 @@ TEAMS = ['Real Madrid', 'Barcelona', 'Liverpool', 'PSG', 'Brazil', 'Iceland', 'P
          'Scandinavia', 'Spain', 'Netherland', 'Pick 2 star lower than your opponent']
 
 class Play:
-
     def __init__(self):
         mot = Tournament()
         self.number_of_players = mot.total_players
@@ -33,7 +32,6 @@ class Play:
               )
         #todo: implement how to keep score
 
-
     def print_fixtures(self):
         pass
         # for key,value in self.fixtures.items():
@@ -41,7 +39,6 @@ class Play:
 
             #implement the names in the value
             #implement pretty print
-
 
     def get_scores_from_input(self):
         #Todo: get input from user, the score of a game and store it somehow
@@ -55,7 +52,6 @@ class Play:
             except:
                 print("Please try again, and be careful.")
 
-
     def show_league_table(self):
-        # todo: implent a function which shows the league table at any given time
+        # todo: implement a function which shows the league table at any given time
         pass

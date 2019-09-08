@@ -43,7 +43,7 @@ class Tournament:
     def get_fixtures(self):
 
         fixtures = {}
-        for i in range (1, int(self.__total_games__())+1):
+        for i in range(1, int(self.__total_games__())+1):
             fixtures[i] = []
             fixtures[i].append([i, i+1])
             fixtures[i].append(['EMPTY FOR SCORES'])
