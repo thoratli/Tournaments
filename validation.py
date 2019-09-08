@@ -1,5 +1,16 @@
-#toDo: implement validation class
+#toDo: atli implement validation class
 
-#validate int
-#validate strings
-#validate input
+class Validation():
+
+    def validate_integer(self):
+        pass
+
+    def validate_score_input(self):
+        pass
+
+    def validate_name_input(self):
+        pass
+
+    def validate_rounds(self):
+        pass
+
