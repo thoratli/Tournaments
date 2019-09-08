@@ -23,13 +23,13 @@ class Play:
         while game_on < int(self.games):
             game_on += 1
 
+            #todo: implement
             print(f'PLAYING GAME NR: {game_on}')
             print(self.fixtures[game_on])
             score = self.get_scores_from_input()
             self.fixtures[game_on][1] = score
 
-        print(self.fixtures
-              )
+        print(self.fixtures)
         #todo: implement how to keep score
 
     def print_fixtures(self):
@@ -41,7 +41,7 @@ class Play:
             #implement pretty print
 
     def get_scores_from_input(self):
-        #Todo: get input from user, the score of a game and store it somehow
+        #todo: get input from user, the score of a game and store it somehow
         while True:
             try:
                 score = input("Enter the scores with space between, 2 2: ").split()
