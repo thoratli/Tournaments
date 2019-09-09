@@ -18,9 +18,12 @@ class Validation():
 
             try:
                 home, away = score.split()
-                return int(home),int(away)
+                int(home)
+                int(away)
+                return True
             except:
                 print("This didn't work!")
+                return False
 
 
     def validate_name_input(self, string: str):
