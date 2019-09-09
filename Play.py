@@ -6,15 +6,19 @@ TEAMS = ['Real Madrid', 'Barcelona', 'Liverpool', 'PSG', 'Brazil', 'Iceland', 'P
 
 class Play:
     def __init__(self):
-        mot = Tournament()
-        self.number_of_players = mot.total_players
-        self.rounds = mot.rounds
-        self.games = mot.__total_games__()
-        self.players_dict = mot.players_list
-        print(mot.__print_starting_info__())
+        self.mot = Tournament()
+        self.number_of_players = self.mot.total_players
+        self.rounds = self.mot.rounds
+        self.games = self.mot.__total_games__()
+        self.players_dict = self.mot.players_list
+        print(self.mot.__print_starting_info__())
         self.fixtures = {}
-        self.fixtures = mot.get_fixtures()
+        self.fixtures = self.mot.get_fixtures()
         self.print_fixtures()
+
+
+    def print_league(self):
+        self.mot.print_league()
 
 
     def start_tournament(self):
