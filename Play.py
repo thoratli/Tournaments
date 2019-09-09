@@ -38,3 +38,7 @@ class Play:
         #todo: get input from user, the score of a game and store it somehow
             score = input("Enter the scores with space between, 2 2: ")
             return score
+
+    def convert_score_string_to_numbers(self, score):
+        home, away = score.split()
+        return int(home), int(away)
