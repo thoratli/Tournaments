@@ -36,6 +36,7 @@ class Play:
         print(self.fixtures)
         #todo: implement how to keep score
 
+
     def print_fixtures(self):
         pass
         # for key,value in self.fixtures.items():
@@ -43,6 +44,7 @@ class Play:
 
             #implement the names in the value
             #implement pretty print
+
 
     def get_scores_from_input(self):
         #todo: get input from user, the score of a game and store it somehow
