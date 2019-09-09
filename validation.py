@@ -1,6 +1,9 @@
 #toDo: atli implement validation class
+from options import Options
 
 class Validation():
+    def __init__(self):
+        self.options = Options()
 
     def validate_integer(self, string: str):
 
@@ -34,3 +37,13 @@ class Validation():
     def validate_rounds(self, integer: int):
         pass
 
+    def validate_options(self, option):
+
+        try:
+            option = int(option)
+            if 0 < option <= self.options.total_options:
+                return True
+            print("You had 1 task! To pick from 3 numbers! PLEASE STAY FOCUSED")
+            return False
+        except:
+            print("Integer! Please!")
