@@ -46,8 +46,11 @@ def main():
 
             elif the_option == '3':
                 print(f'\nNext game is x x')
-                scores = play.get_scores_from_input()
-                validate.validate_score_input(scores)
+                while True:
+                    scores = play.get_scores_from_input()
+                    if validate.validate_score_input(scores):
+                        home, away = play.convert_score_string_to_numbers(scores)
+                        break
 
                 #todo: implement "play_next_game_function"
 
