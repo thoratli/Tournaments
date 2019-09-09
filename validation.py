@@ -22,7 +22,7 @@ class Validation():
                 int(away)
                 return True
             except:
-                print("This didn't work!")
+                print("\n\nThis didn't work. Try again! !")
                 return False
 
 
