@@ -11,3 +11,10 @@ win a league for one night.
 - User can choose sportLeague and name it
 
 
+# Interesting commands
+
+-> fetching todo
+ - grep -Ri "todo" (-R recursively , i caseinsensitive)
+ - sudo apt update - sudo apt install ack - ack -i todo  - tldr ack
+ 
+
