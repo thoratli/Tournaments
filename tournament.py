@@ -1,16 +1,27 @@
 from validation import Validation
 from player import Player
+# from options import Options
 
 class Tournament():
     def __init__(self):
         self.validate = Validation()
+        # self.options = Options()
         self.player = Player()
-        self.name = self.__get_tournament_name()
+
+        self.name = ""
         self.players_list = {}
         self.rounds = 0
+        self.total_players = 0
+        self.total_rounds = 0
+        self.__get_players_name__()
+
+    # def __create_tournament__(self):
+
+    def __initial_tournament__(self):
+        self.name = self.__get_tournament_name()
         self.total_players = self.__get_total_players__()
         self.total_rounds = self.__get_rounds__()
-        self.__get_players_name__()
+
 
     def __get_tournament_name(self):
         name = input("What is the name of your League: ")
