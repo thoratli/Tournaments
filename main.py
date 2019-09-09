@@ -24,15 +24,16 @@ def main():
     validate = Validation()
     play = Play()
     print(WELCOME)
-    Tournament_finished = False
+    game_counter = 0
 
     #initializing tournament and get data for it
     new_game.__initial_tournament__()
     new_game.__print_starting_info__()
 
-    while Tournament_finished is False:
+    while game_counter < int(new_game.total_games()):
 
         print(option.show_options())
+
         the_option = option.get_option()
         if validate.validate_options(the_option):
 
@@ -45,12 +46,11 @@ def main():
 
 
             elif the_option == '3':
-                print(f'\nNext game is x x')
-                while True:
-                    scores = play.get_scores_from_input()
-                    if validate.validate_score_input(scores):
-                        home, away = play.convert_score_string_to_numbers(scores)
-                        break
+                # print(f'\nNext game is x x')
+                # next game from tournament.next_fixture
+                # play.play_next_game(new_game.total_games())
+
+                game_counter += 1
 
                 #todo: implement "play_next_game_function"
 
@@ -59,6 +59,8 @@ def main():
                 print(f'\nOPTION {the_option}\nThe stats are not implemented yet, sorry!')
 
 
+    #the end of the loop, it shows the league standings
+    new_game.print_league()
 
 
 main()
