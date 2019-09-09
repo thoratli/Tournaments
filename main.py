@@ -18,13 +18,15 @@ WELCOME = "########## ########  ##    ##  #########   ##   ##     ####         #
           "                 ###  ###  #### ####  ##    ## ##  ##       ##    ##  ##  ####  ##     ##   ##### ##   # #### \n"
 
 def main():
+    print("-----------")
     option = Options()
     new_game = Tournament()
     validate = Validation()
+    play = Play()
     print(WELCOME)
     Tournament_finished = False
-    #todo: implement the main function so it show options and depending on option it will do something
 
+    #initializing tournament and get data for it
     new_game.__initial_tournament__()
     new_game.__print_starting_info__()
 
@@ -35,15 +37,22 @@ def main():
         if validate.validate_options(the_option):
 
             if the_option == '1':
-                print(f'Standings for {new_game.name}')
                 new_game.print_league()
 
-
             elif the_option == '2':
-                print(f'\nOPTION {the_option}\n for PLAYING')
+                print(f'\nUpcoming games for league: {new_game.name}')
+                #todo: implement fixture feature
 
 
             elif the_option == '3':
+                print(f'\nNext game is x x')
+                scores = play.get_scores_from_input()
+                validate.validate_score_input(scores)
+
+                #todo: implement "play_next_game_function"
+
+
+            elif the_option == '4':
                 print(f'\nOPTION {the_option}\nThe stats are not implemented yet, sorry!')
 
 

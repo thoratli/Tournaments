@@ -14,17 +14,14 @@ class Validation():
             print("Please enter an integer! ")
             return False
 
-    def validate_score_input(self):
+    def validate_score_input(self, score):
 
-        while True:
             try:
-                score = input("Enter the score: 2 2").strip().split()
-                if len(score) ==2:
-                    return int(score[0]), int(score[1])
-                else:
-                    print("Please try again! Enter 2 numbers with space between!")
+                home, away = score.split()
+                return int(home),int(away)
             except:
-                print("Please try again! x x")
+                print("This didn't work!")
+
 
     def validate_name_input(self, string: str):
         namelist = string.split()
