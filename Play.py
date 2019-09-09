@@ -19,10 +19,6 @@ class Play:
         self.print_fixtures()
 
 
-    def print_league(self):
-        self.mot.print_league()
-
-
     def start_tournament(self):
         game_on = 0
 
@@ -38,15 +34,6 @@ class Play:
 
         # print(self.fixtures)
         #todo: implement how to keep score
-
-
-    def print_fixtures(self):
-        pass
-        # for key,value in self.fixtures.items():
-        #     print(f'Game nr:{key}, Teams: {value}')
-
-        #implement the names in the value
-        #implement pretty print
 
 
     def get_scores_from_input(self):
