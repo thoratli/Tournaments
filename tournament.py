@@ -1,13 +1,10 @@
 from validation import Validation
 from player import Player
-# from options import Options
 
 class Tournament():
     def __init__(self):
         self.validate = Validation()
-        # self.options = Options()
         self.player = Player()
-
         self.name = ""
         self.players_list = {}
         self.rounds = 0
@@ -21,6 +18,7 @@ class Tournament():
         self.name = self.__get_tournament_name()
         self.total_players = self.__get_total_players__()
         self.total_rounds = self.__get_rounds__()
+        self.__get_players_name__()
 
 
     def __get_tournament_name(self):
@@ -35,7 +33,7 @@ class Tournament():
         print("PLAYER       PLAYED     SCORED    CONCEDED    +/-    POINTS")
 
         for key,value in self.player.player_dict.items():
-            print(self.player)
+            print(key, value)
 
 
 
@@ -94,7 +92,17 @@ class Tournament():
         retval = f'\nSo {self.total_players} players are competing.\n'
         retval += f'You wanted to play {self.total_rounds} rounds.\n'
         retval += f'In total you will play {self.__total_games__()} games\n'
+        print(retval)
         return retval
+
+    def print_fixtures(self):
+        pass
+        # for key,value in self.fixtures.items():
+        #     print(f'Game nr:{key}, Teams: {value}')
+
+        #implement the names in the value
+        #implement pretty print
+
 
 
     def __str__(self):
