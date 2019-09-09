@@ -1,7 +1,10 @@
-from Tournaments import *
+from tournament import Tournament
+from options import Options
 from validation import *
+from Play import *
 
-welcome = "########## ########  ##    ##  #########   ##   ##     ####         ###       ###      #########  ##   ##   ##########\n" \
+
+WELCOME = "########## ########  ##    ##  #########   ##   ##     ####         ###       ###      #########  ##   ##   ##########\n" \
           "    ##     ##    ##  ##    ##  ##     ##   ###  ##    ##  ##       ## ##     ## ##     ##         ###  ##       ##    \n" \
           "    ##     ##    ##  ##    ##  #########   ##  ###   ########     ##   ##   ##   ##    #########  ##  ###       ##    \n" \
           "    ##     ##    ##  ##    ##  ##      ##  ##   ##  ##      ##   ##     ## ##     ##   ##         ##   ##       ##    \n" \
@@ -14,17 +17,39 @@ welcome = "########## ########  ##    ##  #########   ##   ##     ####         #
           "                 ### #     ##   ##    ##    ## ##  ##       ##    ##  ##  ##     ##   ##    ## ## ##  #  ##  \n" \
           "                 ###  ###  #### ####  ##    ## ##  ##       ##    ##  ##  ####  ##     ##   ##### ##   # #### \n"
 
-print(welcome)
+def main():
+    option = Options()
+    new_game = Tournament()
+    validate = Validation()
+    print(WELCOME)
+    Tournament_finished = False
+    #todo: implement the main function so it show options and depending on option it will do something
 
-from Play import *
+    new_game.__initial_tournament__()
+    new_game.__print_starting_info__()
 
-#todo wenni implement intro with input = Name of the league
+    while Tournament_finished is False:
+
+        print(option.show_options())
+        the_option = option.get_option()
+        if validate.validate_options(the_option):
+
+            if the_option == '1':
+                print(f'Standings for {new_game.name}')
+                new_game.print_league()
 
 
-new_game = Play()
-new_game.print_league()
-new_game.start_tournament()
-print(new_game)
+            elif the_option == '2':
+                print(f'\nOPTION {the_option}\n for PLAYING')
+
+
+            elif the_option == '3':
+                print(f'\nOPTION {the_option}\nThe stats are not implemented yet, sorry!')
+
+
+
+
+main()
 
 
 
