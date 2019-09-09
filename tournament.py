@@ -5,25 +5,26 @@ class Tournament():
     def __init__(self):
         self.validate = Validation()
         self.player = Player()
+
         self.name = ""
         self.players_list = {}
         self.rounds = 0
         self.total_players = 0
         self.total_rounds = 0
-        self.__get_players_name__()
+        # self.fixtures = {}
 
-    # def __create_tournament__(self):
 
     def __initial_tournament__(self):
-        self.name = self.__get_tournament_name()
-        self.total_players = self.__get_total_players__()
-        self.total_rounds = self.__get_rounds__()
-        self.__get_players_name__()
+        self.name = self.get_tournament_name()
+        self.total_players = self.get_total_players()
+        self.total_rounds = self.get_rounds()
+        self.set_players_name()
 
 
-    def __get_tournament_name(self):
+    def get_tournament_name(self):
         name = input("What is the name of your League: ")
         return name
+
 
     def print_league(self):
         #todo: implement values in the print
@@ -36,8 +37,7 @@ class Tournament():
             print(key, value)
 
 
-
-    def __get_total_players__(self):
+    def get_total_players(self):
 
         while True:
             players = input("How many players: ")
@@ -45,7 +45,7 @@ class Tournament():
                 return int(players)
 
 
-    def __get_players_name__(self):
+    def set_players_name(self):
 
         players = 0
         #todo implement id system for user
@@ -59,8 +59,7 @@ class Tournament():
                     players += 1
 
 
-
-    def __get_rounds__(self):
+    def get_rounds(self):
         while True:
             try:
                 number = int(input("How many rounds you want to play? "))
@@ -87,6 +86,14 @@ class Tournament():
         return fixtures
 
 
+    def print_fixtures(self):
+        pass
+        # for key,value in self.fixtures.items():
+        #     print(f'Game nr:{key}, Teams: {value}')
+
+        #todo:implement the names in the value
+        #todo:implement pretty print
+
 
     def __print_starting_info__(self):
         retval = f'\nSo {self.total_players} players are competing.\n'
@@ -94,15 +101,6 @@ class Tournament():
         retval += f'In total you will play {self.__total_games__()} games\n'
         print(retval)
         return retval
-
-    def print_fixtures(self):
-        pass
-        # for key,value in self.fixtures.items():
-        #     print(f'Game nr:{key}, Teams: {value}')
-
-        #implement the names in the value
-        #implement pretty print
-
 
 
     def __str__(self):
