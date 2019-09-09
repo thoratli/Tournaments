@@ -1,29 +1,31 @@
 from validation import Validation
+from player import Player
 
 class Tournament():
     def __init__(self):
-        self.name = self.__get_tournament_name()
         self.validate = Validation()
+        self.player = Player()
+        self.name = self.__get_tournament_name()
         self.players_list = {}
         self.rounds = 0
-        # self.players = 0
         self.total_players = self.__get_total_players__()
         self.total_rounds = self.__get_rounds__()
         self.__get_players_name__()
 
     def __get_tournament_name(self):
-        name = input("What is the name of your League?\n ")
+        name = input("What is the name of your League: ")
         return name
 
     def print_league(self):
         #todo: implement values in the print
+        #todo: implement size of print so it fits
 
         print(f'\n                  ---- {self.name} ----')
         print("PLAYER       PLAYED     SCORED    CONCEDED    +/-    POINTS")
 
-        for key,value in self.players_list.items():
-            print(f'Player {key}        x          X         Y        X-Y      3 ')
-        print("\n\n")
+        for key,value in self.player.player_dict.items():
+            print(self.player)
+
 
 
     def __get_total_players__(self):
@@ -43,8 +45,10 @@ class Tournament():
             while players == i:
                 player = input(f'Participant nr {players +1}: ')
                 if self.validate.validate_name_input(player):
+                    self.player.add_player(player)
                     self.players_list[i+1] = player
                     players += 1
+
 
 
     def __get_rounds__(self):

@@ -23,8 +23,8 @@ from Play import *
 
 new_game = Play()
 new_game.print_league()
-
 new_game.start_tournament()
+print(new_game)
 
 
 
