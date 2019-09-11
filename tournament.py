@@ -13,6 +13,8 @@ class Tournament():
         self.total_players = 0
         self.total_rounds = 0
         self.fixtures = {}
+        self.randomlist = ['Real Madrid', 'Barcelona', 'Liverpool', 'Iceland', 'Brazil',
+                           'PSG', '1 star team', 'Worst team in League', 'Everton']
 
 
 
@@ -20,8 +22,26 @@ class Tournament():
         self.name = self.get_tournament_name()
         self.total_players = self.get_total_players()
         self.total_rounds = self.get_rounds()
-        self.set_players_name()
-        # self.fixtures = self.get_fixtures()
+
+        play_random = input("You want to play with random Teams from our list [Y/n]").lower()
+        if play_random in 'yY':
+            self.get_random_team()
+        else:
+            self.set_players_name()
+
+
+    def get_random_team(self):
+        players = 0
+        # todo implement id system for user
+        checklist = []
+        for i in range(int(self.total_players)):
+            while players == i:
+                team = random.choice(self.randomlist)
+                if team not in checklist:
+                    checklist.append(team)
+                    self.player.add_player(team)
+                    self.players_list.append(team)
+                    players += 1
 
 
 
@@ -113,10 +133,14 @@ class Tournament():
 
         print("    ---- FIXTURES ---")
         for game,teams in self.fixtures.items():
-
-            print(f"Game nr {game}: ", end = "")
+            print(f"Game nr {game+1}: ", end="")
+            number_of_teams = 0
             for team in teams:
-                print(f"{team} ",end = " ")
+                if number_of_teams == 0:
+                    print(f"{team} ", end="VS ")
+                    number_of_teams += 1
+                else:
+                    print(f"{team}", end=" ")
             print("")
 
         #todo:implement the names in the value
