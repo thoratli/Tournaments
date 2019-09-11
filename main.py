@@ -35,25 +35,23 @@ def main():
         print(option.show_options())
 
         the_option = option.get_option()
-        if validate.validate_options(the_option):
-
-            if the_option == '1':
-                new_game.print_league()
-
-            elif the_option == '2':
-                print(f'\nUpcoming games for league: {new_game.name}')
-                new_game.get_fixtures()
-                new_game.print_fixtures()
-
-
-            elif the_option == '3':
-                # print(f'\nNext game is x x')
+        if validate.validate_options(the_option) or the_option == "":
+            if the_option == '1' or the_option == '':
+                print(f'\nNext game is x x')
                 # next game from tournament.next_fixture
                 # play.play_next_game(new_game.total_games())
 
                 game_counter += 1
 
                 #todo: implement "play_next_game_function"
+
+            elif the_option == '3':
+                new_game.print_league()
+
+            elif the_option == '2':
+                print(f'\nUpcoming games for league: {new_game.name}')
+                new_game.get_fixtures()
+                new_game.print_fixtures()
 
 
             elif the_option == '4':
