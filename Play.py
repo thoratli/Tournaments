@@ -14,21 +14,31 @@ class Play:
         self.games = self.mot.__total_games_per_round__()
         self.players_dict = self.mot.players_list
         print(self.mot.__print_starting_info__())
+        self.game = 0
 
 
 
-    def play_next_game(self):
-        game_on = 0
+    def play_next_game(self, total_games):
+        # todo: implement the tournament games
 
-        while game_on < int(self.games):
+        self.game += 1
+        print(self.players_dict
+              )
+        print(f'Game number: {self.game}')
 
-            #todo: implement the tournament games
-            print(f'PLAYING GAME NR: {game_on+1}')
-            print(self.fixtures[game_on+1])
-            home_score, away_score = self.validation.validate_score_input()
-            self.fixtures[game_on+1][1] = (home_score, away_score)
-            # if homescore and awayscore:
-            game_on += 1
+        # while True:
+        #     scores = self.get_scores_from_input()
+        #     if self.validation.validate_score_input(scores):
+        #         home, away = self.convert_score_string_to_numbers(scores)
+        #         break
+
+
+
+        # print(self.fixtures[game_on+1])
+        #
+        # home_score, away_score = self.validation.validate_score_input()
+        # self.fixtures[game_on+1][1] = (home_score, away_score)
+        # # if homescore and awayscore:
 
         # print(self.fixtures)
         #todo: implement how to keep score
@@ -38,3 +48,7 @@ class Play:
         #todo: get input from user, the score of a game and store it somehow
             score = input("Enter the scores with space between, 2 2: ")
             return score
+
+    def convert_score_string_to_numbers(self, score):
+        home, away = score.split()
+        return int(home), int(away)
