@@ -7,10 +7,10 @@ class Options:
         self.total_options = TOTAL_OPTIONS
 
     def show_options(self):
-        retval = f'\n[1] Show table'
-        retval += "\n[2] Show fixtures \n"
-        retval += "[3] Play next game in current Tournament\n"
-        retval += "[4] Print stats"
+        retval = "\n[1][ENTER] PLAY NEXT GAME\n"
+        retval += "[2] Show fixtures \n"
+        retval += '[3] Show table - missing values\n'
+        retval += "[4] Print stats - not implemented\n"
         return retval
 
     def get_option(self):
