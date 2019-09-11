@@ -40,6 +40,8 @@ class Validation():
     def validate_options(self, option):
 
         try:
+            if option == '':
+                return option
             option = int(option)
             if 0 < option <= self.options.total_options:
                 return True
