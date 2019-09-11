@@ -1,5 +1,6 @@
 from validation import Validation
 from player import Player
+import random
 
 class Tournament():
     def __init__(self):
@@ -7,7 +8,7 @@ class Tournament():
         self.player = Player()
 
         self.name = ""
-        self.players_list = {}
+        self.players_list = []
         self.rounds = 0
         self.total_players = 0
         self.total_rounds = 0
@@ -58,7 +59,7 @@ class Tournament():
                 player = input(f'Participant nr {players +1}: ')
                 if self.validate.validate_name_input(player):
                     self.player.add_player(player)
-                    self.players_list[i+1] = player
+                    self.players_list.append(player)
                     players += 1
 
 
@@ -72,24 +73,40 @@ class Tournament():
                 print("Please enter a number! ")
 
 
-    def __total_games__(self):
+    def __total_games_per_round__(self):
         # Added this. Should return the right number of games - Wenni
-        return f"{round((((self.total_players*(self.total_players-1))/2)* self.total_rounds))}"
+        return f"{round(((self.total_players*(self.total_players-1))/2))}"
+
+
+    def create_game(self, team_list):
+
+        game = []
+        while len(game) < 2:
+            team = random.choice(team_list)
+            if team not in game:
+                game.append(team)
+
+        return sorted(game)
+
+
 
 
     def get_fixtures(self):
 
         #todo: implement the fixtures. Náði ekki að gera það :/
 
-        # deiling = len(self.players_list)
-        # for nr in range(1, int(self.__total_games__()+1), (self.total_players)-1):
+        checklist = []
+        counter = 0
+        while counter < int(self.__total_games_per_round__()):
+            game = self.create_game(self.players_list)
+
+            if game not in checklist:
+                checklist.append(game)
+                self.fixtures[counter] = game
+                counter += 1
+        # print(f"You are playing {self.total_rounds} rounds. \n")
         #
-        #     self.fixtures[nr] = [self.players_list[nr], self.players_list[nr+1]]
-        #     self.fixtures[nr+1] = [self.players_list[nr+2], self.players_list[nr+3]]
-
-
-
-        return self.fixtures
+        # print(self.fixtures)
 
 
     def print_fixtures(self):
@@ -109,7 +126,7 @@ class Tournament():
     def __print_starting_info__(self):
         retval = f'\nSo {self.total_players} players are competing.\n'
         retval += f'You wanted to play {self.total_rounds} rounds.\n'
-        retval += f'In total you will play {self.__total_games__()} games\n'
+        retval += f'In total you will play {self.__total_games_per_round__()} games\n'
         print(retval)
         return retval
 
