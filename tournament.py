@@ -150,7 +150,7 @@ class Tournament():
     def __print_starting_info__(self):
         retval = f'\nSo {self.total_players} players are competing.\n'
         retval += f'You wanted to play {self.total_rounds} rounds.\n'
-        retval += f'In total you will play {self.__total_games_per_round__()} games\n'
+        retval += f'In total you will play {int(self.__total_games_per_round__())*int(self.total_rounds)} games\n'
         print(retval)
         return retval
 
