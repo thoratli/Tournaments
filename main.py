@@ -30,7 +30,7 @@ def main():
     new_game.__initial_tournament__()
     new_game.__print_starting_info__()
 
-    while game_counter < int(new_game.total_games()):
+    while game_counter < int(new_game.__total_games_per_round__()):
 
         print(option.show_options())
 
