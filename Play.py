@@ -11,7 +11,7 @@ class Play:
         self.mot = Tournament()
         self.number_of_players = self.mot.total_players
         self.rounds = self.mot.rounds
-        self.games = self.mot.total_games()
+        self.games = self.mot.__total_games_per_round__()
         self.players_dict = self.mot.players_list
         print(self.mot.__print_starting_info__())
         self.game = 0

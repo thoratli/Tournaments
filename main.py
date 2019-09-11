@@ -42,7 +42,8 @@ def main():
 
             elif the_option == '2':
                 print(f'\nUpcoming games for league: {new_game.name}')
-                #todo: implement fixture feature
+                new_game.get_fixtures()
+                new_game.print_fixtures()
 
 
             elif the_option == '3':
