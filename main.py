@@ -2,6 +2,7 @@ from tournament import Tournament
 from options import Options
 from validation import *
 from Play import *
+from game import Game
 
 SPACE = "                                             "
 
@@ -35,6 +36,7 @@ def main():
     new_game.get_fixtures()
     new_game.__print_starting_info__()
 
+
     while game_counter < int(new_game.__total_games_per_round__()):
 
         print(option.show_options())
@@ -42,14 +44,20 @@ def main():
         the_option = option.get_option()
         if validate.validate_options(the_option) or the_option == "":
             if the_option == '':
+
                 new_game.play_next_game(game_counter)
 
                 while True:
                     score = input("How did it end: (2 2)")
+                    a_game = Game()
+
                     if validate.validate_score_input(score):
                         score = score.split()
                         the_game = new_game.fixtures[game_counter]
-                        new_game.handle_scores(score, the_game)
+
+                        a_game = Game(score[0], score[1], the_game[0], the_game[1])
+
+                        a_game.handle_scores()
                         break
 
 
@@ -66,7 +74,7 @@ def main():
 
 
             elif the_option == '2':
-                new_game.print_league()
+                print(new_game)
 
 
             elif the_option == '3':
