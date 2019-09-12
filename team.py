@@ -1,6 +1,6 @@
 
 
-class Player:
+class Team:
     def __init__(self, name= str, ):
         self.id = 0
         self.player_dict = {}
@@ -14,7 +14,8 @@ class Player:
     def get_name(self):
         return self.name
 
-    def get_poins(self):
+    def add_points(self, ):
+
         return self.points
 
     def scored_goals(self):
