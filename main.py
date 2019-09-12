@@ -32,6 +32,7 @@ def main():
 
     #initializing tournament and get data for it
     new_game.__initial_tournament__()
+    new_game.get_fixtures()
     new_game.__print_starting_info__()
 
     while game_counter < int(new_game.__total_games_per_round__()):
@@ -41,9 +42,9 @@ def main():
         the_option = option.get_option()
         if validate.validate_options(the_option) or the_option == "":
             if the_option == '':
-                print(f'\nNext game is x x')
+                # print(f'\nNext game is x x')
                 # next game from tournament.next_fixture
-                # play.play_next_game(new_game.total_games())
+                new_game.play_next_game(game_counter)
 
                 game_counter += 1
 
@@ -52,7 +53,7 @@ def main():
 
             elif the_option == '1':
                 print(f'\nUpcoming games for {new_game.name}')
-                new_game.get_fixtures()
+                # new_game.get_fixtures()
                 new_game.print_fixtures()
 
 

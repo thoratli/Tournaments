@@ -35,6 +35,8 @@ class Tournament():
             self.set_players_name()
 
 
+
+
     def get_random_team(self):
         players = 0
         # todo implement id system for user
@@ -47,6 +49,11 @@ class Tournament():
                     self.player.add_player(team)
                     self.players_list.append(team)
                     players += 1
+
+    def play_next_game(self, game_nr):
+        # todo: implement the tournament games
+        print("hahahahah")
+        print(self.fixtures[game_nr])
 
 
 
