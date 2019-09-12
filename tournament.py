@@ -1,12 +1,12 @@
 from validation import Validation
-from player import Player
+from team import Team
 import random
 PADDING = "---------------------------------------------------------"
 
 class Tournament():
     def __init__(self):
         self.validate = Validation()
-        self.player = Player()
+        self.player = Team()
 
         self.name = ""
         self.players_list = []
@@ -52,8 +52,22 @@ class Tournament():
 
     def play_next_game(self, game_nr):
         # todo: implement the tournament games
-        print("hahahahah")
-        print(self.fixtures[game_nr])
+
+        first_done = False
+        print("\n\nNext game is: \n")
+        for team in self.fixtures[game_nr]:
+            if first_done is False:
+                print(f'{team} VS ', end="")
+
+                first_done = True
+            else:
+                print(team)
+        print("")
+
+
+
+
+
 
 
 
