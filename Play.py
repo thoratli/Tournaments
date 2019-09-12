@@ -1,10 +1,6 @@
 from tournament import Tournament
 from validation import Validation
 
-TEAMS = ['Real Madrid', 'Barcelona', 'Liverpool', 'PSG', 'Brazil', 'Iceland', 'Pick 2starred team',
-         'Italy', 'Belgium', 'Pick a 3starred team', 'Fifa Random Rule', 'Your competitor picks for you',
-         'Scandinavia', 'Spain', 'Netherland', 'Pick 2 star lower than your opponent']
-
 class Play:
     def __init__(self):
         self.validation = Validation()
