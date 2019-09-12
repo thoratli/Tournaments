@@ -13,13 +13,7 @@ class Play:
 
 
 
-    def play_next_game(self, total_games):
-        # todo: implement the tournament games
 
-        self.game += 1
-        print(self.players_dict
-              )
-        print(f'Game number: {self.game}')
 
         # while True:
         #     scores = self.get_scores_from_input()
