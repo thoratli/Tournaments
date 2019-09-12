@@ -1,6 +1,7 @@
 from validation import Validation
 from player import Player
 import random
+PADDING = "---------------------------------------------------------"
 
 class Tournament():
     def __init__(self):
@@ -14,8 +15,11 @@ class Tournament():
         self.total_rounds = 0
         self.fixtures = {}
         self.randomlist = ['Real Madrid', 'Barcelona', 'Liverpool', 'Iceland', 'Brazil',
-                           'PSG', '1 star', '2 star', 'Lowest star', 'Everton', 'FifaRandomRule',
-                           'Chelsea', 'Basel', 'Manchester City', 'IcelanderTeam']
+                           'PSG', '1 star', '2 star', '1 star', '3 star', '4 star','Lowest star',
+                           'Everton', 'FifaRandomRule', 'Chelsea', 'Basel', 'Manchester City',
+                           'IcelanderTeam', 'Manchester United', 'Arsenal', 'Leicester', 'Ajax',
+                           'Atletico Madrid', 'Tottenham', 'Bayern Munchen', 'B. Dortmund', 'Juventus',
+                           'Roma', 'Inter Milan']
 
 
 
@@ -54,18 +58,18 @@ class Tournament():
     def print_league(self):
         #todo: implement values in the print
         #todo: implement size of print so it fits
-        print("---------------------------------------------------------")
         print(f'                     {self.name}')
-        print("---------------------------------------------------------")
-        print("PLAYER          PLAYED   SCORED   CONCEDED   +/-  POINTS")
-        print("------          ------   ------   --------   ---  ------")
+        print("PLAYER            PLAYED   SCORED   CONCEDED   +/-  POINTS")
+        print("------            ------   ------   --------   ---  ------")
 
 
         for key,value in self.player.player_dict.items():
             if len(value)> 11:
-                print(value[0:11] + "...")
+                print(value[0:13] + "...")
+                print(PADDING)
             else:
                 print(value)
+                print(PADDING)
 
 
     def get_total_players(self):

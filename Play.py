@@ -9,7 +9,6 @@ class Play:
         self.rounds = self.mot.rounds
         self.games = self.mot.__total_games_per_round__()
         self.players_dict = self.mot.players_list
-        print(self.mot.__print_starting_info__())
         self.game = 0
 
 
