@@ -42,18 +42,26 @@ def main():
         the_option = option.get_option()
         if validate.validate_options(the_option) or the_option == "":
             if the_option == '':
-                # print(f'\nNext game is x x')
-                # next game from tournament.next_fixture
                 new_game.play_next_game(game_counter)
 
+                while True:
+                    score = input("How did it end: (2 2)")
+                    if validate.validate_score_input(score):
+                        score = score.split()
+                        the_game = new_game.fixtures[game_counter]
+                        new_game.handle_scores(score, the_game)
+                        break
+
+
                 game_counter += 1
+
 
                 #todo: implement "play_next_game_function"
 
 
             elif the_option == '1':
                 print(f'\nUpcoming games for {new_game.name}')
-                # new_game.get_fixtures()
+                #todo: print only unplayed games or games with scores
                 new_game.print_fixtures()
 
 
