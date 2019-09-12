@@ -49,10 +49,10 @@ def main():
                     if validate.validate_score_input(score):
                         score = score.split()
                         the_game = new_game.fixtures[game_counter]
-                        handle_scores(score, the_game)
+                        new_game.handle_scores(score, the_game)
                         break
 
-                    
+
                 game_counter += 1
 
 
