@@ -64,6 +64,11 @@ class Tournament():
                 print(team)
         print("")
 
+    def handle_scores(self, scorelist, gamelist):
+        print("SKORLIST", scorelist)
+        print("GAMELIST", gamelist)
+
+
 
 
 
