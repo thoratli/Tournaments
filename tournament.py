@@ -14,7 +14,8 @@ class Tournament():
         self.total_rounds = 0
         self.fixtures = {}
         self.randomlist = ['Real Madrid', 'Barcelona', 'Liverpool', 'Iceland', 'Brazil',
-                           'PSG', '1 star team', 'Worst team in League', 'Everton']
+                           'PSG', '1 star', '2 star', 'Lowest star', 'Everton', 'FifaRandomRule',
+                           'Chelsea', 'Basel', 'Manchester City', 'IcelanderTeam']
 
 
 
@@ -53,12 +54,18 @@ class Tournament():
     def print_league(self):
         #todo: implement values in the print
         #todo: implement size of print so it fits
+        print("---------------------------------------------------------")
+        print(f'                     {self.name}')
+        print("---------------------------------------------------------")
+        print("PLAYER          PLAYED   SCORED   CONCEDED   +/-  POINTS")
+        print("------          ------   ------   --------   ---  ------")
 
-        print(f'\n                  ---- {self.name} ----')
-        print("PLAYER       PLAYED     SCORED    CONCEDED    +/-    POINTS")
 
         for key,value in self.player.player_dict.items():
-            print(key, value)
+            if len(value)> 11:
+                print(value[0:11] + "...")
+            else:
+                print(value)
 
 
     def get_total_players(self):
@@ -150,7 +157,7 @@ class Tournament():
     def __print_starting_info__(self):
         retval = f'\nSo {self.total_players} players are competing.\n'
         retval += f'You wanted to play {self.total_rounds} rounds.\n'
-        retval += f'In total you will play {self.__total_games_per_round__()} games\n'
+        retval += f'In total you will play {int(self.__total_games_per_round__())*int(self.total_rounds)} games'
         print(retval)
         return retval
 

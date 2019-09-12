@@ -11,11 +11,11 @@ WELCOME = "########## ########  ##    ##  #########   ##   ##     ####         #
           "    ##     ########  ########  ##      ##  ##   ## ##        ## ##       ###       ##  #########  ##   ##       ##    \n" \
           "\n" \
           "\n" \
-          "                 ### ###   #### ####  ##### ## ##  ##     ######  ##  ##  ####   ###   ###  ##### #####  ####\n" \
-          "  ###########    ### #     ##   ##    ## ## ## ### ##       ##    ##  ##  ##    ##    ##    ## ## ## ##  ##  \n" \
-          "  ###########    ####      #### ####  ##### ## ## ###       ##    ######  ####    #  ##     ## ## #####  ####\n" \
-          "                 ### #     ##   ##    ##    ## ##  ##       ##    ##  ##  ##     ##   ##    ## ## ##  #  ##  \n" \
-          "                 ###  ###  #### ####  ##    ## ##  ##       ##    ##  ##  ####  ##     ##   ##### ##   # #### \n"
+          "                 ### ###   #### ####  ##### ## ##  ##     ######  ##  ##  ####     ###   ### ##### #####  ####\n" \
+          "  ###########    ### #     ##   ##    ## ## ## ### ##       ##    ##  ##  ##      ##    ##   ## ## ## ##  ##  \n" \
+          "  ###########    ####      #### ####  ##### ## ## ###       ##    ######  ####      #  ##    ## ## #####  ####\n" \
+          "                 ### #     ##   ##    ##    ## ##  ##       ##    ##  ##  ##       ##   ##   ## ## ##  #  ##  \n" \
+          "                 ###  ###  #### ####  ##    ## ##  ##       ##    ##  ##  ####    ##     ##  ##### ##   # #### \n"
 
 def main():
     print("-----------")
@@ -36,7 +36,7 @@ def main():
 
         the_option = option.get_option()
         if validate.validate_options(the_option) or the_option == "":
-            if the_option == '1' or the_option == '':
+            if the_option == '':
                 print(f'\nNext game is x x')
                 # next game from tournament.next_fixture
                 # play.play_next_game(new_game.total_games())
@@ -45,16 +45,18 @@ def main():
 
                 #todo: implement "play_next_game_function"
 
-            elif the_option == '3':
-                new_game.print_league()
 
-            elif the_option == '2':
+            elif the_option == '1':
                 print(f'\nUpcoming games for league: {new_game.name}')
                 new_game.get_fixtures()
                 new_game.print_fixtures()
 
 
-            elif the_option == '4':
+            elif the_option == '2':
+                new_game.print_league()
+
+
+            elif the_option == '3':
                 print(f'\nOPTION {the_option}\nThe stats are not implemented yet, sorry!')
 
 
