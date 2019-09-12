@@ -1,7 +1,7 @@
 
 
 class Team:
-    def __init__(self, name= str, ):
+    def __init__(self, name=str):
         self.id = 0
         self.player_dict = {}
         self.name = name
@@ -24,12 +24,14 @@ class Team:
     def conceded_goals(self):
         return self.conceded_goals
 
-    def add_player(self, name):
+    def add_team(self, name):
         self.player_dict[self.id] = name
         self.id += 1
 
 
 
     def __str__(self):
-        return f'{self.name()} <--- {self.played_games} ---{self.scored_goals}' \
+        #þetta prentar fixtures
+        print("asdasdadasdada")
+        return f'{self.name} <--- {self.played_games} ---{self.scored_goals}' \
             f' --- {self.conceded_goals} --- {int(self.scored_goals)-int(self.conceded_goals)} --- {self.points}'
