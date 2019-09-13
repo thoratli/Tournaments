@@ -157,18 +157,22 @@ class Tournament():
 
     def __str__(self):
         print(f'                     {self.name}')
-        print("PLAYER            PLAYED   SCORED   CONCEDED   +/-  POINTS")
-        print("------            ------   ------   --------   ---  ------")
+        print("{:<18}{:<10}{:<3}{:<3}{:<3}{:<3}".format("PLAYER", "PLAYED", "SCORED", "CONCEDED", "+/-", "POINTS"))
+        print("{:<18}{:<10}{:<3}{:<3}{:<3}{:<3}".format("------", "------", "------", "--------", "---", "------"))
+        # print("PLAYER               PLAYED   SCORED   CONCEDED   +/-  POINTS")
+        # print("------               ------   ------   --------   ---  ------")
 
         sorted_x = sorted(self.players_list, key=operator.attrgetter('points'))
         sorted_x.reverse()
 
+        # print('{:>12.2f}'.format(num))
+
         retval = ""
 
         for team in sorted_x:
-            retval += f'{team.name}'
-            retval += f'       {team.played_games}'
-            retval += f'         {team.scored_goals}'
+            retval += "{:<18}".format(team.name)
+            retval += "{:<13}".format(team.played_games)
+            retval += "{:<3}".format(team.scored_goals)
             retval += f'        {team.conceded_goals}'
             retval += f'        {team.scored_goals - team.conceded_goals}'
             retval += f'        {team.points} \n'
