@@ -14,20 +14,24 @@ class Team:
     def get_name(self):
         return self.name
 
-    def add_points(self):
-
+    def win(self):
         self.points += 3
 
-    def scored_goals(self):
-        return self.scored_goals
+    def draw(self):
+        self.points += 1
 
-    def conceded_goals(self):
-        return self.conceded_goals
+    def add_scored_goals(self, goals):
+        self.scored_goals += int(goals)
+
+    def add_conceded_goals(self,goals):
+        self.conceded_goals += int(goals)
 
     def add_team(self, name):
         self.player_dict[self.id] = name
         self.id += 1
 
+    def play_game(self):
+        self.played_games += 1
 
 
     def __str__(self):
