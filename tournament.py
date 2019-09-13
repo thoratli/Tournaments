@@ -1,6 +1,7 @@
 from validation import Validation
 from team import Team
 import random
+import operator
 PADDING = "---------------------------------------------------------"
 
 class Tournament():
@@ -28,71 +29,17 @@ class Tournament():
         self.total_rounds = self.get_rounds()
 
 
-        # play_random = input("You want to play with random Teams from our list [Y/n]").lower()
-        # if play_random in 'yY':
-        #     self.get_random_team()
-        # else:
-        self.set_players_name()
-
-
-
-
-    # def get_random_team(self):
-    #     players = 0
-    #     # todo implement id system for user
-    #     checklist = []
-    #     for i in range(int(self.total_players)):
-    #         while players == i:
-    #             team = random.choice(self.randomlist)
-    #             if team not in checklist:
-    #                 checklist.append(team)
-    #                 self.player.add_team(team)
-    #                 self.players_list.append(team)
-    #                 players += 1
-
-    def play_next_game(self, game_nr):
-        # todo: implement the tournament games
-
-        first_done = False
-        print("\n\nNext game is: \n")
-        for team in self.fixtures[game_nr]:
-            if first_done is False:
-                print(f'{team} VS ', end="")
-
-                first_done = True
-            else:
-                print(team)
-        print("")
-
+        play_random = input("You want to play with random Teams from our list [Y/n]").lower()
+        if play_random in 'yY':
+            self.get_random_team()
+        else:
+            self.set_players_name()
 
 
     def get_tournament_name(self):
         name = input("What is the name of your League: ")
         return name
 
-
-    # def print_league(self):
-    #     #todo: implement values in the print
-    #     #todo: implement size of print so it fits
-    #
-    #     print(Tournament)
-    #
-    #
-    #     for key,value in self.player.player_dict.items():
-    #         if len(value)> 11:
-    #             print(value[0:13] + "...")
-    #             print(PADDING)
-    #         else:
-    #             print(value)
-    #             print(PADDING)
-
-
-    def get_total_players(self):
-
-        while True:
-            players = input("How many players: ")
-            if self.validate.validate_integer(players):
-                return int(players)
 
 
     def set_players_name(self):
@@ -109,6 +56,43 @@ class Tournament():
                     players += 1
 
 
+
+    def get_random_team(self):
+        players = 0
+        # todo implement id system for user
+        checklist = []
+        for i in range(int(self.total_players)):
+            while players == i:
+                team = Team(random.choice(self.randomlist))
+                if team not in checklist:
+                    checklist.append(team)
+                    self.player.add_team(team)
+                    self.players_list.append(team)
+                    players += 1
+
+    def play_next_game(self, game_nr):
+
+        first_done = False
+        print("\n\nNext game is: \n")
+        for team in self.fixtures[game_nr]:
+            if first_done is False:
+                print(f'{team} VS ', end="")
+
+                first_done = True
+            else:
+                print(team)
+        print("")
+        return self.fixtures[game_nr][0], self.fixtures[game_nr][1]
+
+
+    def get_total_players(self):
+
+        while True:
+            players = input("How many players: ")
+            if self.validate.validate_integer(players):
+                return int(players)
+
+
     def get_rounds(self):
         while True:
             try:
@@ -120,7 +104,6 @@ class Tournament():
 
 
     def __total_games_per_round__(self):
-        # Added this. Should return the right number of games - Wenni
         return f"{round(((self.total_players*(self.total_players-1))/2))}"
 
 
@@ -137,8 +120,6 @@ class Tournament():
 
     def get_fixtures(self):
 
-        #todo: implement the fixtures. Náði ekki að gera það :/
-
         checklist = []
         counter = 0
         while counter < int(self.__total_games_per_round__()):
@@ -148,12 +129,11 @@ class Tournament():
                 checklist.append(game)
                 self.fixtures[counter] = game
                 counter += 1
-        #
 
 
     def print_fixtures(self):
 
-        print("    ---- FIXTURES ---")
+        print("  ---- FIXTURES ----")
         for game,teams in self.fixtures.items():
             print(f"Game nr {game+1}: ", end="")
             number_of_teams = 0
@@ -165,8 +145,6 @@ class Tournament():
                     print(f"{team}", end=" ")
             print("")
 
-        #todo:implement the names in the value
-        #todo:implement pretty print
 
 
     def __print_starting_info__(self):
@@ -182,9 +160,12 @@ class Tournament():
         print("PLAYER            PLAYED   SCORED   CONCEDED   +/-  POINTS")
         print("------            ------   ------   --------   ---  ------")
 
+        sorted_x = sorted(self.players_list, key=operator.attrgetter('points'))
+        sorted_x.reverse()
+
         retval = ""
 
-        for team in self.players_list:
+        for team in sorted_x:
             retval += f'{team.name}'
             retval += f'       {team.played_games}'
             retval += f'         {team.scored_goals}'
