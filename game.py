@@ -12,7 +12,7 @@ class Game():
         # check for a win
         if self.home_score < self.away_score:
             self.away_team.win()
-        else:
+        elif self.away_score < self.home_score:
             self.home_team.win()
 
 
