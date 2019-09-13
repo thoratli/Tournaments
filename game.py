@@ -1,5 +1,6 @@
+
 class Game():
-    def __init__(self, home_score=int, away_score=int, home_team=str, away_team=str):
+    def __init__(self, home_score=int, away_score=int, home_team=None, away_team=None):
 
         self.home_score = home_score
         self.away_score = away_score
@@ -8,8 +9,9 @@ class Game():
 
     def handle_scores(self):
 
-        if self.away_score > self.home_score:
-            pass
+        if self.home_score < self.away_score:
+            self.away_team.add_points()
+
 
 
 

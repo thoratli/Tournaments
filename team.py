@@ -14,9 +14,9 @@ class Team:
     def get_name(self):
         return self.name
 
-    def add_points(self, ):
+    def add_points(self):
 
-        return self.points
+        self.points += 3
 
     def scored_goals(self):
         return self.scored_goals
@@ -32,6 +32,4 @@ class Team:
 
     def __str__(self):
         #þetta prentar fixtures
-        print("asdasdadasdada")
-        return f'{self.name} <--- {self.played_games} ---{self.scored_goals}' \
-            f' --- {self.conceded_goals} --- {int(self.scored_goals)-int(self.conceded_goals)} --- {self.points}'
+        return f'{self.name}'
