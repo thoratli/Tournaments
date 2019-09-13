@@ -7,12 +7,44 @@ class Game():
         self.home_team = home_team
         self.away_team = away_team
 
+
+    def _win(self):
+        # check for a win
+        if self.home_score < self.away_score:
+            self.away_team.win()
+        else:
+            self.home_team.win()
+
+
+    def _draw(self):
+        # check for a draw
+        if self.home_score == self.away_score:
+            self.away_team.draw()
+            self.home_team.draw()
+
+
+    def _played(self):
+        self.away_team.play_game()
+        self.home_team.play_game()
+
+
+    def _add_goals(self):
+        away_goals = self.away_score
+        home_goals = self.home_score
+
+        self.away_team.add_scored_goals(away_goals)
+        self.home_team.add_scored_goals(home_goals)
+
+        self.away_team.add_conceded_goals(home_goals)
+        self.home_team.add_conceded_goals(away_goals)
+
+
     def handle_scores(self):
 
-        if self.home_score < self.away_score:
-            self.away_team.add_points()
-
-
+        self._played()
+        self._win()
+        self._draw()
+        self._add_goals()
 
 
     def __str__(self):
