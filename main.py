@@ -36,26 +36,31 @@ def main():
     new_game.get_fixtures()
     new_game.__print_starting_info__()
 
-    while game_counter < int(new_game.__total_games_per_round__()):
+    total_games = int(new_game.__total_games_per_round__())*int(new_game.total_rounds)
+
+    while game_counter < total_games:
 
         print(option.show_options())
 
         the_option = option.get_option()
         if validate.validate_options(the_option) or the_option == "":
             if the_option == '':
-
-                home, away = new_game.play_next_game(game_counter)
+                dict_key = game_counter%int(new_game.__total_games_per_round__())
+                home, away = new_game.play_next_game(dict_key)
 
                 while True:
                     score = input("How did it end: (2 2)")
+
+
 
                     if validate.validate_score_input(score):
                         score = score.split()
                         a_game = Game(score[0], score[1], home, away)
                         a_game.handle_scores()
+                        game_counter += 1
                         break
 
-                game_counter += 1
+
 
             elif the_option == '1':
                 print(f'\nUpcoming games for {new_game.name}')
