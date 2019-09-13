@@ -1,5 +1,3 @@
-
-
 class Team:
     def __init__(self, name=str):
         self.id = 0
@@ -33,7 +31,5 @@ class Team:
     def play_game(self):
         self.played_games += 1
 
-
     def __str__(self):
-        #þetta prentar fixtures
         return f'{self.name}'
