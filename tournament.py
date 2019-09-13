@@ -2,7 +2,8 @@ from validation import Validation
 from team import Team
 import random
 import operator
-PADDING = "---------------------------------------------------------"
+PADDING = "--------------------------------------------------------------"
+MIDDLE = int(len(PADDING)/2)
 
 class Tournament():
     def __init__(self):
@@ -156,9 +157,30 @@ class Tournament():
 
 
     def __str__(self):
-        print(f'                     {self.name}')
-        print("{:<18}{:<10}{:<3}{:<3}{:<3}{:<3}".format("PLAYER", "PLAYED", "SCORED", "CONCEDED", "+/-", "POINTS"))
-        print("{:<18}{:<10}{:<3}{:<3}{:<3}{:<3}".format("------", "------", "------", "--------", "---", "------"))
+        print("\n"+PADDING+"\n\n")
+
+        for i in range(MIDDLE-int(len(self.name)/2)):
+            print(" ", end="")
+
+
+        print(f'{self.name}')
+
+        for i in range(MIDDLE-int(len(self.name)/2)):
+            print(" ", end="")
+        print("\n")
+
+
+        print(PADDING, "\n")
+
+        print("{:<18}{:}{:<10}{:}{:<10}"
+              "{:}{:<11}{:}{:<6}{:}{:<6}".format("PLAYER",
+                                         "", "PLAYED","", "SCORED",
+                                         "", "CONCEDED", "", "+/-", "", "POINTS"))
+
+        print("{:<18}{:}{:<6}{:4}{:<7}{:<3}{:<3}{:<3}{:<3}{:<3}{:<3}"
+              .format("----------", "",  "------", "",  "------", "","--------", "", "---", "",  "------"))
+
+
         # print("PLAYER               PLAYED   SCORED   CONCEDED   +/-  POINTS")
         # print("------               ------   ------   --------   ---  ------")
 
@@ -171,10 +193,10 @@ class Tournament():
 
         for team in sorted_x:
             retval += "{:<18}".format(team.name)
-            retval += "{:<13}".format(team.played_games)
-            retval += "{:<3}".format(team.scored_goals)
-            retval += f'        {team.conceded_goals}'
-            retval += f'        {team.scored_goals - team.conceded_goals}'
-            retval += f'        {team.points} \n'
+            retval += "{:3}".format(team.played_games)
+            retval += "{:10}".format(team.scored_goals)
+            retval += "{:11}".format(team.conceded_goals)
+            retval += "{:9}".format(team.scored_goals-team.conceded_goals)
+            retval += "{:7}\n".format(team.points)
 
         return retval
