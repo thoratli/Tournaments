@@ -120,16 +120,14 @@ class Tournament():
 
 
     def get_fixtures(self):
-
-        checklist = []
         counter = 0
-        while counter < int(self.__total_games_per_round__()):
-            game = self.create_game(self.players_list)
-
-            if game not in checklist:
-                checklist.append(game)
-                self.fixtures[counter] = game
-                counter += 1
+        index = 0
+        print(f"Total players: {self.total_players}")
+        print(self.players_list)
+        while counter < (len(self.players_list) / 2):
+            self.fixtures[counter] = [self.players_list[index], self.players_list[index + 1]]
+            index += 2
+            counter += 1
 
 
     def print_fixtures(self):
