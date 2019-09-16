@@ -33,10 +33,12 @@ def main():
 
     #initializing tournament and get data for it
     new_game.__initial_tournament__()
+
     new_game.get_fixtures()
     new_game.__print_starting_info__()
-
     total_games = int(new_game.__total_games_per_round__())*int(new_game.total_rounds)
+
+    random_team = input("\nYou want us to choose random teams for every game? [Y/n]: ")
 
     while game_counter < total_games:
 
@@ -48,10 +50,11 @@ def main():
                 dict_key = game_counter%int(new_game.__total_games_per_round__())
                 home, away = new_game.play_next_game(dict_key)
 
+                if random_team in 'Yy':
+                    print(new_game.get_one_fixture() + "\n")
+
                 while True:
-                    score = input("How did it end: (2 2)")
-
-
+                    score = input("How did it end: (2 2): ")
 
                     if validate.validate_score_input(score):
                         score = score.split()
