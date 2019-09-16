@@ -135,6 +135,7 @@ class Tournament():
     def print_fixtures(self):
 
         print("  ---- FIXTURES ----")
+        print(f"  ---- You're playing {self.total_rounds} rounds ----")
         for game,teams in self.fixtures.items():
             print(f"Game nr {game+1}: ", end="")
             number_of_teams = 0
