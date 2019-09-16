@@ -18,9 +18,11 @@ class Validation():
 
             try:
                 home, away = score.split()
-                int(home)
-                int(away)
-                return True
+                home = int(home)
+                away =int(away)
+                if home > 0 and away > 0:
+                    return True
+                print("This can´t be correct! ")
             except:
                 print("\n\nThis didn't work. Try again! !")
                 return False
