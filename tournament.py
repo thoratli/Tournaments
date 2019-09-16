@@ -122,8 +122,6 @@ class Tournament():
     def get_fixtures(self):
         counter = 0
         index = 0
-        print(f"Total players: {self.total_players}")
-        print(self.players_list)
         while counter < (len(self.players_list) / 2):
             self.fixtures[counter] = [self.players_list[index], self.players_list[index + 1]]
             index += 2
