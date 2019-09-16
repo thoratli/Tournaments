@@ -1,5 +1,6 @@
 from validation import Validation
 from team import Team
+from options import Options
 import random
 import operator
 PADDING = "--------------------------------------------------------------"
@@ -7,6 +8,7 @@ MIDDLE = int(len(PADDING)/2)
 
 class Tournament():
     def __init__(self):
+        self.options = Options()
         self.validate = Validation()
         self.player = Team()
         self.name = ""
@@ -29,12 +31,15 @@ class Tournament():
         self.total_players = self.get_total_players()
         self.total_rounds = self.get_rounds()
 
-
         play_random = input("You want to play with random Teams from our list [Y/n]").lower()
-        if play_random in 'yY':
+        if play_random in 'yY ':
             self.get_random_team()
         else:
             self.set_players_name()
+
+
+
+
 
 
     def get_tournament_name(self):
@@ -130,6 +135,11 @@ class Tournament():
                 checklist.append(game)
                 self.fixtures[counter] = game
                 counter += 1
+
+    def get_one_fixture(self):
+        team1 = random.choice(self.randomlist)
+        team2 = random.choice(self.randomlist)
+        return f'{team1} vs {team2}'
 
 
     def print_fixtures(self):
