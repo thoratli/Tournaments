@@ -105,6 +105,8 @@ class Tournament():
                 number = int(input("How many rounds you want to play? "))
                 if number > 0:
                     return number
+                else:
+                    print("Please enter a number >0 ! ")
             except:
                 print("Please enter a number! ")
 
