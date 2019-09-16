@@ -31,11 +31,18 @@ class Tournament():
         self.total_players = self.get_total_players()
         self.total_rounds = self.get_rounds()
 
-        play_random = input("You want to play with random Teams from our list [Y/n]").lower()
-        if play_random in 'yY ':
-            self.get_random_team()
-        else:
-            self.set_players_name()
+        while True:
+            play_random = input("You want to play with random Teams from our list [Y/n]: ").lower()
+            if play_random in 'yY ':
+                self.get_random_team()
+                return
+            elif play_random in 'nN':
+                self.set_players_name()
+                return
+            else:
+                print("Please try again! ")
+
+
 
 
 
@@ -96,7 +103,10 @@ class Tournament():
         while True:
             players = input("How many players: ")
             if self.validate.validate_integer(players):
-                return int(players)
+                if int(players) <= 1:
+                    print("You can´t play a tournament on your own. Call your friends! ")
+                if int(players) > 1:
+                    return int(players)
 
 
     def get_rounds(self):
@@ -105,6 +115,8 @@ class Tournament():
                 number = int(input("How many rounds you want to play? "))
                 if number > 0:
                     return number
+                else:
+                    print("Please enter a number >0 ! ")
             except:
                 print("Please enter a number! ")
 
@@ -137,9 +149,21 @@ class Tournament():
                 counter += 1
 
     def get_one_fixture(self):
-        team1 = random.choice(self.randomlist)
-        team2 = random.choice(self.randomlist)
-        return f'{team1} vs {team2}'
+
+        while True:
+            team1 = random.choice(self.randomlist)
+            team2 = random.choice(self.randomlist)
+
+
+            teams = f'{team1} VS {team2}\n'
+            print(teams)
+
+            happy = input("Are you happy with the teams? [Y/n] \n")
+
+            if happy in 'Yy ':
+                return teams
+            else:
+                print("\nCry me a river, We will give you new teams ... \n")
 
 
     def print_fixtures(self):
