@@ -30,17 +30,20 @@ class Tournament():
         self.name = self.get_tournament_name()
         self.total_players = self.get_total_players()
         self.total_rounds = self.get_rounds()
+        self.set_players_name()
 
+        #refactor this shit
         while True:
-            play_random = input("You want to play with random Teams from our list [Y/n]: ").lower()
+            play_random = input(f"You want to have one random team throughout the -- {self.name} -- league [Y/n]: ").lower()
             if play_random in 'yY ':
+                #assigna random teamum á leikmenn
                 self.get_random_team()
                 return
+
             elif play_random in 'nN':
-                self.set_players_name()
                 return
             else:
-                print("Please try again! ")
+                print("Please enter Y or N ! ")
 
 
 
@@ -155,15 +158,16 @@ class Tournament():
             team2 = random.choice(self.randomlist)
 
 
-            teams = f'{team1} VS {team2}\n'
-            print(teams)
+            teams = f'{team1} VS {team2}'
+            return teams
 
-            happy = input("Are you happy with the teams? [Y/n] \n")
 
-            if happy in 'Yy ':
-                return teams
-            else:
-                print("\nCry me a river, We will give you new teams ... \n")
+            # happy = input("Are you happy with the teams? [Y/n] \n")
+            #
+            # if happy in 'Yy ':
+            #     return teams
+            # else:
+            #     print("\nCry me a river, We will give you new teams ... \n")
 
 
     def print_fixtures(self):
