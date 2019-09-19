@@ -33,12 +33,30 @@ def main():
 
     #initializing tournament and get data for it
     new_game.__initial_tournament__()
+    # ef init_tourn random_action is false
+    random_team = input("\nYou want us to choose random teams for every game? [Y/n]: ")
+
 
     new_game.get_fixtures()
     new_game.__print_starting_info__()
+
+    # print who is what team if choosen random in initial
+
+    #league....
+    # Atli : Liverpool
+    # Wenni: Arsenal
+
+    # else
+
+    # league.....
+    # Atli 3 3 3
+    # Wenni 4 1 0
+
+
+
     total_games = int(new_game.__total_games_per_round__())*int(new_game.total_rounds)
 
-    random_team = input("\nYou want us to choose random teams for every game? [Y/n]: ")
+
 
     while game_counter < total_games:
 
