@@ -28,13 +28,13 @@ class Validation():
                 return False
 
 
-    def validate_name_input(self, string: str):
-        namelist = string.split()
-        if len(namelist) == 1:
-            return True
-        else:
-            print("Please, just one name! ")
-            return False
+    # def validate_name_input(self, string: str):
+    #     namelist = string.split()
+    #     if len(namelist) == 1:
+    #         return True
+    #     else:
+    #         print("Please, just one name! ")
+    #         return False
 
     def validate_rounds(self, integer: int):
         pass
