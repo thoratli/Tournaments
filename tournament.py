@@ -94,10 +94,10 @@ class Tournament():
         for i in range(int(self.total_players)):
             while players == i:
                 team_name = input(f'Participant nr {players +1}: ')
-                if self.validate.validate_name_input(team_name):
-                    new_team = Team(team_name)
-                    self.players_list.append(new_team)
-                    players += 1
+                # if self.validate.validate_name_input(team_name):
+                new_team = Team(team_name)
+                self.players_list.append(new_team)
+                players += 1
 
 
 
@@ -134,8 +134,10 @@ class Tournament():
         while True:
             players = input("How many players: ")
             if self.validate.validate_integer(players):
-                if int(players) <= 1:
+                if int(players) == 1:
                     print("You can´t play a tournament on your own. Call your friends! ")
+                elif int(players) <=0:
+                    print(f'What kind of Tournament has {players} competitors? ')
                 if int(players) > 1:
                     return int(players)
 
