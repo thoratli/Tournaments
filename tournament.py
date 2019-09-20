@@ -143,15 +143,12 @@ class Tournament():
 
 
     def get_rounds(self):
+
         while True:
-            try:
-                number = int(input("How many rounds you want to play? "))
-                if number > 0:
+            number = input("How many rounds you want to play? ")
+            if self.validate.validate_integer(number):
+                if self.validate.validate_rounds(number):
                     return number
-                else:
-                    print("Please enter a number >0 ! ")
-            except:
-                print("Please enter a number! ")
 
 
     def __total_games_per_round__(self):
