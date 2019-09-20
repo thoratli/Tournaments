@@ -5,9 +5,7 @@ from Play import *
 from game import Game
 
 SPACE = "                                             "
-
 PADDING = "\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n"
-
 WELCOME = f"{SPACE}########## ########  ##    ##  #########   ##   ##     ####         ###       ###      #########  ##   ##   ##########\n" \
           f"{SPACE}    ##     ##    ##  ##    ##  ##     ##   ###  ##    ##  ##       ## ##     ## ##     ##         ###  ##       ##    \n" \
           f"{SPACE}    ##     ##    ##  ##    ##  #########   ##  ###   ########     ##   ##   ##   ##    #########  ##  ###       ##    \n" \
@@ -25,10 +23,7 @@ def main():
     option = Options()
     new_game = Tournament()
     validate = Validation()
-    play = Play()
-    print(PADDING)
-    print(WELCOME)
-    print(PADDING)
+    print(f'{PADDING}\n{WELCOME}\n{PADDING}')
     game_counter = 0
 
     #initializing tournament and get data for it
