@@ -16,28 +16,25 @@ class Validation():
 
     def validate_score_input(self, score):
 
-            try:
-                home, away = score.split()
-                home = int(home)
-                away =int(away)
-                if home > 0 and away > 0:
-                    return True
-                print("This can´t be correct! ")
-            except:
-                print("\n\nThis didn't work. Try again! !")
-                return False
+        try:
+            home, away = score.split()
+            home = int(home)
+            away =int(away)
+            if home > 0 and away > 0:
+                return True
+            print("This can´t be correct! ")
+        except:
+            print("\n\nThis didn't work. Try again!!")
+            return False
 
 
-    # def validate_name_input(self, string: str):
-    #     namelist = string.split()
-    #     if len(namelist) == 1:
-    #         return True
-    #     else:
-    #         print("Please, just one name! ")
-    #         return False
+    def validate_rounds(self, rounds):
+        if int(rounds) > 0:
+            return True
+        print("The lowest number available is 1.")
+        return False
 
-    def validate_rounds(self, integer: int):
-        pass
+
 
     def validate_options(self, option):
 
