@@ -49,7 +49,11 @@ class Tournament():
                 return self.players_list
 
             elif play_random in 'nN':
-                return
+                random_team_choice = input("\nYou want us to choose random teams for every game? [Y/n]: ")
+                if random_team_choice in "Yy":
+                    return random_team_choice # Returning this string if user wants random teams every game
+                else:
+                    return # Returning nothing if user chooses not to have random teams every game
             else:
                 print("Please enter Y or N ! ")
 

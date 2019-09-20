@@ -32,26 +32,12 @@ def main():
     game_counter = 0
 
     #initializing tournament and get data for it
-    new_game.__initial_tournament__()
+    random_team = new_game.__initial_tournament__()
     # ef init_tourn random_action is false
-    random_team = input("\nYou want us to choose random teams for every game? [Y/n]: ")
 
 
     new_game.get_fixtures()
     new_game.__print_starting_info__()
-
-    # print who is what team if choosen random in initial
-
-    #league....
-    # Atli : Liverpool
-    # Wenni: Arsenal
-
-    # else
-
-    # league.....
-    # Atli 3 3 3
-    # Wenni 4 1 0
-
 
 
     total_games = int(new_game.__total_games_per_round__())*int(new_game.total_rounds)
@@ -68,7 +54,7 @@ def main():
                 dict_key = game_counter%int(new_game.__total_games_per_round__())
                 home, away = new_game.play_next_game(dict_key)
 
-                if random_team in 'Yy':
+                if isinstance(random_team, str) and random_team in 'Yy':
                     print(new_game.get_one_fixture() + "\n")
 
                 while True:
@@ -84,7 +70,7 @@ def main():
 
 
             elif the_option == '1':
-                print(f'\nUpcoming games for {new_game.name}')
+                print(f'\nFixtures for {new_game.name}')
                 #todo: print only unplayed games or games with scores
                 new_game.print_fixtures()
 
