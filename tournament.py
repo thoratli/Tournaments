@@ -36,9 +36,17 @@ class Tournament():
         while True:
             play_random = input(f"You want to have one random team throughout the -- {self.name} -- league [Y/n]: ").lower()
             if play_random in 'yY ':
-                #assigna random teamum á leikmenn
-                self.get_random_team()
-                return
+                #Búa til lista með random liðum
+                rand_teams = self.get_random_teams()
+
+                # Prenta út hver er hvaða lið
+                self.print_assigned_teams(self.players_list, rand_teams)
+
+
+                # self.get_random_team() # commeentaði þetta út í bili.
+                for i in range(self.total_players):
+                    self.players_list[i].name += " " + "(" + rand_teams[i] + ")" # Bæti hér við random liðinu fyrir aftan nafnið á spilaranum.
+                return self.players_list
 
             elif play_random in 'nN':
                 return
@@ -46,8 +54,24 @@ class Tournament():
                 print("Please enter Y or N ! ")
 
 
+    def print_assigned_teams(self, players_list, rand_teams):
+        print("-- Here are the teams assigned for this league --")
+        print("")
+        for i in range(self.total_players):
+            print(f"{players_list[i]} -> {rand_teams[i]}")
+            print("")
 
 
+
+    def get_random_teams(self):
+        randlist = []
+        counter = 0
+        while counter < self.total_players:
+            random_team = random.choice(self.randomlist)
+            if random_team not in randlist:
+                randlist.append(random_team)
+                counter += 1
+        return randlist
 
 
 
@@ -210,12 +234,12 @@ class Tournament():
 
         print(PADDING, "\n")
 
-        print("{:<18}{:}{:<10}{:}{:<10}"
+        print("{:<27}{:}{:<10}{:}{:<10}"
               "{:}{:<11}{:}{:<6}{:}{:<6}".format("PLAYER",
                                          "", "PLAYED","", "SCORED",
                                          "", "CONCEDED", "", "+/-", "", "POINTS"))
 
-        print("{:<18}{:}{:<6}{:4}{:<7}{:<3}{:<3}{:<3}{:<3}{:<3}{:<3}"
+        print("{:<27}{:}{:<6}{:4}{:<7}{:<3}{:<3}{:<3}{:<3}{:<3}{:<3}"
               .format("----------", "",  "------", "",  "------", "","--------", "", "---", "",  "------"))
 
 
@@ -230,7 +254,7 @@ class Tournament():
         retval = ""
 
         for team in sorted_x:
-            retval += "{:<18}".format(team.name)
+            retval += "{:<27}".format(team.name)
             retval += "{:3}".format(team.played_games)
             retval += "{:10}".format(team.scored_goals)
             retval += "{:11}".format(team.conceded_goals)
