@@ -11,7 +11,7 @@ class Validation():
             int(string)
             return True
         except:
-            print("Please enter an integer! ")
+            print("Please enter an integer!\n")
             return False
 
     def validate_score_input(self, score):
@@ -27,30 +27,33 @@ class Validation():
             print('\n\nThis didn\'t work. Try again!!')
             return False
 
-    def validate_limit(self, number, min=None, max=None):
+    def validate_limit(self, number, min, max=None):
         """Validates upper and lower limits on input"""
         if number == "":
             return True
 
         try:
             number = int(number)
-
-            if max:
-                if number <= max:
-                    if number >= min:
-                        return True
-
-                    else:
-                        print(f"\nThe lowest number available is {min}.")
-                else:
-                    print(f"\nThe highest number available is {max}.")
-
-
-            if number >= min:
-                return True
-
         except:
-            print(f"Enter a number from {min} to {max}")
+            return False
+
+        if max:
+            if number <= max:
+                if number >= min:
+                    return True
+
+                else:
+                    print(f"\nThe lowest number available is {min}.")
+            else:
+                print(f"\nThe highest number available is {max}.")
+
+
+        if number < min:
+            print(f"\nThe lowest number available is {min}.")
+            return False
+
+        return True
+
 
     def validate_options(self, option):
         """Validates options and returns the options if it´s acceptable"""
