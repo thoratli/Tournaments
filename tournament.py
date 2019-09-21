@@ -51,6 +51,7 @@ class Tournament():
 
             # self.get_random_team() # commeentaði þetta út í bili.
             for i in range(self.total_players):
+                # todo: capitalize rand_teams[i] in the string
                 self.players_list[i].name += " " + "(" + rand_teams[i] + ")" # Bæti hér við random liðinu fyrir aftan nafnið á spilaranum.
             return self.players_list
 
@@ -113,6 +114,7 @@ class Tournament():
         while counter < self.total_players:
             random_team = random.choice(self.randomlist)
             if random_team not in randlist:
+                random_team = random_team.capitalize()
                 randlist.append(random_team)
                 counter += 1
         return randlist
@@ -138,11 +140,11 @@ class Tournament():
         print("\n\nNext game is: \n")
         for team in self.fixtures[game_nr]:
             if first_done is False:
-                print(f'{team} VS ', end="")
+                print(f'{str(team).capitalize()} VS ', end="")
 
                 first_done = True
             else:
-                print(team)
+                print(str(team).capitalize())
         print("")
         return self.fixtures[game_nr][0], self.fixtures[game_nr][1]
 
@@ -180,7 +182,7 @@ class Tournament():
         while True:
             team1 = random.choice(self.randomlist)
             team2 = random.choice(self.randomlist)
-            teams = f'{team1} VS {team2}'
+            teams = f'{str(team1).capitalize()} VS {str(team2).capitalize()}'
             return teams
 
     def print_fixtures(self):
@@ -191,10 +193,10 @@ class Tournament():
             number_of_teams = 0
             for team in teams:
                 if number_of_teams == 0:
-                    print(f"{team} ", end="VS ")
+                    print(f"{str(team).capitalize()} ", end="VS ")
                     number_of_teams += 1
                 else:
-                    print(f"{team}", end=" ")
+                    print(f"{str(team).capitalize()}", end=" ")
             print("")
 
     def __print_starting_info__(self):
@@ -261,11 +263,11 @@ class Tournament():
         retval = ""
 
         for team in sorted_x:
-            retval += "{:<27}".format(team.name)
-            retval += "{:3}".format(team.played_games)
-            retval += "{:10}".format(team.scored_goals)
-            retval += "{:11}".format(team.conceded_goals)
-            retval += "{:9}".format(team.scored_goals-team.conceded_goals)
-            retval += "{:7}\n".format(team.points)
+            retval += "{:<27}".format(team.name).capitalize()
+            retval += "{:3}".format(team.played_games).capitalize()
+            retval += "{:10}".format(team.scored_goals).capitalize()
+            retval += "{:11}".format(team.conceded_goals).capitalize()
+            retval += "{:9}".format(team.scored_goals-team.conceded_goals).capitalize()
+            retval += "{:7}\n".format(team.points).capitalize()
 
         return retval
