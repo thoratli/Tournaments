@@ -1,5 +1,5 @@
 
-TOTAL_OPTIONS = 4
+TOTAL_OPTIONS = 5
 
 class Options:
 
@@ -11,6 +11,7 @@ class Options:
         retval += "[1] Show fixtures \n"
         retval += '[2] Show table \n'
         retval += "[3] Print stats - not implemented\n"
+        retval += "[4} Leave application \n"
         return retval
 
     def get_option(self):
