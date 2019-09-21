@@ -41,13 +41,16 @@ def main():
         if validate.validate_limit((the_option), 1, 4) or the_option == "":
             if the_option == '':
                 dict_key = game_counter%int(new_game.__total_games_per_round__())
+                print(LINES)
                 home, away = new_game.play_next_game(dict_key)
 
                 if isinstance(random_team, str) and random_team in 'Yy':
                     print(new_game.get_one_fixture() + "\n")
 
                 while True:
-                    score = input("Enter results, two integers with space between:   ")
+                    print(LINES)
+
+                    score = input("Enter results, two integers with space between: ")
                     if validate.validate_score_input(score):
                         score = score.split()
                         a_game = Game(score[0], score[1], home, away)
@@ -58,7 +61,6 @@ def main():
             elif the_option == '1':
                 print(LINES)
                 print(f"           ~~~~~ {new_game.name} ~~~~~")
-
                 print(f'\nYou are playing {new_game.total_rounds}rounds of the following games')
                 print(LINES)
 
