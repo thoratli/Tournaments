@@ -1,7 +1,6 @@
 from tournament import Tournament
 from options import Options
 from validation import *
-from Play import *
 from game import Game
 
 SPACE = "                                             "
@@ -53,7 +52,7 @@ def main():
                         break
 
             elif the_option == '1':
-                print(f'\nFixtures for {new_game.name}')
+                print(f'\nYou are playing {new_game.total_rounds} rounds')
                 #todo: print only unplayed games or games with scores
                 new_game.print_fixtures()
 
