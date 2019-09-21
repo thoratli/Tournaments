@@ -1,0 +1,7 @@
+﻿name,id,rounds,total_players,player,form,Team,Played,Scored,Conceded,Difference,Points
+Hawgs,1,2,4,Atli,fixedrandom,Liverpool,1,1,1,0,1
+Hawgs,1,2,4,Wenni,fixedrandom,Arsenal,1,1,1,0,1
+Hawgs,1,2,4,Haukur,fixedrandom,Iceland,1,2,0,0,3
+Hawgs,1,2,4,Sindri,fixedrandom,Manchester United,1,0,2,0,0
+Wennarnir,2,1,2,Steinarr,Randomround,None,1,3,1,2,3
+Wennarnir,2,1,2,Þór,Randomround,None,1,1,3,-2,0
