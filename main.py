@@ -1,7 +1,9 @@
 from tournament import Tournament
-from options import Options
+# from options import Options
 from validation import *
 from game import Game
+from datareader import abstract_model
+from stats import Statistics
 
 SPACE = "                                             "
 LINES = "\n-----------------------------------------------\n"
@@ -24,19 +26,38 @@ def freeze_screen():
 
 
 def main():
-    option = Options()
-    new_game = Tournament()
-    validate = Validation()
+
     print(f'{PADDING}\n{WELCOME}\n{PADDING}')
     game_counter = 0
-    random_team = new_game.__initial_tournament__()
-    new_game.get_fixtures()
-    new_game.__print_starting_info__()
-    total_games = int(new_game.__total_games_per_round__())*int(new_game.total_rounds)
+
+    print("[1] Play a new game")
+    print("[2] Continue with a league")
+
+    users_pick = input("Enter choice: ")
+
+    if users_pick == '1':
+        option = Options()
+        new_game = Tournament()
+        validate = Validation()
+
+        random_team = new_game.__initial_tournament__()
+        new_game.get_fixtures()
+        new_game.__print_starting_info__()
+        total_games = int(new_game.__total_games_per_round__())*int(new_game.total_rounds)
+
+    # elif users_pick == '2':
+    #     print("Reading from database....")
+    #     database = abstract_model()
+
+
+
+    else:
+        exit("You don´t deserve us")
+
 
     while game_counter < total_games:
-
         print(option.show_options())
+
         the_option = option.get_option()
         if validate.validate_limit(the_option, 1, 4) or the_option == "":
             if the_option == '':
@@ -75,17 +96,38 @@ def main():
                 freeze_screen()
 
             elif the_option == '3':
-                print(f'\nOPTION {the_option}\nThe stats are not implemented yet, sorry!')
+
+                print(option.show_stat_options())
+                stat_option = input("Pick your stat: ")
+
+                if stat_option == '1':
+                    print("Biggest Win(Jóhannes): X vs Y, 5 - 1.")
+
+                elif stat_option == '2':
+                    print("Biggest loss(Birnir): X vs Y, 5 - 1.")
+
+                elif stat_option == '3':
+                    print("Most games won in a row(Þórarinn): 6")
+
+                else:
+                    print("NOT AN OPTION!! ")
+
                 freeze_screen()
+
+
 
 
             elif the_option == '4':
                 print('You can´t leave us BITCH! ')
                 freeze_screen()
+                #todo: implement write out
+                #writeout function
+                #quic
 
-
-    #the end of the loop, it shows the league standings
+    # the end of the loop, it shows the league standings
     print(new_game)
+
+
 
 
 main()
