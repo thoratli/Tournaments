@@ -52,7 +52,6 @@ class Validation():
         except:
             print(f"Enter a number from {min} to {max}")
 
-
     def validate_options(self, option):
         """Validates options and returns the options if it´s acceptable"""
 
