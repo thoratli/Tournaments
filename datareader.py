@@ -1,4 +1,6 @@
 import csv
+
+#These are the rows in the CSV
 TOURNAMENT_NAME = 0
 ID = 1
 ROUNDS = 2
