@@ -34,7 +34,9 @@ class Tournament():
         self.set_players_name()
 
         #refactor this shit
+        print("\n", PADDING)
         print(f"\n{self.name} is almost ready to start ...\n")
+        print(PADDING)
 
         self.print_random_teamlist(6)
 
@@ -184,7 +186,6 @@ class Tournament():
     def print_fixtures(self):
         """Prints all fixtures for tournament"""
 
-        print("  ---- FIXTURES ----")
         for game,teams in self.fixtures.items():
             print(f"Game nr {game+1}: ", end="")
             number_of_teams = 0
