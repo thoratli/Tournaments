@@ -38,7 +38,7 @@ def main():
 
         print(option.show_options())
         the_option = option.get_option()
-        if validate.validate_limit((the_option), 1, 4) or the_option == "":
+        if validate.validate_limit(the_option, 1, 4) or the_option == "":
             if the_option == '':
                 dict_key = game_counter%int(new_game.__total_games_per_round__())
                 print(LINES)
@@ -61,7 +61,7 @@ def main():
             elif the_option == '1':
                 print(LINES)
                 print(f"           ~~~~~ {new_game.name} ~~~~~")
-                print(f'\nYou are playing {new_game.total_rounds}rounds of the following games')
+                print(f'\nYou are playing {new_game.total_rounds} rounds of the following games')
                 print(LINES)
 
                 #todo: print only unplayed games or games with scores
