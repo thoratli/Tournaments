@@ -18,56 +18,94 @@ class Tournament():
         self.total_rounds = 0
         self.fixtures = {}
         self.randomlist = ['Real Madrid', 'Barcelona', 'Liverpool', 'Iceland', 'Brazil',
-                           'PSG', '1 star', '2 star', '1 star', '3 star', '4 star','Lowest star',
-                           'Everton', 'FifaRandomRule', 'Chelsea', 'Basel', 'Manchester City',
+                           'PSG', '1 star', '2 star', 'Spain', '3 star', '4 star','Lowest star',
+                           'Everton', 'Chelsea', 'Basel', 'Manchester City',
                            'IcelanderTeam', 'Manchester United', 'Arsenal', 'Leicester', 'Ajax',
                            'Atletico Madrid', 'Tottenham', 'Bayern Munchen', 'B. Dortmund', 'Juventus',
-                           'Roma', 'Inter Milan']
-
+                           'Roma', 'Inter Milan', 'Colombia', 'England', 'Sweden', 'Scandinavia', 'Italy',
+                           'Burnley', 'Sevilla']
 
 
     def __initial_tournament__(self):
+
         self.name = self.get_tournament_name()
         self.total_players = self.get_total_players()
         self.total_rounds = self.get_rounds()
         self.set_players_name()
 
         #refactor this shit
-        while True:
-            play_random = input(f"You want to have one random team throughout the -- {self.name} -- league [Y/n]: ").lower()
-            if play_random in 'yY ':
-                #Búa til lista með random liðum
-                rand_teams = self.get_random_teams()
+        print(f"\n{self.name} is almost ready to start ...\n")
 
-                # Prenta út hver er hvaða lið
-                self.print_assigned_teams(self.players_list, rand_teams)
+        self.print_random_teamlist(6)
 
+        play_random = input(f"You want to play with one random team from our list [Y/n]: ")
 
-                # self.get_random_team() # commeentaði þetta út í bili.
-                for i in range(self.total_players):
-                    self.players_list[i].name += " " + "(" + rand_teams[i] + ")" # Bæti hér við random liðinu fyrir aftan nafnið á spilaranum.
-                return self.players_list
+        if play_random in "yY ":
+            #Búa til lista með random liðum
+            rand_teams = self.get_random_teams()
 
-            elif play_random in 'nN':
-                random_team_choice = input("\nYou want us to choose random teams for every game? [Y/n]: ")
-                if random_team_choice in "Yy":
-                    return random_team_choice # Returning this string if user wants random teams every game
-                else:
-                    return # Returning nothing if user chooses not to have random teams every game
+            # Prenta út hver er hvaða lið
+            self.print_assigned_teams(self.players_list, rand_teams)
+
+            # self.get_random_team() # commeentaði þetta út í bili.
+            for i in range(self.total_players):
+                self.players_list[i].name += " " + "(" + rand_teams[i] + ")" # Bæti hér við random liðinu fyrir aftan nafnið á spilaranum.
+            return self.players_list
+
+        elif play_random in "nN":
+            random_team_choice = input("\nYou want us to choose random teams for every game? [Y/n]:")
+            if random_team_choice in "Yy ":
+                return random_team_choice # Returning this string if user wants random teams every game
             else:
-                print("Please enter Y or N ! ")
+                return # Returning nothing if user chooses not to have random teams every game
+        else:
+            print("Please enter Y or N ! ")
 
+    def get_tournament_name(self):
+        """Returns the input of the tournament name"""
+        return input("What is the name of your League: ")
+
+    def get_total_players(self):
+        """Allows participants to enter number of competitors """
+
+        while True:
+            players = input("How many players: ")
+            if self.validate.validate_integer(players):
+                players = int(players)
+                if self.validate.validate_limit(players, 2):
+                    return int(players)
+
+    def get_rounds(self):
+        """Allows user to enter the number of rounds they want to play
+        and returns that number"""
+
+        while True:
+            number = input("How many rounds you want to play? ")
+            if self.validate.validate_integer(number):
+                if self.validate.validate_limit(number, 1):
+                    return number
+
+    def set_players_name(self):
+        """Allows participants to enter names for themselves"""
+        players = 0
+
+        for i in range(int(self.total_players)):
+            while players == i:
+                team_name = input(f'Participant nr {players +1}: ')
+                # if self.validate.validate_name_input(team_name):
+                new_team = Team(team_name)
+                self.players_list.append(new_team)
+                players += 1
 
     def print_assigned_teams(self, players_list, rand_teams):
-        print("-- Here are the teams assigned for this league --")
-        print("")
+        """Prints assigned team for each player"""
+
+        print("-- \nHere are the teams assigned for this league --\n")
         for i in range(self.total_players):
-            print(f"{players_list[i]} -> {rand_teams[i]}")
-            print("")
-
-
+            print(f"{str(players_list[i]).capitalize()} -> {rand_teams[i]}\n")
 
     def get_random_teams(self):
+        """Creates a list of random teams of size total players and returns it"""
         randlist = []
         counter = 0
         while counter < self.total_players:
@@ -77,33 +115,10 @@ class Tournament():
                 counter += 1
         return randlist
 
-
-
-
-    def get_tournament_name(self):
-        name = input("What is the name of your League: ")
-        return name
-
-
-
-    def set_players_name(self):
-
-        players = 0
-        #todo implement id system for user
-
-        for i in range(int(self.total_players)):
-            while players == i:
-                team_name = input(f'Participant nr {players +1}: ')
-                if self.validate.validate_name_input(team_name):
-                    new_team = Team(team_name)
-                    self.players_list.append(new_team)
-                    players += 1
-
-
-
     def get_random_team(self):
+        """Assigns a team to a players from the randomlist """
+
         players = 0
-        # todo implement id system for user
         checklist = []
         for i in range(int(self.total_players)):
             while players == i:
@@ -115,6 +130,7 @@ class Tournament():
                     players += 1
 
     def play_next_game(self, game_nr):
+        """Plays the next game and returns the fixtures"""
 
         first_done = False
         print("\n\nNext game is: \n")
@@ -128,35 +144,13 @@ class Tournament():
         print("")
         return self.fixtures[game_nr][0], self.fixtures[game_nr][1]
 
-
-    def get_total_players(self):
-
-        while True:
-            players = input("How many players: ")
-            if self.validate.validate_integer(players):
-                if int(players) <= 1:
-                    print("You can´t play a tournament on your own. Call your friends! ")
-                if int(players) > 1:
-                    return int(players)
-
-
-    def get_rounds(self):
-        while True:
-            try:
-                number = int(input("How many rounds you want to play? "))
-                if number > 0:
-                    return number
-                else:
-                    print("Please enter a number >0 ! ")
-            except:
-                print("Please enter a number! ")
-
-
     def __total_games_per_round__(self):
+        """Returns total games per round"""
+
         return f"{round(((self.total_players*(self.total_players-1))/2))}"
 
-
     def create_game(self, team_list):
+        """Creates a list of games"""
 
         game = []
         while len(game) < 2:
@@ -165,7 +159,6 @@ class Tournament():
                 game.append(team)
 
         return game
-
 
     def get_fixtures(self):
 
@@ -180,25 +173,16 @@ class Tournament():
                 counter += 1
 
     def get_one_fixture(self):
+        """Returns one fixture from randomlist"""
 
         while True:
             team1 = random.choice(self.randomlist)
             team2 = random.choice(self.randomlist)
-
-
             teams = f'{team1} VS {team2}'
             return teams
 
-
-            # happy = input("Are you happy with the teams? [Y/n] \n")
-            #
-            # if happy in 'Yy ':
-            #     return teams
-            # else:
-            #     print("\nCry me a river, We will give you new teams ... \n")
-
-
     def print_fixtures(self):
+        """Prints all fixtures for tournament"""
 
         print("  ---- FIXTURES ----")
         for game,teams in self.fixtures.items():
@@ -212,17 +196,36 @@ class Tournament():
                     print(f"{team}", end=" ")
             print("")
 
-
-
     def __print_starting_info__(self):
-        retval = f'\nSo {self.total_players} players are competing.\n'
+        """Returns a starting info before the tournament starts"""
+
+        retval = f'So {self.total_players} players are competing.\n'
         retval += f'You wanted to play {self.total_rounds} rounds.\n'
         retval += f'In total you will play {int(self.__total_games_per_round__())*int(self.total_rounds)} games'
         print(retval)
         return retval
 
+    def print_random_teamlist(self, teams_in_one_line):
+        """Prints all teams from randomlist"""
+
+        retval = ""
+        length = 0
+
+        for i in self.randomlist:
+            length += len(i)
+            if i == self.randomlist[-1]:
+                retval += i
+            elif length >= teams_in_one_line*10:
+                retval += "\n"
+                length = 0
+            else:
+                retval += f"{i}, "
+
+        print(retval, "\n")
 
     def __str__(self):
+        #todo: Refactor __str__ function for tournament
+
         print("\n"+PADDING+"\n\n")
 
         for i in range(MIDDLE-int(len(self.name)/2)):
@@ -234,7 +237,6 @@ class Tournament():
         for i in range(MIDDLE-int(len(self.name)/2)):
             print(" ", end="")
         print("\n")
-
 
         print(PADDING, "\n")
 
