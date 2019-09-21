@@ -11,6 +11,9 @@ SCORED = 8
 CONCEDED = 9
 DIFFERENCE = 10
 POINTS = 11
+HEADER_FOR_TOURNAMENT = 5
+HEADER_PLAYERS_LOWER = 6
+HEADER_PLAYERS_HIGHER = 10
 
 
 class abstract_model():
@@ -18,7 +21,6 @@ class abstract_model():
         self.file_list = []
         self.tournaments = {}
         self.players_data = {}
-
 
 
     def read_data(self,filename):
@@ -30,44 +32,25 @@ class abstract_model():
             for row in reader:
                 self.file_list.append(row)
 
+    def _print_headers_for_data(self, minlimit: int, maxlimit=None):
+        """Prints out the headers of the csv file, minlimit 4 for tournament,
+        minlimit 5 for players and maxlimit 10"""
 
-    def print_data(self):
-
-
-        self._print_headers()
-        for index, value in enumerate(self.file_list[1:]):
-            print(value)
-        #     id = (value[index+1])
-        #     if id not in listinn:
-        #         listinn.append(id)
-        #         count_values += 1
-        #
-        # print(count_values)
-        # print(len(listinn))
-
-
-            # print(leaguename + " Id: ", id)
-
-
-    def _print_headers(self):
-        for value in self.file_list[0]:
-            print(value, end=" ")
+        for index, value in enumerate(self.file_list[0]):
+            if maxlimit:
+                if minlimit<=index<=maxlimit:
+                    print(value, end=" ")
+            else:
+                if index <= minlimit:
+                    print(value, end=" ")
         print("\n")
 
     def get_tournament_data(self):
-
-        # total_players = self.get_total_players()
-        print("---------------------------------------------------------\n")
-        print("These are the Tournaments in the database with all data:\n")
-        print("---------------------------------------------------------\n")
-
-        # self._print_headers()
 
         tournament_number = 1
 
         # starting from 1 row to skip headers
         for row in self.file_list[1:]:
-            #information for the tournament
             name = self.file_list[tournament_number][TOURNAMENT_NAME]
             id = self.file_list[tournament_number][ID]
             rounds = self.file_list[tournament_number][ROUNDS]
@@ -101,14 +84,29 @@ class abstract_model():
             tournament_number += 1
 
     def print_tournament_data(self):
+        """Prints out tournament data from database"""
 
-        #prints out the Tournament ID and its data
+        print("---------------------------------------------------------\n")
+        print("These are the Tournaments in the database with all data:\n")
+        print("---------------------------------------------------------\n")
+
+        self._print_headers_for_data(HEADER_FOR_TOURNAMENT)
+
+
         for key,value in self.tournaments.items():
             print("Tournament ID:", key, ",Tournament data:", value)
         print("\n")
 
     def print_player_data(self):
-        #prints out each player and his attributes
+        """Prints out players data from database"""
+
+        print("---------------------------------------------------------\n")
+        print("These are the Players in the database with all data:\n")
+        print("---------------------------------------------------------\n")
+
+        self._print_headers_for_data(HEADER_PLAYERS_LOWER,HEADER_PLAYERS_HIGHER)
+
+
         for key,value in self.players_data.items():
             print("Player:", key, " Attributes:", value)
 
