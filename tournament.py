@@ -86,7 +86,7 @@ class Tournament():
             number = input("How many rounds you want to play? ")
             if self.validate.validate_integer(number):
                 if self.validate.validate_limit(number, 1):
-                    return number
+                    return int(number)
 
     def set_players_name(self):
         """Allows participants to enter names for themselves"""
