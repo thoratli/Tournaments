@@ -6,7 +6,7 @@ class Validation():
         self.options = Options()
 
     def validate_integer(self, string: str):
-
+        """ Validates if parameter is integer and return True, otherwise False """
         try:
             int(string)
             return True
@@ -15,7 +15,7 @@ class Validation():
             return False
 
     def validate_score_input(self, score):
-
+        """ Validates the parameter score and returns True if """
         try:
             home, away = score.split()
             home = int(home)
@@ -24,19 +24,37 @@ class Validation():
                 return True
             print("This can´t be correct! ")
         except:
-            print("\n\nThis didn't work. Try again!!")
+            print('\n\nThis didn\'t work. Try again!!')
             return False
 
-
-    def validate_rounds(self, rounds):
-        if int(rounds) > 0:
+    def validate_limit(self, number, min=None, max=None):
+        """Validates upper and lower limits on input"""
+        if number == "":
             return True
-        print("The lowest number available is 1.")
-        return False
 
+        try:
+            number = int(number)
+
+            if max:
+                if number <= max:
+                    if number >= min:
+                        return True
+
+                    else:
+                        print(f"\nThe lowest number available is {min}.")
+                else:
+                    print(f"\nThe highest number available is {max}.")
+
+
+            if number >= min:
+                return True
+
+        except:
+            print(f"Enter a number from {min} to {max}")
 
 
     def validate_options(self, option):
+        """Validates options and returns the options if it´s acceptable"""
 
         try:
             if option == '':
@@ -48,3 +66,4 @@ class Validation():
             return False
         except:
             print("Integer! Please!")
+            return False
