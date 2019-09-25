@@ -4,6 +4,7 @@ from validation import *
 from Files.mysqldata import DatabaseSearcher
 import time
 from game import Game
+from team import Team
 
 from datareader import abstract_model
 from stats import Statistics
@@ -42,12 +43,13 @@ def main():
 
     if users_pick == '1':
         new_game = Tournament()
-
         random_team = new_game.__initial_tournament__()
         new_game.get_fixtures()
         new_game.__print_starting_info__()
         total_games = int(new_game.__total_games_per_round__())*int(new_game.total_rounds)
         game_counter = new_game.game_counter
+        game_players = Team()
+
 
     elif users_pick == '2':
         print("\nReading from database....")
@@ -61,12 +63,9 @@ def main():
             if Database.get_tournament_by_id(id):
                 name, players, rounds, game_counter = Database.get_tournament_by_id(id)
                 print("LeagueName:",name,"\nTotal Players: ", players, "\nTotal Rounds: ", rounds)
-                players_list = Database.get_players_data(id, players)
-                print("List of players: ", players_list)
-
+                players_dict = Database.get_players_data(id, players)
+                print("List of players: ", players_dict)
                 break
-
-
 
         while True:
             password = input("Enter password or q to quit application: ")
@@ -80,6 +79,8 @@ def main():
 
 
                 new_game = Tournament(name, rounds, players, game_counter)
+                new_game.set_players_name(players_dict)
+
                 print("nr of players: ", players)
                 print("Total rounds: ", rounds)
                 print("------------------")
