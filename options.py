@@ -15,5 +15,14 @@ class Options:
         return retval
 
     def get_option(self):
-        option = input("Enter an option: ")
+        option = input("Enter an option: ").strip()
         return option
+
+
+    def show_stat_options(self):
+        retval = "[1] Biggest Win \n"
+        retval += '[2] Biggest loss \n'
+        retval += "[3] Most games won in a row\n"
+        retval += "Any other suggestions? email us, t@tourno.sick\n"
+        return retval
+

@@ -1,12 +1,33 @@
 class Team:
-    def __init__(self, name=str):
+    def __init__(self, name=str, points=None, played=None, scored=None, conceded=None):
         self.id = 0
-        self.player_dict = {}
+
         self.name = name
-        self.points = 0
-        self.played_games = 0
-        self.scored_goals = 0
-        self.conceded_goals = 0
+        if points:
+            self.points = points
+        else:
+            self.points = 0
+
+        if played:
+            self.played_games = played
+        else:
+            self.played_games = 0
+
+        if scored:
+            self.scored_goals = scored
+        else:
+            self.scored_goals = 0
+
+        if conceded:
+            self.conceded_goals = conceded
+        else:
+            self.conceded_goals = 0
+
+        self.player_dict = {}
+        # self.name = name
+        # self.points = 0
+        # self.scored_goals = 0
+        # self.conceded_goals = 0
 
 
     def get_name(self):
