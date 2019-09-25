@@ -129,6 +129,7 @@ class Tournament():
 
     def set_players_name(self, players_dict=None):
         """Allows participants to enter names for themselves"""
+        players = 0
         if players_dict:
             for key, value in players_dict.items():
                 name = key
