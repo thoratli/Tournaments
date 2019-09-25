@@ -11,7 +11,7 @@ class Validation():
             int(string)
             return True
         except:
-            print("Please enter an integer!\n")
+            print("\nPlease enter an integer!\n")
             return False
 
     def validate_score_input(self, score):
