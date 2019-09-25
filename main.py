@@ -1,7 +1,10 @@
 from tournament import Tournament
 # from options import Options
 from validation import *
+from Files.mysqldata import DatabaseSearcher
+import time
 from game import Game
+
 from datareader import abstract_model
 from stats import Statistics
 
@@ -29,6 +32,8 @@ def main():
 
     print(f'{PADDING}\n{WELCOME}\n{PADDING}')
     game_counter = 0
+    validate = Validation()
+    option = Options()
 
     print("[1] Play a new game")
     print("[2] Continue with a league")
@@ -36,26 +41,68 @@ def main():
     users_pick = input("Enter choice: ")
 
     if users_pick == '1':
-        option = Options()
         new_game = Tournament()
-        validate = Validation()
 
         random_team = new_game.__initial_tournament__()
         new_game.get_fixtures()
         new_game.__print_starting_info__()
         total_games = int(new_game.__total_games_per_round__())*int(new_game.total_rounds)
+        game_counter = new_game.game_counter
 
-    # elif users_pick == '2':
-    #     print("Reading from database....")
-    #     database = abstract_model()
+    elif users_pick == '2':
+        print("\nReading from database....")
+        time.sleep(2)
+        print("\n", "\nAvailable leagues:")
+        Database = DatabaseSearcher()
+        Database.print_available_leagues()
 
+        while True:
+            id = input("Enter the ID for the league you want to play? ")
+            if Database.get_tournament_by_id(id):
+                name, players, rounds, game_counter = Database.get_tournament_by_id(id)
+                print("LeagueName:",name,"\nTotal Players: ", players, "\nTotal Rounds: ", rounds)
+                players_list = Database.get_players_data(id, players)
+                print("List of players: ", players_list)
+
+                break
+
+
+
+        while True:
+            password = input("Enter password or q to quit application: ")
+
+            if password in "Qq":
+                quit()
+
+            if Database.validate_password(id, password) is True:
+                print("Collecting data from database ...")
+                time.sleep(2)
+
+
+                new_game = Tournament(name, rounds, players, game_counter)
+                print("nr of players: ", players)
+                print("Total rounds: ", rounds)
+                print("------------------")
+                total_games = int(new_game.__total_games_per_round__()) * int(new_game.total_rounds)
+                # random_team
+                # random_team = new_game.__initial_tournament__()
+
+                #get the form from the database
+                # if form is randomTeams team = Liverpool blabla
+
+
+                break
+            else:
+                print("Incorrect password! Try again!!")
 
 
     else:
         exit("You don´t deserve us")
 
-
+    print("GameCounter: :", game_counter)
+    print("TotalgamesPlayed:", total_games)
     while game_counter < total_games:
+        new_game.game_counter += 1
         print(option.show_options())
 
         the_option = option.get_option()
