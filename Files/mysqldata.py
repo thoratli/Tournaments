@@ -58,12 +58,14 @@ class DatabaseSearcher:
         self.curs.execute(query)
         records = self.curs.fetchall()
         # print(records)
-        namelist = []
+        namedict = {}
 
-        for i,v in enumerate(records):
-            namelist.append(records[i][0])
+        for i,attrib in enumerate(records):
+            name = records[i][0]
+            namedict[name] = []
+            namedict[name].append(attrib[1:])
 
-        return namelist
+        return namedict
 
     def print_available_leagues(self):
         query = "select * from tournament"
