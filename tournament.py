@@ -127,17 +127,28 @@ class Tournament():
                 if self.validate.validate_limit(number, 1):
                     return int(number)
 
-    def set_players_name(self):
+    def set_players_name(self, players_dict=None):
         """Allows participants to enter names for themselves"""
-        players = 0
+        if players_dict:
+            for key, value in players_dict.items():
+                name = key
+                for attr in value:
+                    points = attr[0]
+                    scored = attr[1]
+                    conceded = attr[2]
+                    played = attr[3]
+                    new_team = Team(name, points, played, scored, conceded)
+                    print(new_team)
+                    self.players_list.append(new_team)
 
-        for i in range(int(self.total_players)):
-            while players == i:
-                team_name = input(f'Participant nr {players +1}: ')
-                # if self.validate.validate_name_input(team_name):
-                new_team = Team(team_name)
-                self.players_list.append(new_team)
-                players += 1
+        else:
+            for i in range(int(self.total_players)):
+                while players == i:
+                    team_name = input(f'Participant nr {players +1}: ')
+                    # if self.validate.validate_name_input(team_name):
+                    new_team = Team(team_name)
+                    self.players_list.append(new_team)
+                    players += 1
 
     def print_assigned_teams(self, players_list, rand_teams):
         """Prints assigned team for each player"""
