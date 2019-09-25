@@ -7,15 +7,38 @@ PADDING = "--------------------------------------------------------------"
 MIDDLE = int(len(PADDING)/2)
 
 class Tournament():
-    def __init__(self):
+    def __init__(self, name=None, rounds=None, players=None, game_counter=None, players_list=None):
+        if name:
+            self.name = name
+        else:
+            self.name = ""
+
+        if rounds:
+            self.total_rounds = rounds
+        else:
+            self.total_rounds = 0
+
+        if players:
+            self.total_players = players
+        else:
+            self.total_players = 0
+
+        if game_counter:
+            self.game_counter = game_counter
+        else:
+            self.game_counter = 0
+
+        if players_list:
+            self.players_list = players_list
+            for team in players_list:
+                self.player = Team(team.name, team.points, team.played_games, team.scored_goals, team.conceded_goals)
+        else:
+            self.players_list = []
+
+
         self.options = Options()
         self.validate = Validation()
-        self.player = Team()
-        self.name = ""
-        self.players_list = []
-        self.rounds = 0
-        self.total_players = 0
-        self.total_rounds = 0
+        # self.player = Team()
         self.fixtures = {}
         self.randomlist = ['Real Madrid', 'Barcelona', 'Liverpool', 'Iceland', 'Brazil',
                            'PSG', '1 star', '2 star', 'Spain', '3 star', '4 star','Lowest star',
@@ -25,6 +48,21 @@ class Tournament():
                            'Roma', 'Inter Milan', 'Colombia', 'England', 'Sweden', 'Scandinavia', 'Italy',
                            'Burnley', 'Sevilla']
 
+    def get_password(self):
+        """Gets the passwords from user and returns it"""
+        #todo: implement hashing
+        #todo: implement sending the password to email
+        #todo: implement recover on password
+
+        while True:
+            password = input("Enter a easy password to access the league later: ")
+            print("\n", "Your password will be: ",password, "\n")
+            password2 = input("Repeat your password:  ")
+            if password == password2:
+                print("Remember: ", password)
+                return password
+            else:
+                print("Didn't match. Try again: ")
 
     def __initial_tournament__(self):
 
@@ -32,6 +70,7 @@ class Tournament():
         self.total_players = self.get_total_players()
         self.total_rounds = self.get_rounds()
         self.set_players_name()
+        self.password = self.get_password()
 
         #refactor this shit
         print("\n", PADDING)
