@@ -91,7 +91,6 @@ def main():
                 #get the form from the database
                 # if form is randomTeams team = Liverpool blabla
 
-
                 break
             else:
                 print("Incorrect password! Try again!!")
@@ -100,8 +99,7 @@ def main():
     else:
         exit("You don´t deserve us")
 
-    print("GameCounter: :", game_counter)
-    print("TotalgamesPlayed:", total_games)
+
     while game_counter < total_games:
         new_game.game_counter += 1
         print(option.show_options())
