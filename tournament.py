@@ -92,14 +92,15 @@ class Tournament():
             for i in range(self.total_players):
                 # todo: capitalize rand_teams[i] in the string
                 self.players_list[i].name += " " + "(" + rand_teams[i] + ")" # Bæti hér við random liðinu fyrir aftan nafnið á spilaranum.
-            return self.players_list
+
+            return self.players_list, rand_teams
 
         elif play_random in "nN":
             random_team_choice = input("\nYou want us to choose random teams for every game? [Y/n]:")
             if random_team_choice in "Yy ":
-                return random_team_choice # Returning this string if user wants random teams every game
+                return random_team_choice, False # Returning this string if user wants random teams every game
             else:
-                return # Returning nothing if user chooses not to have random teams every game
+                return False, False# Returning nothing if user chooses not to have random teams every game
         else:
             print("Please enter Y or N ! ")
 
