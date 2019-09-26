@@ -1,38 +1,36 @@
 from tournament import Tournament
 # from options import Options
 from validation import *
-from Files.mysqldata import DatabaseSearcher
+from mysqldata import DatabaseSearcher
 import time
 from game import Game
 from team import Team
-
-from datareader import abstract_model
-from stats import Statistics
 
 SPACE = "                                             "
 LINES = "\n-----------------------------------------------\n"
 PADDING = "\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n"
 WELCOME = f"{SPACE}########## ########  ##    ##  #########   ##   ##     ####         ###       ###      #########  ##   ##   ##########\n" \
-          f"{SPACE}    ##     ##    ##  ##    ##  ##     ##   ###  ##    ##  ##       ## ##     ## ##     ##         ###  ##       ##    \n" \
-          f"{SPACE}    ##     ##    ##  ##    ##  #########   ##  ###   ########     ##   ##   ##   ##    #########  ##  ###       ##    \n" \
-          f"{SPACE}    ##     ##    ##  ##    ##  ##      ##  ##   ##  ##      ##   ##     ## ##     ##   ##         ##   ##       ##    \n" \
-          f"{SPACE}    ##     ########  ########  ##      ##  ##   ## ##        ## ##       ###       ##  #########  ##   ##       ##    \n" \
-          f"{SPACE}\n" \
-          f"{SPACE}\n" \
-          f"{SPACE}                 ### ###   #### ####  ##### ## ##  ##     ######  ##  ##  ####     ###   ### ##### #####  ####\n" \
-          f"{SPACE}  ###########    ### #     ##   ##    ## ## ## ### ##       ##    ##  ##  ##      ##    ##   ## ## ## ##  ##  \n" \
-          f"{SPACE}  ###########    ####      #### ####  ##### ## ## ###       ##    ######  ####      #  ##    ## ## #####  ####\n" \
-          f"{SPACE}                 ### #     ##   ##    ##    ## ##  ##       ##    ##  ##  ##       ##   ##   ## ## ##  #  ##  \n" \
-          f"{SPACE}                 ###  ###  #### ####  ##    ## ##  ##       ##    ##  ##  ####    ##     ##  ##### ##   # #### \n"
+    f"{SPACE}    ##     ##    ##  ##    ##  ##     ##   ###  ##    ##  ##       ## ##     ## ##     ##         ###  ##       ##    \n" \
+    f"{SPACE}    ##     ##    ##  ##    ##  #########   ##  ###   ########     ##   ##   ##   ##    #########  ##  ###       ##    \n" \
+    f"{SPACE}    ##     ##    ##  ##    ##  ##      ##  ##   ##  ##      ##   ##     ## ##     ##   ##         ##   ##       ##    \n" \
+    f"{SPACE}    ##     ########  ########  ##      ##  ##   ## ##        ## ##       ###       ##  #########  ##   ##       ##    \n" \
+    f"{SPACE}\n" \
+    f"{SPACE}\n" \
+    f"{SPACE}                 ### ###   #### ####  ##### ## ##  ##     ######  ##  ##  ####     ###   ### ##### #####  ####\n" \
+    f"{SPACE}  ###########    ### #     ##   ##    ## ## ## ### ##       ##    ##  ##  ##      ##    ##   ## ## ## ##  ##  \n" \
+    f"{SPACE}  ###########    ####      #### ####  ##### ## ## ###       ##    ######  ####      #  ##    ## ## #####  ####\n" \
+    f"{SPACE}                 ### #     ##   ##    ##    ## ##  ##       ##    ##  ##  ##       ##   ##   ## ## ##  #  ##  \n" \
+    f"{SPACE}                 ###  ###  #### ####  ##    ## ##  ##       ##    ##  ##  ####    ##     ##  ##### ##   # #### \n"
 
 def freeze_screen():
     input("\nPRESS ANY KEY TO CONTINUE")
 
 
 def main():
+    Database = DatabaseSearcher()
 
     print(f'{PADDING}\n{WELCOME}\n{PADDING}')
-    game_counter = 0
+    # game_counter = 0
     validate = Validation()
     option = Options()
 
@@ -43,19 +41,36 @@ def main():
 
     if users_pick == '1':
         new_game = Tournament()
-        random_team = new_game.__initial_tournament__()
-        new_game.get_fixtures()
-        new_game.__print_starting_info__()
+        random_team, random_team_list = new_game.__initial_tournament__()
+
+        # fixedteams if returned false
+        # randomrounds if return yY
+        # randomlist if returned randomlist
+
+        if type(random_team) == list:
+            print("SKOHH")
+            fixed = '1'
+        elif random_team is False:
+            fixed = '0'
+        elif random_team in "Yy ":
+            fixed = '0'
+
+
+
+        # new_game.get_fixtures()
+        # new_game.__print_starting_info__()
         total_games = int(new_game.__total_games_per_round__())*int(new_game.total_rounds)
         game_counter = new_game.game_counter
-        game_players = Team()
+
+        id = Database.create_new_tournament(new_game.name, new_game.total_players,
+            new_game.total_rounds, new_game.password, new_game.players_list, fixed, list(random_team_list))
+        # game_players = Team()
 
 
     elif users_pick == '2':
         print("\nReading from database....")
         time.sleep(2)
         print("\n", "\nAvailable leagues:")
-        Database = DatabaseSearcher()
         Database.print_available_leagues()
 
         while True:
@@ -64,7 +79,6 @@ def main():
                 name, players, rounds, game_counter = Database.get_tournament_by_id(id)
                 print("LeagueName:",name,"\nTotal Players: ", players, "\nTotal Rounds: ", rounds)
                 players_dict = Database.get_players_data(id, players)
-                print("List of players: ", players_dict)
                 break
 
         while True:
@@ -76,7 +90,6 @@ def main():
             if Database.validate_password(id, password) is True:
                 print("Collecting data from database ...")
                 time.sleep(2)
-
 
                 new_game = Tournament(name, rounds, players, game_counter)
                 new_game.set_players_name(players_dict)
@@ -157,24 +170,18 @@ def main():
 
                 else:
                     print("NOT AN OPTION!! ")
-
-                freeze_screen()
-
-
-
+                    freeze_screen()
 
             elif the_option == '4':
-                print('You can´t leave us BITCH! ')
-                freeze_screen()
-                #todo: implement write out
-                #writeout function
-                #quic
+                print("Writing out data...")
+                time.sleep(2)
+                Database.update_played_games_in_tournament_by_id(id, game_counter)
+                print("All set! See you soon!")
+                # Database.update attributes for teams
+                exit()
 
     # the end of the loop, it shows the league standings
     print(new_game)
-
-
-
 
 main()
 
