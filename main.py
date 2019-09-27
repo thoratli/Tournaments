@@ -48,23 +48,27 @@ def main():
         # randomlist if returned randomlist
 
         if type(random_team) == list:
-            print("SKOHH")
-            fixed = '1'
+            fixed = True
         elif random_team is False:
-            fixed = '0'
+            fixed = False
         elif random_team in "Yy ":
-            fixed = '0'
+            fixed = False
 
-
-
-        # new_game.get_fixtures()
         # new_game.__print_starting_info__()
         total_games = int(new_game.__total_games_per_round__())*int(new_game.total_rounds)
         game_counter = new_game.game_counter
 
-        id = Database.create_new_tournament(new_game.name, new_game.total_players,
-            new_game.total_rounds, new_game.password, new_game.players_list, fixed, list(random_team_list))
+        if type(random_team_list) is list:
+            id = Database.create_new_tournament(new_game.name, new_game.total_players,
+                new_game.total_rounds, new_game.password, new_game.players_list, fixed, list(random_team_list))
+        else:
+            id = Database.create_new_tournament(new_game.name, new_game.total_players,
+                                            new_game.total_rounds, new_game.password, new_game.players_list, fixed)
+
         # game_players = Team()
+        new_game.get_fixtures()
+
+
 
 
     elif users_pick == '2':
@@ -135,7 +139,14 @@ def main():
                         score = score.split()
                         a_game = Game(score[0], score[1], home, away)
                         a_game.handle_scores()
+                        # print("ID:", id, "GAMECOUNTER:", game_counter)
                         game_counter += 1
+
+                        Database.update_played_games_in_tournament_by_id(id, game_counter)
+                        # parameters id, team.points, team.scored, team.conce, played
+
+                        for i in new_game.players_list:
+                            Database.update_players_attributes(i.id, i.points, i.scored_goals, i.conceded_goals, i.played_games)
                         break
 
             elif the_option == '1':
@@ -175,9 +186,8 @@ def main():
             elif the_option == '4':
                 print("Writing out data...")
                 time.sleep(2)
-                Database.update_played_games_in_tournament_by_id(id, game_counter)
+                # Database.update_played_games_in_tournament_by_id(id, game_counter)
                 print("All set! See you soon!")
-                # Database.update attributes for teams
                 exit()
 
     # the end of the loop, it shows the league standings

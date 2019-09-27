@@ -1,6 +1,11 @@
 class Team:
+    __USER_ID = 1
     def __init__(self, name=str, points=None, played=None, scored=None, conceded=None):
-        self.id = 0
+
+
+        self.id = Team.__USER_ID
+        Team.__USER_ID += 1
+
 
         self.name = name
         if points:
@@ -24,10 +29,7 @@ class Team:
             self.conceded_goals = 0
 
         self.player_dict = {}
-        # self.name = name
-        # self.points = 0
-        # self.scored_goals = 0
-        # self.conceded_goals = 0
+
 
 
     def get_name(self):

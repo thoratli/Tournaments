@@ -79,16 +79,15 @@ class DatabaseSearcher:
 
     def update_played_games_in_tournament_by_id(self, ID=int, played_games=int):
 
-        if self.validation.validate_integer(ID):
-            ID = str(ID)
-            played = str(played_games)
+        ID = str(ID)
+        played = str(played_games)
 
-            query = "UPDATE tournament " + "SET played_games = " + played + " WHERE id = " + ID + ";"
+        query = "UPDATE tournament " + "SET played_games = " + played + " WHERE id = " + ID + ";"
 
-            self.curs.execute(query)
-            self.connection.commit()
+        self.curs.execute(query)
+        self.connection.commit()
 
-    def create_new_tournament(self,name:str,total_players:str,total_rounds:str, password:str, namelist:list, fixed:bool, rand_list:list):
+    def create_new_tournament(self,name:str,total_players:str,total_rounds:str, password:str, namelist:list, fixed:bool, rand_list=None):
 
         total_players = str(total_players)
         rounds = str(total_rounds)
@@ -104,9 +103,15 @@ class DatabaseSearcher:
         self.curs.execute(sql, val)
         self.connection.commit()
         tournament_id = self.__get_newest_id()
-        self.__add_players_to_tournament(namelist, tournament_id, rand_list)
 
-    def __add_players_to_tournament(self, namelist, tournament_id, team):
+        if rand_list:
+            self.__add_players_to_tournament(namelist, tournament_id, rand_list)
+        else:
+            self.__add_players_to_tournament(namelist, tournament_id)
+
+        return tournament_id
+
+    def __add_players_to_tournament(self, namelist, tournament_id, team=False):
 
         points = 0
         scored = 0
@@ -117,14 +122,16 @@ class DatabaseSearcher:
         sql = "INSERT INTO team (name, points, scored_goals, conceded_goals, played_games, tournament_id, assigned_team) " \
               "VALUES (%s, %s, %s, %s, %s, %s, %s)"
 
-
-        print(len(namelist), "LEN AF NAMELIST")
-        print(len(team), "LEN AF TEAMLIST")
-        for index, value in enumerate(namelist):
-            val = (str(value), points, scored, conceded, played, tournament_id, team[index])
-            self.curs.execute(sql, val)
-            self.connection.commit()
-
+        if team:
+            for index, value in enumerate(namelist):
+                val = (str(value), points, scored, conceded, played, tournament_id, team[index])
+                self.curs.execute(sql, val)
+                self.connection.commit()
+        else:
+            for index, value in enumerate(namelist):
+                val = (str(value), points, scored, conceded, played, tournament_id, False)
+                self.curs.execute(sql, val)
+                self.connection.commit()
 
     def __get_newest_id(self):
 
@@ -132,6 +139,27 @@ class DatabaseSearcher:
             self.curs.execute(return_value)
             records = self.curs.fetchone()
             return records[0]
+
+    def update_players_attributes(self, id, points, scored, conceded, played):
+        id = str(id)
+        points = str(points)
+        scored = str(scored)
+        conceded = str(conceded)
+        played = str(played)
+
+        query = "UPDATE team " +\
+                "SET " \
+                "played_games = " + played +\
+                ", points = " + points +\
+                ", scored_goals = " + scored +\
+                ", conceded_goals = " + conceded +\
+                " WHERE id = " + id + ";"
+
+        # print(query)
+
+        self.curs.execute(query)
+        self.connection.commit()
+
 
 
 
