@@ -142,7 +142,6 @@ class Tournament():
                     conceded = attr[2]
                     played = attr[3]
                     new_team = Team(name, points, played, scored, conceded)
-                    print(new_team)
                     self.players_list.append(new_team)
 
         else:
