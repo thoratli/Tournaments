@@ -58,6 +58,7 @@ def main():
             print_message("Please try to enter 1 or 2")
 
 
+    #todo: refactor, make more simple
     #if new game, create instance and get the random team form
     if users_pick == '1':
         new_game = Tournament()
@@ -108,6 +109,7 @@ def main():
                 break
 
         while True:
+            #todo: implement if user want password protection
             password = input("Enter password or q to quit application: ")
             if password in "Qq":
                 quit()
@@ -121,6 +123,7 @@ def main():
                 print_message(f"WELCOME BACK TO {new_game.name}")
                 print(LINES)
                 total_games = int(new_game.__total_games_per_round__()) * int(new_game.total_rounds)
+
                 #todo get fixtures from database
                 # random_team
                 # random_team = new_game.__initial_tournament__()
@@ -188,7 +191,6 @@ def main():
                 freeze_screen(2)
 
             elif the_option == '3':
-
                 print(option.show_stat_options())
                 stat_option = input("Pick your stat: ")
 
