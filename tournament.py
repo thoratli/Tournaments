@@ -66,6 +66,8 @@ class Tournament():
             else:
                 print("Didn't match. Try again: ")
 
+
+    #remove this function and make more simple
     def __initial_tournament__(self):
 
         self.name = self.get_tournament_name()
