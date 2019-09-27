@@ -16,7 +16,7 @@ class DatabaseSearcher:
                                                       database='tournament',
                                                       user='root',
                                                       password='atli2369')
-            self.curs = self.connection.cursor()
+            self.curs = self.connection.cursor(buffered=True)
         except Error as e:
             print("Error reading data from MySQL table", e)
 
@@ -134,11 +134,33 @@ class DatabaseSearcher:
                 self.connection.commit()
 
     def __get_newest_id(self):
+        return_value = "SELECT id FROM tournament ORDER BY id DESC LIMIT 1;"
+        self.curs.execute(return_value)
+        records = self.curs.fetchone()
+        return records[0]
 
-            return_value = "SELECT id FROM tournament ORDER BY id DESC LIMIT 1;"
+    def find_next_player_id(self):
+        try:
+            return_value = "SELECT id FROM team ORDER BY id DESC LIMIT 1;"
             self.curs.execute(return_value)
             records = self.curs.fetchone()
-            return records[0]
+            return int(records[0])+1
+        except:
+            return False
+
+    def database_is_not_empty(self):
+        try:
+            return_value = "SELECT * from tournament;"
+            self.curs.execute(return_value)
+            records = self.curs.fetchone()
+            if len(records) == 0:
+                return False
+        except:
+            return True
+
+    def get_fixtures(self):
+        #todo: implement in database
+        pass
 
     def update_players_attributes(self, id, points, scored, conceded, played):
         id = str(id)
@@ -154,8 +176,6 @@ class DatabaseSearcher:
                 ", scored_goals = " + scored +\
                 ", conceded_goals = " + conceded +\
                 " WHERE id = " + id + ";"
-
-        # print(query)
 
         self.curs.execute(query)
         self.connection.commit()
