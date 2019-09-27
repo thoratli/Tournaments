@@ -7,7 +7,7 @@ from game import Game
 from team import Team
 
 SPACE = "                                             "
-LINES = "\n-----------------------------------------------\n"
+LINES = "-----------------------------------------------\n"
 PADDING = "\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n"
 WELCOME = f"{SPACE}########## ########  ##    ##  #########   ##   ##     ####         ###       ###      #########  ##   ##   ##########\n" \
     f"{SPACE}    ##     ##    ##  ##    ##  ##     ##   ###  ##    ##  ##       ## ##     ## ##     ##         ###  ##       ##    \n" \
@@ -22,23 +22,43 @@ WELCOME = f"{SPACE}########## ########  ##    ##  #########   ##   ##     ####  
     f"{SPACE}                 ### #     ##   ##    ##    ## ##  ##       ##    ##  ##  ##       ##   ##   ## ## ##  #  ##  \n" \
     f"{SPACE}                 ###  ###  #### ####  ##    ## ##  ##       ##    ##  ##  ####    ##     ##  ##### ##   # #### \n"
 
-def freeze_screen():
-    input("\nPRESS ANY KEY TO CONTINUE")
+def print_message(message:str, newlines=1):
+    newline = "\n"*newlines
+    print(message, newline)
 
+def freeze_screen(sleep_time:int, message=None, newlines=1):
+    newline = "\n"*newlines
+
+    if message:
+        print(str(message),newline)
+        time.sleep(sleep_time)
+    else:
+        input("\nPRESS ANY KEY TO CONTINUE")
+
+def initialize():
+    print(f'{PADDING}\n{WELCOME}\n{PADDING}')
 
 def main():
-    Database = DatabaseSearcher()
-
-    print(f'{PADDING}\n{WELCOME}\n{PADDING}')
-    # game_counter = 0
+    # initialize instances and print intro.
+    #todo: make sure you only print intro (def initalize) once
+    database = DatabaseSearcher()
     validate = Validation()
     option = Options()
+    initialize()
 
-    print("[1] Play a new game")
-    print("[2] Continue with a league")
+    #first menu
+    print_message("[1] Play a new game\n[2] Continue with a league")
 
-    users_pick = input("Enter choice: ")
+    while True:
+        users_pick = input("Enter choice: ").strip()
 
+        if users_pick == '1' or users_pick == '2':
+            break
+        else:
+            print_message("Please try to enter 1 or 2")
+
+
+    #if new game, create instance and get the random team form
     if users_pick == '1':
         new_game = Tournament()
         random_team, random_team_list = new_game.__initial_tournament__()
@@ -59,58 +79,59 @@ def main():
         game_counter = new_game.game_counter
 
         if type(random_team_list) is list:
-            id = Database.create_new_tournament(new_game.name, new_game.total_players,
+            id = database.create_new_tournament(new_game.name, new_game.total_players,
                 new_game.total_rounds, new_game.password, new_game.players_list, fixed, list(random_team_list))
         else:
-            id = Database.create_new_tournament(new_game.name, new_game.total_players,
+            id = database.create_new_tournament(new_game.name, new_game.total_players,
                                             new_game.total_rounds, new_game.password, new_game.players_list, fixed)
 
         # game_players = Team()
         new_game.get_fixtures()
 
 
-
-
     elif users_pick == '2':
-        print("\nReading from database....")
+        print_message("Reading from database ...")
         time.sleep(2)
-        print("\n", "\nAvailable leagues:")
-        Database.print_available_leagues()
+        if database.database_is_not_empty():
+            freeze_screen(2, "No leagues in the database")
+            main()
+        else:
+            print_message("Available leagues:")
+            database.print_available_leagues()
 
         while True:
             id = input("Enter the ID for the league you want to play? ")
-            if Database.get_tournament_by_id(id):
-                name, players, rounds, game_counter = Database.get_tournament_by_id(id)
+            if database.get_tournament_by_id(id):
+                name, players, rounds, game_counter = database.get_tournament_by_id(id)
                 print("LeagueName:",name,"\nTotal Players: ", players, "\nTotal Rounds: ", rounds)
-                players_dict = Database.get_players_data(id, players)
+                players_dict = database.get_players_data(id, players)
                 break
 
         while True:
             password = input("Enter password or q to quit application: ")
-
             if password in "Qq":
                 quit()
 
-            if Database.validate_password(id, password) is True:
-                print("Collecting data from database ...")
-                time.sleep(2)
-
+            if database.validate_password(id, password) is True:
+                freeze_screen(2, "Collecting data from database ...")
                 new_game = Tournament(name, rounds, players, game_counter)
                 new_game.set_players_name(players_dict)
 
-                print("nr of players: ", players)
-                print("Total rounds: ", rounds)
-                print("------------------")
+                print(LINES)
+                print_message(f"WELCOME BACK TO {new_game.name}")
+                print(LINES)
                 total_games = int(new_game.__total_games_per_round__()) * int(new_game.total_rounds)
+                #todo get fixtures from database
                 # random_team
                 # random_team = new_game.__initial_tournament__()
+                new_game.get_fixtures()
 
                 #get the form from the database
                 # if form is randomTeams team = Liverpool blabla
 
                 break
             else:
-                print("Incorrect password! Try again!!")
+                print_message("Incorrect password! Try again!")
 
 
     else:
@@ -127,9 +148,12 @@ def main():
                 dict_key = game_counter%int(new_game.__total_games_per_round__())
                 print(LINES)
                 home, away = new_game.play_next_game(dict_key)
+                #todo: implement random_team variable depending on database state
 
-                if isinstance(random_team, str) and random_team in 'Yy':
-                    print(new_game.get_one_fixture() + "\n")
+                #this works when starting a game but not when starting an old game
+                # if isinstance(random_team, str) and random_team in 'Yy':
+                #     print(new_game.get_one_fixture() + "\n")
+
 
                 while True:
                     print(LINES)
@@ -139,14 +163,12 @@ def main():
                         score = score.split()
                         a_game = Game(score[0], score[1], home, away)
                         a_game.handle_scores()
-                        # print("ID:", id, "GAMECOUNTER:", game_counter)
                         game_counter += 1
 
-                        Database.update_played_games_in_tournament_by_id(id, game_counter)
-                        # parameters id, team.points, team.scored, team.conce, played
+                        database.update_played_games_in_tournament_by_id(id, game_counter)
 
                         for i in new_game.players_list:
-                            Database.update_players_attributes(i.id, i.points, i.scored_goals, i.conceded_goals, i.played_games)
+                            database.update_players_attributes(i.id, i.points, i.scored_goals, i.conceded_goals, i.played_games)
                         break
 
             elif the_option == '1':
@@ -158,12 +180,12 @@ def main():
                 #todo: print only unplayed games or games with scores
                 new_game.print_fixtures()
                 print(LINES)
-                freeze_screen()
+                freeze_screen(2)
 
 
             elif the_option == '2':
                 print(new_game)
-                freeze_screen()
+                freeze_screen(2)
 
             elif the_option == '3':
 
@@ -180,13 +202,12 @@ def main():
                     print("Most games won in a row(Þórarinn): 6")
 
                 else:
-                    print("NOT AN OPTION!! ")
-                    freeze_screen()
+                    freeze_screen(2, "NOT AN OPTION")
 
             elif the_option == '4':
                 print("Writing out data...")
                 time.sleep(2)
-                # Database.update_played_games_in_tournament_by_id(id, game_counter)
+                # database.update_played_games_in_tournament_by_id(id, game_counter)
                 print("All set! See you soon!")
                 exit()
 
