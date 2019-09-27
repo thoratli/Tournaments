@@ -1,0 +1,11 @@
+show all items
+select * from team;
+select * from tournament;
+
+reset ID for both tables
+ALTER TABLE team AUTO_INCREMENT = 1;
+ALTER TABLE tournament AUTO_INCREMENT = 1;
+
+delete all data from tables
+Delete from tournament;
+Delete from team;

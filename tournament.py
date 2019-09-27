@@ -2,6 +2,7 @@ from validation import Validation
 from team import Team
 from options import Options
 import random
+import getpass
 import operator
 PADDING = "--------------------------------------------------------------"
 MIDDLE = int(len(PADDING)/2)
@@ -55,9 +56,10 @@ class Tournament():
         #todo: implement recover on password
 
         while True:
-            password = input("Enter a easy password to access the league later: ")
-            print("\n", "Your password will be: ",password, "\n")
-            password2 = input("Repeat your password:  ")
+            password = getpass.getpass(prompt="Enter a easy password for later access: ")
+            # password = input("Enter a easy password to access the league later: ")
+            # print("\n", "Your password will be: ",password, "\n")
+            password2 = getpass.getpass(prompt="Repeat your password:")
             if password == password2:
                 print("Remember: ", password)
                 return password
