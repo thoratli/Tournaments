@@ -66,6 +66,8 @@ class Tournament():
             else:
                 print("Didn't match. Try again: ")
 
+
+    #remove this function and make more simple
     def __initial_tournament__(self):
 
         self.name = self.get_tournament_name()
@@ -142,7 +144,6 @@ class Tournament():
                     conceded = attr[2]
                     played = attr[3]
                     new_team = Team(name, points, played, scored, conceded)
-                    print(new_team)
                     self.players_list.append(new_team)
 
         else:
