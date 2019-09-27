@@ -1,8 +1,15 @@
+from mysqldata import DatabaseSearcher
+
 class Team:
-    __USER_ID = 1
+    Database = DatabaseSearcher()
+
+    __USER_ID = Database.find_next_player_id()
+    if not __USER_ID:
+        __USER_ID = 1
     def __init__(self, name=str, points=None, played=None, scored=None, conceded=None):
 
 
+        #works if team is random from start
         self.id = Team.__USER_ID
         Team.__USER_ID += 1
 
