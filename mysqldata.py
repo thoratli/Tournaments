@@ -3,6 +3,8 @@ from mysql.connector import Error
 
 from validation import Validation
 
+#todo: add fixturetable to database, how do we keep track on scores? Scorestable?
+
 
 class DatabaseSearcher:
     def __init__(self,):
