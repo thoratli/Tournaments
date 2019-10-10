@@ -31,6 +31,7 @@ class DatabaseSearcher:
             records = self.curs.fetchall()
 
             try:
+                # type = records[0][0]
                 name = records[0][1]
                 players = records[0][2]
                 rounds = records[0][3]
@@ -104,7 +105,7 @@ class DatabaseSearcher:
 
         self.curs.execute(sql, val)
         self.connection.commit()
-        tournament_id = self.__get_newest_id()
+        tournament_id = self.get_newest_id()
 
         if rand_list:
             self.__add_players_to_tournament(namelist, tournament_id, rand_list)
@@ -135,7 +136,20 @@ class DatabaseSearcher:
                 self.curs.execute(sql, val)
                 self.connection.commit()
 
-    def __get_newest_id(self):
+    def add_to_sport_table(self, sportname, tournament_id):
+        #todo: insert the sport type to the database
+        sportname = str(sportname)
+        tournament_id = str(tournament_id)
+
+        sql = "INSERT INTO sports (Sportname, tournament_id) " \
+              "VALUES (%s, %s)"
+
+        val = (sportname, tournament_id)
+
+        self.curs.execute(sql, val)
+        self.connection.commit()
+
+    def get_newest_id(self):
         return_value = "SELECT id FROM tournament ORDER BY id DESC LIMIT 1;"
         self.curs.execute(return_value)
         records = self.curs.fetchone()
@@ -249,3 +263,23 @@ class DatabaseSearcher:
         # Database.get_players_data(id, players)
         #
         # Database.print_available_leagues()
+
+    def is_password_protected(self, tournament_id):
+        try:
+            query = "SELECT password from tournament WHERE id = " + tournament_id + ";"
+            self.curs.execute(query)
+            records = self.curs.fetchone()
+            if len(records) == 0:
+                return False
+        except:
+            return True
+
+    def insert_fixtures(self):
+        pass
+
+    def get_type(self, id):
+        ID = str(id)
+        query = "select sportname from sports where tournament_id = " + ID + ";"
+        self.curs.execute(query)
+        records = self.curs.fetchone()
+        return records[0]
