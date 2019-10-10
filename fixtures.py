@@ -8,17 +8,15 @@ class Fixtures():
         if len(teams) % 2 != 0:
             teams.append('Day off')
         n = len(teams)
-        match = []
+        # match = []
         fixtures = []
 
         return_match = []
         for fixture in range(1, n):
             for i in range(round(n/2)):
-                match.append((teams[i], teams[n - 1 - i]))
                 return_match.append((teams[n - 1 - i], teams[i]))
             teams.insert(1, teams.pop())
             fixtures.append(return_match)
-            match = []
             return_match = []
 
         self._insert_fixture_into_dict(fixtures)
@@ -33,8 +31,8 @@ class Fixtures():
                     self.fixtures[game] = [i, []]
                     game += 1
 
-        for key,value in self.fixtures.items():
-            print(key, value)
+        # for key,value in self.fixtures.items():
+        #     print(key, value)
 
     def show_fixtures(self):
         for key, value in self.fixtures.items():
