@@ -8,7 +8,17 @@ PADDING = "--------------------------------------------------------------"
 MIDDLE = int(len(PADDING)/2)
 
 class Tournament():
-    def __init__(self, name=None, rounds=None, players=None, game_counter=None, players_list=None):
+    def __init__(self, id=None, type=None, name=None, rounds=None, players=None, game_counter=None, players_list=None):
+        if id:
+            self.id = id
+        else:
+            self.id = None
+
+        if type:
+            self.type = type
+        else:
+            self.type = ""
+
         if name:
             self.name = name
         else:
@@ -36,6 +46,8 @@ class Tournament():
         else:
             self.players_list = []
 
+        self.password = None
+
 
         self.options = Options()
         self.validate = Validation()
@@ -48,6 +60,10 @@ class Tournament():
                            'Atletico Madrid', 'Tottenham', 'Bayern Munchen', 'B. Dortmund', 'Juventus',
                            'Roma', 'Inter Milan', 'Colombia', 'England', 'Sweden', 'Scandinavia', 'Italy',
                            'Burnley', 'Sevilla']
+
+        # print("\n", PADDING)
+        # print(f"\n{self.name} is almost ready to start ...\n")
+        # print(PADDING)
 
     def get_password(self):
         """Gets the passwords from user and returns it"""
@@ -62,28 +78,31 @@ class Tournament():
             password2 = getpass.getpass(prompt="Repeat your password:")
             if password == password2:
                 print("Remember: ", password)
+                self.password = password
                 return password
             else:
                 print("Didn't match. Try again: ")
 
 
-    #remove this function and make more simple
-    def __initial_tournament__(self):
+    def get_type(self):
+        print(f"[1] Soccer/Fifa/PES\n[2] UFC\n[3] Darts")
+        type = input().strip()
+        if type in '123':
+            if type == '1':
+                self.type = 'Soccer'
+            elif type == '2':
+                self.type = 'UFC'
+            else:
+                self.type = 'Darts'
 
-        self.name = self.get_tournament_name()
-        self.total_players = self.get_total_players()
-        self.total_rounds = self.get_rounds()
-        self.set_players_name()
-        self.password = self.get_password()
+        return self.type
 
-        #refactor this shit
-        print("\n", PADDING)
-        print(f"\n{self.name} is almost ready to start ...\n")
-        print(PADDING)
+
+    def get_form(self):
 
         self.print_random_teamlist(6)
 
-        play_random = input(f"You want to play with one random team from our list [Y/n]: ")
+        play_random = input(f"You want to play with a fixed random team from our list [Y/n]: ")
 
         if play_random in "yY ":
             #Búa til lista með random liðum
@@ -97,20 +116,24 @@ class Tournament():
                 # todo: capitalize rand_teams[i] in the string
                 self.players_list[i].name += " " + "(" + rand_teams[i] + ")" # Bæti hér við random liðinu fyrir aftan nafnið á spilaranum.
 
-            return self.players_list, rand_teams
-
-        elif play_random in "nN":
-            random_team_choice = input("\nYou want us to choose random teams for every game? [Y/n]:")
-            if random_team_choice in "Yy ":
-                return random_team_choice, False # Returning this string if user wants random teams every game
-            else:
-                return False, False# Returning nothing if user chooses not to have random teams every game
+            return rand_teams
         else:
-            print("Please enter Y or N ! ")
+            return []
+
+    def random_every_game(self):
+
+        random_team_choice = input("\nYou want us to choose random teams for every game? [Y/n]:")
+        if random_team_choice in "Yy ":
+            return random_team_choice # Returning this string if user wants random teams every game
+        else:
+            return False# Returning nothing if user chooses not to have random teams every game
+
 
     def get_tournament_name(self):
         """Returns the input of the tournament name"""
-        return input("What is the name of your League: ")
+        name = input("What is the name of your League: ")
+        self.name = name
+        return name
 
     def get_total_players(self):
         """Allows participants to enter number of competitors """
@@ -120,6 +143,7 @@ class Tournament():
             if self.validate.validate_integer(players):
                 players = int(players)
                 if self.validate.validate_limit(players, 2):
+                    self.total_players = players
                     return int(players)
 
     def get_rounds(self):
@@ -130,6 +154,7 @@ class Tournament():
             number = input("How many rounds you want to play? ")
             if self.validate.validate_integer(number):
                 if self.validate.validate_limit(number, 1):
+                    self.total_rounds = int(number)
                     return int(number)
 
     def set_players_name(self, players_dict=None):

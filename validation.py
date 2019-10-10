@@ -20,7 +20,7 @@ class Validation():
             home, away = score.split()
             home = int(home)
             away =int(away)
-            if home > 0 and away > 0:
+            if home >= 0 and away >= 0:
                 return True
             print("This can´t be correct! ")
         except:
