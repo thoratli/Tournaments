@@ -45,7 +45,7 @@ def main():
     database = DatabaseSearcher()
     validate = Validation()
     option = Options()
-    the_new_fixtures = Fixtures()
+    fixtures = Fixtures()
     initialize()
 
     #first menu
@@ -73,7 +73,9 @@ def main():
             new_game.get_total_players()
             new_game.get_rounds()
             new_game.set_players_name()
-            new_game.get_password()
+            encryption = input("You want password protection [y/N] ").lower()
+            if encryption == 'y':
+                new_game.get_password()
             form = new_game.get_form()
 
             #if form returns an emptylist, user doesn't want fixed teams
@@ -88,15 +90,17 @@ def main():
             if fixed:
                 id = database.create_new_tournament(new_game.name, new_game.total_players,
                 new_game.total_rounds, new_game.password, new_game.players_list, fixed, new_game.get_random_teams())
+                database.add_to_sport_table(type, database.get_newest_id())
             else:
                 id = database.create_new_tournament(new_game.name, new_game.total_players,
                 new_game.total_rounds, new_game.password, new_game.players_list, fixed)
+                database.add_to_sport_table(type, database.get_newest_id())
+
 
             # game_players = Team()
 
-            the_new_fixtures.generate_fixture_list(new_game.players_list)
-
-            # new_game.get_fixtures()
+            fixtures.generate_fixture_list(new_game.players_list)
+            fixtures.show_fixtures()
 
 
     elif users_pick == '2':
@@ -113,43 +117,50 @@ def main():
             id = input("Enter the ID for the league you want to play? ")
             if database.get_tournament_by_id(id):
                 name, players, rounds, game_counter = database.get_tournament_by_id(id)
-                print("LeagueName:",name,"\nTotal Players: ", players, "\nTotal Rounds: ", rounds)
+                type = database.get_type(id)
+                print("LeagueName:", name, "\nTotal Players: ", players, "\nTotal Rounds: ", rounds)
                 players_dict = database.get_players_data(id, players)
+
                 break
 
+
+        #password protection
         while True:
             #todo: implement if user want password protection
-            password = input("Enter password or q to quit application: ")
-            if password in "Qq":
-                quit()
+            if database.is_password_protected(id):
+                password = input("Enter password: ")
 
-            if database.validate_password(id, password) is True:
-                freeze_screen(2, "Collecting data from database ...")
-                new_game = Tournament(name, rounds, players, game_counter)
+                if database.validate_password(id, password) is True:
+                    freeze_screen(2, "Collecting data from database ...")
+                    new_game = Tournament(id, type, name, rounds, players, game_counter)
+                    new_game.set_players_name(players_dict)
+
+                    print(LINES)
+                    print_message(f"WELCOME BACK TO {new_game.name}")
+                    print(LINES)
+                    total_games = int(new_game.__total_games_per_round__()) * int(new_game.total_rounds)
+
+                    fixtures.show_fixtures()
+
+                    break
+                else:
+                    print_message("Incorrect password! Try again!")
+            else:
+                new_game = Tournament(id, "soccer", name, rounds, players, game_counter)
                 new_game.set_players_name(players_dict)
-
                 print(LINES)
                 print_message(f"WELCOME BACK TO {new_game.name}")
                 print(LINES)
                 total_games = int(new_game.__total_games_per_round__()) * int(new_game.total_rounds)
-
-                #todo get fixtures from database
-                # random_team
-                # random_team = new_game.__initial_tournament__()
-                # new_game.get_fixtures()
-                the_new_fixtures.show_fixtures()
-
-                #get the form from the database
-                # if form is randomTeams team = Liverpool blabla
+                fixtures.generate_fixture_list(new_game.players_list)
 
                 break
-            else:
-                print_message("Incorrect password! Try again!")
 
     else:
         exit("You don´t deserve us")
 
-    print(total_games, "----- total games ---- atli")
+
+    # print(total_games, "----- total games ---- atli")
     while game_counter < total_games:
         new_game.game_counter += 1
         print(option.show_options())
@@ -191,8 +202,7 @@ def main():
                 print(LINES)
 
                 #todo: print only unplayed games or games with scores
-                the_new_fixtures.show_fixtures()
-                # new_game.print_fixtures()
+                fixtures.show_fixtures()
                 print(LINES)
                 freeze_screen(2)
 
@@ -220,12 +230,11 @@ def main():
             elif the_option == '4':
                 print("Writing out data...")
                 time.sleep(2)
-                # database.update_played_games_in_tournament_by_id(id, game_counter)
                 print("All set! See you soon!")
                 exit()
 
     # the end of the loop, it shows the league standings
-    print(new_game)
+    # print(new_game)
 
 main()
 
