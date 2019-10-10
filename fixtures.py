@@ -38,7 +38,7 @@ class Fixtures():
 
     def show_fixtures(self):
         for key, value in self.fixtures.items():
-            print("Game:",key, end=" ")
+            print("Game:", key, end=" ")
             first_team = True
             for the_tuple in value:
                 for team in the_tuple:
@@ -50,4 +50,10 @@ class Fixtures():
         print()
 
     def __str__(self):
-        return f''
+        retval = ""
+        for key,value in self.fixtures.items():
+            retval += key + " "
+            for games in value:
+                retval += games
+            retval += "\n"
+        return retval
