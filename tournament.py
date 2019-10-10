@@ -8,15 +8,22 @@ PADDING = "--------------------------------------------------------------"
 MIDDLE = int(len(PADDING)/2)
 
 class Tournament():
-    def __init__(self, type=None, name=None, rounds=None, players=None, game_counter=None, players_list=None):
+    def __init__(self, id=None, type=None, name=None, rounds=None, players=None, game_counter=None, players_list=None):
+        if id:
+            self.id = id
+        else:
+            self.id = None
+
         if type:
             self.type = type
         else:
             self.type = ""
+
         if name:
             self.name = name
         else:
             self.name = ""
+
         if rounds:
             self.total_rounds = rounds
         else:
@@ -54,9 +61,9 @@ class Tournament():
                            'Roma', 'Inter Milan', 'Colombia', 'England', 'Sweden', 'Scandinavia', 'Italy',
                            'Burnley', 'Sevilla']
 
-        print("\n", PADDING)
-        print(f"\n{self.name} is almost ready to start ...\n")
-        print(PADDING)
+        # print("\n", PADDING)
+        # print(f"\n{self.name} is almost ready to start ...\n")
+        # print(PADDING)
 
     def get_password(self):
         """Gets the passwords from user and returns it"""
