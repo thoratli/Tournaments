@@ -4,6 +4,7 @@ from validation import *
 from mysqldata import DatabaseSearcher
 import time
 from game import Game
+from fixtures import Fixtures
 from team import Team
 
 SPACE = "                                             "
@@ -44,6 +45,7 @@ def main():
     database = DatabaseSearcher()
     validate = Validation()
     option = Options()
+    the_new_fixtures = Fixtures()
     initialize()
 
     #first menu
@@ -91,7 +93,10 @@ def main():
                 new_game.total_rounds, new_game.password, new_game.players_list, fixed)
 
             # game_players = Team()
-            new_game.get_fixtures()
+
+            the_new_fixtures.generate_fixture_list(new_game.players_list)
+
+            # new_game.get_fixtures()
 
 
     elif users_pick == '2':
@@ -131,7 +136,8 @@ def main():
                 #todo get fixtures from database
                 # random_team
                 # random_team = new_game.__initial_tournament__()
-                new_game.get_fixtures()
+                # new_game.get_fixtures()
+                the_new_fixtures.show_fixtures()
 
                 #get the form from the database
                 # if form is randomTeams team = Liverpool blabla
@@ -185,7 +191,8 @@ def main():
                 print(LINES)
 
                 #todo: print only unplayed games or games with scores
-                new_game.print_fixtures()
+                the_new_fixtures.show_fixtures()
+                # new_game.print_fixtures()
                 print(LINES)
                 freeze_screen(2)
 
