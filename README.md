@@ -1,5 +1,7 @@
-# Tournaments
-Creates an Tournament for N number of users. The user picks how many rounds they want to play a league is created where everybody plays with everybody, collecting 3points per victory and 1point per draw. 
+# Tournaments (in-progress)
+Creates an Tournament for N number of users. The user picks how many rounds they want to play and a league is created where everybody plays with everybody, collecting 3points per victory and 1point per draw. 
+The database is up and running but I´m updating the software sou you can choose a sport and generate a tournament for that sport.
+
 
 ## Dependencies
 
