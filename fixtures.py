@@ -1,12 +1,18 @@
 from game import Game
+from team import Team
+from mysqldata import DatabaseSearcher
 
 class Fixtures():
-    def __init__(self):
-        self.fixtures = {}
+    def __init__(self, id=None):
+        if id is None:
+            self.fixtures = {}
+        else:
+            database = DatabaseSearcher()
+            self.fixtures = database.get_fixtures(id)
 
     def generate_fixture_list(self, teams: list):
         if len(teams) % 2 != 0:
-            teams.append('Day off')
+            teams.append(Team('Day Off'))
         n = len(teams)
         # match = []
         fixtures = []
@@ -19,33 +25,41 @@ class Fixtures():
             fixtures.append(return_match)
             return_match = []
 
-        self._insert_fixture_into_dict(fixtures)
+        self.insert_fixture_into_dict(fixtures)
         return fixtures
 
-    def _insert_fixture_into_dict(self, fixtures: list):
+    def insert_fixture_into_dict(self, fixtures: list):
         game = 1
 
         for fixture in fixtures:
             for i in fixture:
-                if 'Day off' not in i:
-                    self.fixtures[game] = [i, []]
-                    game += 1
+                #zero represents not played
+                self.fixtures[game] = [i, 0]
+                game += 1
+        return self.fixtures
 
         # for key,value in self.fixtures.items():
         #     print(key, value)
 
     def show_fixtures(self):
+        i = 1
         for key, value in self.fixtures.items():
-            print("Game:", key, end=" ")
-            first_team = True
-            for the_tuple in value:
-                for team in the_tuple:
-                    if first_team:
-                        print(team, end=" VS ")
-                        first_team = False
-                    else:
-                        print(team)
+            game = value[0]
+            home, away = game
+            played = value[1]
+            if 'Day Off' in game:
+                print("dayoff er í game!!! -----------")
+            if home != 'Day Off' and away != 'Day Off':
+                print("Game:", i, end=" ")
+                print(home, "VS", away, end=" ")
+                i += 1
+            if played == 1:
+                print("ALREADY PLAYED, SCORES: 2 2")
+            else:
+                print("Not played")
         print()
+
+
 
     def __str__(self):
         retval = ""
@@ -54,4 +68,4 @@ class Fixtures():
             for games in value:
                 retval += games
             retval += "\n"
-        return retval
+        return retval + "atli"
