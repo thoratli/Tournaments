@@ -1,6 +1,8 @@
 from validation import Validation
 from team import Team
 from options import Options
+from mysqldata import DatabaseSearcher
+from fixtures import Fixtures
 import random
 import getpass
 import operator
@@ -8,7 +10,9 @@ PADDING = "--------------------------------------------------------------"
 MIDDLE = int(len(PADDING)/2)
 
 class Tournament():
-    def __init__(self, id=None, type=None, name=None, rounds=None, players=None, game_counter=None, players_list=None):
+    def __init__(self, id=None, type=None, name=None, rounds=None, players=None, game_counter=None, players_list=None, new=False):
+        fixture = Fixtures()
+
         if id:
             self.id = id
         else:
@@ -47,12 +51,18 @@ class Tournament():
             self.players_list = []
 
         self.password = None
-
-
         self.options = Options()
         self.validate = Validation()
         # self.player = Team()
-        self.fixtures = {}
+
+        if new:
+            self.fixtures = {}
+        else:
+            self.fixtures = self.get_fixtures_from_db()
+
+
+
+
         self.randomlist = ['Real Madrid', 'Barcelona', 'Liverpool', 'Iceland', 'Brazil',
                            'PSG', '1 star', '2 star', 'Spain', '3 star', '4 star','Lowest star',
                            'Everton', 'Chelsea', 'Basel', 'Manchester City',
@@ -64,6 +74,10 @@ class Tournament():
         # print("\n", PADDING)
         # print(f"\n{self.name} is almost ready to start ...\n")
         # print(PADDING)
+
+    def get_fixtures_from_db(self):
+        database = DatabaseSearcher()
+        self.fixtures = database.get_fixtures(self.id)
 
     def get_password(self):
         """Gets the passwords from user and returns it"""
@@ -157,6 +171,20 @@ class Tournament():
                     self.total_rounds = int(number)
                     return int(number)
 
+    def play_next_game(self):
+        """Plays the next game and returns the fixtures"""
+
+        print("Next game is: \n")
+        #todo: BIGERROR, need to fix
+        for key, value in self.fixtures.items():
+            game = value[0]
+            home, away = game
+            played = value[1]
+            if played == 0:
+                if home.name != 'Day Off' and away.name != 'Day Off':
+                    print(home, "VS", away, end=" ")
+                    return home,away
+
     def set_players_name(self, players_dict=None):
         """Allows participants to enter names for themselves"""
         players = 0
@@ -213,20 +241,21 @@ class Tournament():
                     self.players_list.append(team)
                     players += 1
 
-    def play_next_game(self, game_nr):
-        """Plays the next game and returns the fixtures"""
+    # def play_next_game(self, game_nr):
+    #     """Plays the next game and returns the fixtures"""
+    #
+    #     first_done = False
+    #     print("\n\nNext game is: \n")
+    #     for team in self.fixtures[game_nr]:
+    #         if first_done is False:
+    #             print(f'{str(team).capitalize()} VS ', end="")
+    #
+    #             first_done = True
+    #         else:
+    #             print(str(team).capitalize())
+    #     print("")
+    #     return self.fixtures[game_nr][0], self.fixtures[game_nr][1]
 
-        first_done = False
-        print("\n\nNext game is: \n")
-        for team in self.fixtures[game_nr]:
-            if first_done is False:
-                print(f'{str(team).capitalize()} VS ', end="")
-
-                first_done = True
-            else:
-                print(str(team).capitalize())
-        print("")
-        return self.fixtures[game_nr][0], self.fixtures[game_nr][1]
 
     def __total_games_per_round__(self):
         """Returns total games per round"""
@@ -256,14 +285,14 @@ class Tournament():
                 self.fixtures[counter] = game
                 counter += 1
 
-    def get_one_fixture(self):
-        """Returns one fixture from randomlist"""
-
-        while True:
-            team1 = random.choice(self.randomlist)
-            team2 = random.choice(self.randomlist)
-            teams = f'{str(team1).capitalize()} VS {str(team2).capitalize()}'
-            return teams
+    # def get_one_fixture(self):
+    #     """Returns one fixture from randomlist"""
+    #
+    #     while True:
+    #         team1 = random.choice(self.randomlist)
+    #         team2 = random.choice(self.randomlist)
+    #         teams = f'{str(team1).capitalize()} VS {str(team2).capitalize()}'
+    #         return teams
 
     def print_fixtures(self):
         """Prints all fixtures for tournament"""
