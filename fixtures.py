@@ -1,7 +1,6 @@
 from game import Game
 from team import Team
 from mysqldata import DatabaseSearcher
-# from tournament import Tournament
 
 class Fixtures():
     def __init__(self, database, id=None):
