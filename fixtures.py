@@ -1,13 +1,13 @@
 from game import Game
 from team import Team
 from mysqldata import DatabaseSearcher
-from tournament import Tournament
+# from tournament import Tournament
 
 class Fixtures():
-    def __init__(self, id=None):
+    def __init__(self, database, id=None):
         if id is None:
             self.fixtures = {}
-            self.database = DatabaseSearcher()
+            self.database = database
         else:
             self.database = DatabaseSearcher()
             self.fixtures = self.database.get_fixtures(id)
@@ -47,17 +47,13 @@ class Fixtures():
 
         games = 1
         i = 0
-        print(tournament_id, "Hér er tournament ID!!!!!")
 
         for key, value in self.fixtures.items():
             #key from 1 to number of games
             i += 1
             game = value[0]
             home, away = game #get values from tuple
-            print(key, "ER ÞETTA LYKILLINN????")
             played = self.database.is_played(tournament_id, str(key))
-            print(hex(id(self.database)), "Þetta er memoadressan fyrir fixtures")
-            print("þetta má vera true", played)
 
             if home.name != 'Day Off' and away.name != 'Day Off':
                 if not played:
@@ -67,7 +63,7 @@ class Fixtures():
                     print("NOT played")
 
                 else:
-                    print("SCORES: ")
+                    print("What to do here? ")
 
             # else:
             #     if home.name != 'Day Off' and away.name != 'Day Off':
