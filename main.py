@@ -45,7 +45,6 @@ def main():
     database = DatabaseSearcher()
     validate = Validation()
     option = Options()
-    fixtures = Fixtures()
     initialize()
 
     #first menu
@@ -63,7 +62,6 @@ def main():
     #todo: refactor, make more simple
     #if new game, create instance and get the random team form
     if users_pick == '1':
-
         new_game = Tournament()
         type = new_game.get_type()
 
@@ -96,11 +94,13 @@ def main():
                 new_game.total_rounds, new_game.password, new_game.players_list, fixed)
                 database.add_to_sport_table(type, database.get_newest_id())
 
+            fixtures = Fixtures()
+            the_fixtures = fixtures.generate_fixture_list(new_game.players_list)
+            database.insert_fixtures(the_fixtures, id)
+            fixt_dixt = fixtures.insert_fixture_into_dict(the_fixtures)
+            new_game.fixtures = fixt_dixt
+            fixtures.show_fixtures(tournament_id=id)
 
-            # game_players = Team()
-
-            fixtures.generate_fixture_list(new_game.players_list)
-            fixtures.show_fixtures()
 
 
     elif users_pick == '2':
@@ -120,7 +120,6 @@ def main():
                 type = database.get_type(id)
                 print("LeagueName:", name, "\nTotal Players: ", players, "\nTotal Rounds: ", rounds)
                 players_dict = database.get_players_data(id, players)
-
                 break
 
 
@@ -132,46 +131,47 @@ def main():
 
                 if database.validate_password(id, password) is True:
                     freeze_screen(2, "Collecting data from database ...")
-                    new_game = Tournament(id, type, name, rounds, players, game_counter)
+                    new_game = Tournament(id, type, name, rounds, players, game_counter, True)
                     new_game.set_players_name(players_dict)
 
                     print(LINES)
                     print_message(f"WELCOME BACK TO {new_game.name}")
                     print(LINES)
                     total_games = int(new_game.__total_games_per_round__()) * int(new_game.total_rounds)
-
-                    fixtures.show_fixtures()
+                    fixtures = Fixtures(id)
+                    fixtures.show_fixtures(tournament_id=id)
 
                     break
                 else:
                     print_message("Incorrect password! Try again!")
             else:
-                new_game = Tournament(id, "soccer", name, rounds, players, game_counter)
+                new_game = Tournament(id, type, name, rounds, players, game_counter, False)
                 new_game.set_players_name(players_dict)
                 print(LINES)
                 print_message(f"WELCOME BACK TO {new_game.name}")
                 print(LINES)
                 total_games = int(new_game.__total_games_per_round__()) * int(new_game.total_rounds)
-                fixtures.generate_fixture_list(new_game.players_list)
-
+                fixtures = Fixtures(id)
+                fixtures.show_fixtures(tournament_id=id)
                 break
 
     else:
         exit("You don´t deserve us")
 
-
-    # print(total_games, "----- total games ---- atli")
     while game_counter < total_games:
         new_game.game_counter += 1
         print(option.show_options())
-
         the_option = option.get_option()
         if validate.validate_limit(the_option, 1, 4) or the_option == "":
             if the_option == '':
-                dict_key = game_counter%int(new_game.__total_games_per_round__())
+                # game_number = game_counter%int(new_game.__total_games_per_round__())
                 print(LINES)
-                home, away = new_game.play_next_game(dict_key)
-                #todo: implement random_team variable depending on database state
+                # home, away = new_game.play_next_game(game_counter)
+
+                #hérna þarf að skila instanci í home and away
+                print("NEXT GAME\n")
+                home, away = new_game.play_next_game(id, new_game.game_counter)
+                print("\n", LINES)
 
                 #this works when starting a game but not when starting an old game
                 # if isinstance(random_team, str) and random_team in 'Yy':
@@ -179,19 +179,22 @@ def main():
 
 
                 while True:
-                    print(LINES)
 
                     score = input("Enter results, two integers with space between: ")
                     if validate.validate_score_input(score):
                         score = score.split()
                         a_game = Game(score[0], score[1], home, away)
+
+                        #fæ villu hér því str object á ekki play_game sem er inní handle scores
+                        #self.away_team er str object
                         a_game.handle_scores()
                         game_counter += 1
 
+                        #database update scores
+                        #database update fixtures
                         database.update_played_games_in_tournament_by_id(id, game_counter)
 
                         for i in new_game.players_list:
-
                             database.update_players_attributes(i.id, i.points, i.scored_goals, i.conceded_goals, i.played_games)
                         break
 
@@ -202,7 +205,7 @@ def main():
                 print(LINES)
 
                 #todo: print only unplayed games or games with scores
-                fixtures.show_fixtures()
+                fixtures.show_fixtures(tournament_id=id)
                 print(LINES)
                 freeze_screen(2)
 

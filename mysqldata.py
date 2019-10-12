@@ -1,5 +1,6 @@
 import mysql.connector
 from mysql.connector import Error
+from team import *
 
 from validation import Validation
 
@@ -7,7 +8,7 @@ from validation import Validation
 
 
 class DatabaseSearcher:
-    def __init__(self,):
+    def __init__(self):
         self.validation = Validation()
         self.connect()
 
@@ -59,21 +60,18 @@ class DatabaseSearcher:
         query = "select * from team where tournament_id = " + ID + ";"
         self.curs.execute(query)
         records = self.curs.fetchall()
-        # print(records)
         namedict = {}
 
         for i,attrib in enumerate(records):
             name = records[i][0]
             namedict[name] = []
             namedict[name].append(attrib[1:])
-
         return namedict
 
     def print_available_leagues(self):
         query = "select * from tournament"
         self.curs.execute(query)
         records = self.curs.fetchall()
-        # print(records)
 
         for i, v in enumerate(records):
             print("ID: ", records[i][0])
@@ -174,9 +172,90 @@ class DatabaseSearcher:
         except:
             return True
 
-    def get_fixtures(self):
-        #todo: implement in database
-        pass
+    def get_fixtures(self, id):
+        '''Should return a dict of fixtures {1: [liverpool, Arsenal], 2 [Chelsea ... ] '''
+        if self.validation.validate_integer(id):
+            ID = str(id)
+            query = "select * from fixtures where tournament_id = " + ID + ";"
+            self.curs.execute(query)
+            records = self.curs.fetchall()
+
+            return_dict = {}
+
+            for value in records:
+                key = value[0]
+                hometeam = value[3]
+                awayteam = value[4]
+                played = value[2]
+                # print("Game number:", value[0], end=" ")
+                # print("played:", value[2], end=" ")
+                # print("HomeTeam:", value[3], end=" VS ")
+                # print("AwayTeam:", value[4], end=" ")
+                # print()
+                return_dict[key] = [(hometeam, awayteam), played]
+
+            # print(return_dict)
+
+
+            return return_dict
+
+        #     try:
+        #         # type = records[0][0]
+        #         name = records[0][1]
+        #         players = records[0][2]
+        #         rounds = records[0][3]
+        #         played_games = records[0][5]
+        #         return name, players, rounds, played_games
+        #
+        #     except IndexError:
+        #         print(f"\nTournament with ID {ID} doesn´t exists.\n")
+        #         return False
+        # else:
+        #     return False
+        # pass
+
+    def updated_played(self, tournament_id, game_id):
+        game_id = str(game_id)
+        t_id = str(tournament_id)
+        played = str(1)
+
+        query = "UPDATE fixtures " + \
+                "SET " \
+                "played = " + played + \
+                " WHERE game_id = " + game_id +\
+                " AND tournament_id = " + t_id + ";"
+
+        self.curs.execute(query)
+        self.connection.commit()
+
+
+    def is_played(self, tournament_id, game_id):
+        game_id = str(game_id)
+        t_id = str(tournament_id)
+
+        query = "SELECT played from fixtures where tournament_id = " + t_id + \
+                " AND game_id = " + game_id + ";"
+
+
+        self.curs.execute(query)
+        records = self.curs.fetchone()
+        # print(records, "þetta eru records")
+        # print(records[0], "þetta eru records[0]")
+        # print(type(records[0]), "týpan af records[0]")
+        if records[0] == 0:
+            return False
+
+        return True
+
+        #     return False
+        # except:
+        #     return False
+        # if records:
+        #
+        # print(records[0], "ÞETTA ERU RECORDS")
+        #
+        # return records[0]
+
 
     def update_players_attributes(self, id, points, scored, conceded, played):
         id = str(id)
@@ -274,8 +353,24 @@ class DatabaseSearcher:
         except:
             return True
 
-    def insert_fixtures(self):
-        pass
+    def insert_fixtures(self, fixture_list, tournament_id):
+
+        game_nr = 0
+        for rounds in fixture_list:
+            for fixt in rounds:
+                game_nr += 1
+                home = fixt[0].name
+                away = fixt[1].name
+                # print("GAMENUMBER", game_nr, "ASDADASDASDAS")
+
+
+
+                sql = "INSERT INTO fixtures (game_id, tournament_id, played, hometeamname, awayteamname) " \
+                    "VALUES (%s, %s, %s, %s, %s)"
+                val = (game_nr, tournament_id, 0, home, away)
+                self.curs.execute(sql, val)
+        self.connection.commit()
+
 
     def get_type(self, id):
         ID = str(id)

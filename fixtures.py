@@ -1,12 +1,20 @@
 from game import Game
+from team import Team
+from mysqldata import DatabaseSearcher
+from tournament import Tournament
 
 class Fixtures():
-    def __init__(self):
-        self.fixtures = {}
+    def __init__(self, id=None):
+        if id is None:
+            self.fixtures = {}
+            self.database = DatabaseSearcher()
+        else:
+            self.database = DatabaseSearcher()
+            self.fixtures = self.database.get_fixtures(id)
 
     def generate_fixture_list(self, teams: list):
         if len(teams) % 2 != 0:
-            teams.append('Day off')
+            teams.append(Team('Day Off'))
         n = len(teams)
         # match = []
         fixtures = []
@@ -19,33 +27,72 @@ class Fixtures():
             fixtures.append(return_match)
             return_match = []
 
-        self._insert_fixture_into_dict(fixtures)
+        self.insert_fixture_into_dict(fixtures)
         return fixtures
 
-    def _insert_fixture_into_dict(self, fixtures: list):
+    def insert_fixture_into_dict(self, fixtures: list):
         game = 1
 
         for fixture in fixtures:
             for i in fixture:
-                if 'Day off' not in i:
-                    self.fixtures[game] = [i, []]
-                    game += 1
+                #zero represents not played
+                self.fixtures[game] = [i, 0]
+                game += 1
+        return self.fixtures
 
         # for key,value in self.fixtures.items():
         #     print(key, value)
 
-    def show_fixtures(self):
+    def show_fixtures(self, tournament_id):
+
+        games = 1
+        i = 0
+        print(tournament_id, "Hér er tournament ID!!!!!")
+
         for key, value in self.fixtures.items():
-            print("Game:", key, end=" ")
-            first_team = True
-            for the_tuple in value:
-                for team in the_tuple:
-                    if first_team:
-                        print(team, end=" VS ")
-                        first_team = False
-                    else:
-                        print(team)
+            #key from 1 to number of games
+            i += 1
+            game = value[0]
+            home, away = game #get values from tuple
+            print(key, "ER ÞETTA LYKILLINN????")
+            played = self.database.is_played(tournament_id, str(key))
+            print(hex(id(self.database)), "Þetta er memoadressan fyrir fixtures")
+            print("þetta má vera true", played)
+
+            if home.name != 'Day Off' and away.name != 'Day Off':
+                if not played:
+                    print("Game:", games, end=" ")
+                    print(home, "VS", away, end=" ")
+                    games += 1
+                    print("NOT played")
+
+                else:
+                    print("SCORES: ")
+
+            # else:
+            #     if home.name != 'Day Off' and away.name != 'Day Off':
+            #         print("Game:", games, end=" ")
+            #         print(home, "VS", away, end=" ")
+            #         games += 1
+            #     else:
+            #         print("WENNIWENNIWENNI")
+            #
+            #         played = self.database.is_played(tournament_id, key)
+            #         if played is True:
+            #             print("WENNI: ")
+            #         else:
+            #             print("ÞÓRARINN")
+
+
+
+            # if played == 1:
+            #     print("ALREADY PLAYED, SCORES: 2 2")
+            # else:
+            #
+            #     print("Not played atli")
         print()
+
+
 
     def __str__(self):
         retval = ""
@@ -54,4 +101,4 @@ class Fixtures():
             for games in value:
                 retval += games
             retval += "\n"
-        return retval
+        return retval + "atli"
