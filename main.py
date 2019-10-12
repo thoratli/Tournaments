@@ -99,7 +99,8 @@ def main():
             database.insert_fixtures(the_fixtures, id)
             fixt_dixt = fixtures.insert_fixture_into_dict(the_fixtures)
             new_game.fixtures = fixt_dixt
-            fixtures.show_fixtures()
+            fixtures.show_fixtures(tournament_id=id)
+
 
 
     elif users_pick == '2':
@@ -138,7 +139,7 @@ def main():
                     print(LINES)
                     total_games = int(new_game.__total_games_per_round__()) * int(new_game.total_rounds)
                     fixtures = Fixtures(id)
-                    fixtures.show_fixtures()
+                    fixtures.show_fixtures(tournament_id=id)
 
                     break
                 else:
@@ -151,7 +152,7 @@ def main():
                 print(LINES)
                 total_games = int(new_game.__total_games_per_round__()) * int(new_game.total_rounds)
                 fixtures = Fixtures(id)
-                fixtures.show_fixtures()
+                fixtures.show_fixtures(tournament_id=id)
                 break
 
     else:
@@ -169,7 +170,7 @@ def main():
 
                 #hérna þarf að skila instanci í home and away
                 print("NEXT GAME\n")
-                home, away = new_game.play_next_game()
+                home, away = new_game.play_next_game(id, new_game.game_counter)
                 print("\n", LINES)
 
                 #this works when starting a game but not when starting an old game
@@ -204,7 +205,7 @@ def main():
                 print(LINES)
 
                 #todo: print only unplayed games or games with scores
-                fixtures.show_fixtures()
+                fixtures.show_fixtures(tournament_id=id)
                 print(LINES)
                 freeze_screen(2)
 

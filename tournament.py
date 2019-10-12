@@ -11,7 +11,7 @@ MIDDLE = int(len(PADDING)/2)
 
 class Tournament():
     def __init__(self, id=None, type=None, name=None, rounds=None, players=None, game_counter=None, players_list=None, new=False):
-        fixture = Fixtures()
+        self.database = DatabaseSearcher()
 
         if id:
             self.id = id
@@ -171,19 +171,30 @@ class Tournament():
                     self.total_rounds = int(number)
                     return int(number)
 
-    def play_next_game(self):
+    def play_next_game(self, tournament_id, game_counter):
         """Plays the next game and returns the fixtures"""
-
         print("Next game is: \n")
-        #todo: BIGERROR, need to fix
-        for key, value in self.fixtures.items():
+
+        # self.fixtures = self.database.get_fixtures(tournament_id)
+
+        for game_number, value in self.fixtures.items():
             game = value[0]
             home, away = game
-            played = value[1]
-            if played == 0:
+            # played = value[1]
+            print(hex(id(self.database)), "Þetta er memoadressan fyrir tournament")
+            played = self.database.is_played(tournament_id, game_number)
+            print(played, "þetta er played frá tournament")
+
+            if not played:
+                self.database.updated_played(tournament_id, game_number)
                 if home.name != 'Day Off' and away.name != 'Day Off':
                     print(home, "VS", away, end=" ")
-                    return home,away
+                    #adjust database, played = 1, also for day off game
+                    # self.database.find_fixture_id(home.id, away.id)
+                    return home, away
+
+        return home, away
+
 
     def set_players_name(self, players_dict=None):
         """Allows participants to enter names for themselves"""

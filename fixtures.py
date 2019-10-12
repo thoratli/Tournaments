@@ -1,14 +1,16 @@
 from game import Game
 from team import Team
 from mysqldata import DatabaseSearcher
+from tournament import Tournament
 
 class Fixtures():
     def __init__(self, id=None):
         if id is None:
             self.fixtures = {}
+            self.database = DatabaseSearcher()
         else:
-            database = DatabaseSearcher()
-            self.fixtures = database.get_fixtures(id)
+            self.database = DatabaseSearcher()
+            self.fixtures = self.database.get_fixtures(id)
 
     def generate_fixture_list(self, teams: list):
         if len(teams) % 2 != 0:
@@ -41,22 +43,53 @@ class Fixtures():
         # for key,value in self.fixtures.items():
         #     print(key, value)
 
-    def show_fixtures(self):
-        i = 1
+    def show_fixtures(self, tournament_id):
+
+        games = 1
+        i = 0
+        print(tournament_id, "Hér er tournament ID!!!!!")
+
         for key, value in self.fixtures.items():
+            #key from 1 to number of games
+            i += 1
             game = value[0]
-            home, away = game
-            played = value[1]
-            if 'Day Off' in game:
-                print("dayoff er í game!!! -----------")
-            if home != 'Day Off' and away != 'Day Off':
-                print("Game:", i, end=" ")
-                print(home, "VS", away, end=" ")
-                i += 1
-            if played == 1:
-                print("ALREADY PLAYED, SCORES: 2 2")
-            else:
-                print("Not played")
+            home, away = game #get values from tuple
+            print(key, "ER ÞETTA LYKILLINN????")
+            played = self.database.is_played(tournament_id, str(key))
+            print(hex(id(self.database)), "Þetta er memoadressan fyrir fixtures")
+            print("þetta má vera true", played)
+
+            if home.name != 'Day Off' and away.name != 'Day Off':
+                if not played:
+                    print("Game:", games, end=" ")
+                    print(home, "VS", away, end=" ")
+                    games += 1
+                    print("NOT played")
+
+                else:
+                    print("SCORES: ")
+
+            # else:
+            #     if home.name != 'Day Off' and away.name != 'Day Off':
+            #         print("Game:", games, end=" ")
+            #         print(home, "VS", away, end=" ")
+            #         games += 1
+            #     else:
+            #         print("WENNIWENNIWENNI")
+            #
+            #         played = self.database.is_played(tournament_id, key)
+            #         if played is True:
+            #             print("WENNI: ")
+            #         else:
+            #             print("ÞÓRARINN")
+
+
+
+            # if played == 1:
+            #     print("ALREADY PLAYED, SCORES: 2 2")
+            # else:
+            #
+            #     print("Not played atli")
         print()
 
 

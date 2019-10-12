@@ -8,7 +8,7 @@ from validation import Validation
 
 
 class DatabaseSearcher:
-    def __init__(self,):
+    def __init__(self):
         self.validation = Validation()
         self.connect()
 
@@ -214,6 +214,49 @@ class DatabaseSearcher:
         #     return False
         # pass
 
+    def updated_played(self, tournament_id, game_id):
+        game_id = str(game_id)
+        t_id = str(tournament_id)
+        played = str(1)
+
+        query = "UPDATE fixtures " + \
+                "SET " \
+                "played = " + played + \
+                " WHERE game_id = " + game_id +\
+                " AND tournament_id = " + t_id + ";"
+
+        self.curs.execute(query)
+        self.connection.commit()
+
+
+    def is_played(self, tournament_id, game_id):
+        game_id = str(game_id)
+        t_id = str(tournament_id)
+
+        query = "SELECT played from fixtures where tournament_id = " + t_id + \
+                " AND game_id = " + game_id + ";"
+
+
+        self.curs.execute(query)
+        records = self.curs.fetchone()
+        # print(records, "þetta eru records")
+        # print(records[0], "þetta eru records[0]")
+        # print(type(records[0]), "týpan af records[0]")
+        if records[0] == 0:
+            return False
+
+        return True
+
+        #     return False
+        # except:
+        #     return False
+        # if records:
+        #
+        # print(records[0], "ÞETTA ERU RECORDS")
+        #
+        # return records[0]
+
+
     def update_players_attributes(self, id, points, scored, conceded, played):
         id = str(id)
         points = str(points)
@@ -312,15 +355,19 @@ class DatabaseSearcher:
 
     def insert_fixtures(self, fixture_list, tournament_id):
 
+        game_nr = 0
         for rounds in fixture_list:
             for fixt in rounds:
+                game_nr += 1
                 home = fixt[0].name
                 away = fixt[1].name
+                # print("GAMENUMBER", game_nr, "ASDADASDASDAS")
 
 
-                sql = "INSERT INTO fixtures (tournament_id, played, hometeamname, awayteamname) " \
-                    "VALUES (%s, %s, %s, %s)"
-                val = (tournament_id, False, home, away)
+
+                sql = "INSERT INTO fixtures (game_id, tournament_id, played, hometeamname, awayteamname) " \
+                    "VALUES (%s, %s, %s, %s, %s)"
+                val = (game_nr, tournament_id, 0, home, away)
                 self.curs.execute(sql, val)
         self.connection.commit()
 
