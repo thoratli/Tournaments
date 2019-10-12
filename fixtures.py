@@ -13,13 +13,15 @@ class Fixtures():
             self.fixtures = self.database.get_fixtures(id)
 
     def generate_fixture_list(self, teams: list):
+        """Generate fixtures from a list of teams, and returns the fixtures
+        as a list"""
+
         if len(teams) % 2 != 0:
             teams.append(Team('Day Off'))
         n = len(teams)
-        # match = []
         fixtures = []
-
         return_match = []
+
         for fixture in range(1, n):
             for i in range(round(n/2)):
                 return_match.append((teams[n - 1 - i], teams[i]))
@@ -27,21 +29,18 @@ class Fixtures():
             fixtures.append(return_match)
             return_match = []
 
+        #insert the list into self.fixture dict
         self.insert_fixture_into_dict(fixtures)
         return fixtures
 
     def insert_fixture_into_dict(self, fixtures: list):
         game = 1
-
         for fixture in fixtures:
             for i in fixture:
                 #zero represents not played
                 self.fixtures[game] = [i, 0]
                 game += 1
         return self.fixtures
-
-        # for key,value in self.fixtures.items():
-        #     print(key, value)
 
     def show_fixtures(self, tournament_id):
 
@@ -64,31 +63,7 @@ class Fixtures():
 
                 else:
                     print("What to do here? ")
-
-            # else:
-            #     if home.name != 'Day Off' and away.name != 'Day Off':
-            #         print("Game:", games, end=" ")
-            #         print(home, "VS", away, end=" ")
-            #         games += 1
-            #     else:
-            #         print("WENNIWENNIWENNI")
-            #
-            #         played = self.database.is_played(tournament_id, key)
-            #         if played is True:
-            #             print("WENNI: ")
-            #         else:
-            #             print("ÞÓRARINN")
-
-
-
-            # if played == 1:
-            #     print("ALREADY PLAYED, SCORES: 2 2")
-            # else:
-            #
-            #     print("Not played atli")
         print()
-
-
 
     def __str__(self):
         retval = ""
