@@ -1,7 +1,5 @@
 import mysql.connector
 from mysql.connector import Error
-# from team import *
-
 from validation import Validation
 
 #todo: add fixturetable to database, how do we keep track on scores? Scorestable?
@@ -258,7 +256,6 @@ class DatabaseSearcher:
                 game_nr += 1
                 home = fixt[0].name
                 away = fixt[1].name
-
 
                 sql = "INSERT INTO fixtures (game_id, tournament_id, played, hometeamname, awayteamname) " \
                     "VALUES (%s, %s, %s, %s, %s)"
