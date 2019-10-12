@@ -52,7 +52,6 @@ class Tournament():
         self.password = None
         self.options = Options()
         self.validate = Validation()
-        # self.player = Team()
 
         if new:
             self.fixtures = {}
@@ -70,11 +69,9 @@ class Tournament():
                            'Roma', 'Inter Milan', 'Colombia', 'England', 'Sweden', 'Scandinavia', 'Italy',
                            'Burnley', 'Sevilla']
 
-        # print("\n", PADDING)
-        # print(f"\n{self.name} is almost ready to start ...\n")
-        # print(PADDING)
 
     def get_fixtures_from_db(self):
+        """Reads the fixtures from database """
         database = DatabaseSearcher()
         self.fixtures = database.get_fixtures(self.id)
 
@@ -86,8 +83,6 @@ class Tournament():
 
         while True:
             password = getpass.getpass(prompt="Enter a easy password for later access: ")
-            # password = input("Enter a easy password to access the league later: ")
-            # print("\n", "Your password will be: ",password, "\n")
             password2 = getpass.getpass(prompt="Repeat your password:")
             if password == password2:
                 print("Remember: ", password)
@@ -98,6 +93,7 @@ class Tournament():
 
 
     def get_type(self):
+        """Gets the type of sport from menu options. Returns the type"""
         print(f"[1] Soccer/Fifa/PES\n[2] UFC\n[3] Darts")
         type = input().strip()
         if type in '123':
@@ -112,6 +108,8 @@ class Tournament():
 
 
     def get_form(self):
+        """Gets the form the user. If the form is one random team throughout the
+        league its assignes teams and returns the random_team list. Else it returns an empty list"""
 
         self.print_random_teamlist(6)
 
@@ -134,6 +132,8 @@ class Tournament():
             return []
 
     def random_every_game(self):
+        """Offers the user to play with random team per round, returns
+        random team if he wants, else returns False"""
 
         random_team_choice = input("\nYou want us to choose random teams for every game? [Y/n]:")
         if random_team_choice in "Yy ":
@@ -183,10 +183,9 @@ class Tournament():
                 self.database.updated_played(tournament_id, game_number)
                 if home.name != 'Day Off' and away.name != 'Day Off':
                     print(home, "VS", away, end=" ")
-                    #adjust database, played = 1, also for day off game
-                    # self.database.find_fixture_id(home.id, away.id)
                     return home, away
 
+        #Should reach here
         return home, away
 
 
@@ -323,7 +322,6 @@ class Tournament():
         for i in range(MIDDLE-int(len(self.name)/2)):
             print(" ", end="")
 
-
         print(f'{self.name}')
 
         for i in range(MIDDLE-int(len(self.name)/2)):
@@ -340,15 +338,8 @@ class Tournament():
         print("{:<27}{:}{:<6}{:4}{:<7}{:<3}{:<3}{:<3}{:<3}{:<3}{:<3}"
               .format("----------", "",  "------", "",  "------", "","--------", "", "---", "",  "------"))
 
-
-        # print("PLAYER               PLAYED   SCORED   CONCEDED   +/-  POINTS")
-        # print("------               ------   ------   --------   ---  ------")
-
         sorted_x = sorted(self.players_list, key=operator.attrgetter('points'))
         sorted_x.reverse()
-
-        # print('{:>12.2f}'.format(num))
-
         retval = ""
 
         for team in sorted_x:
