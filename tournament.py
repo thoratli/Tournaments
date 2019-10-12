@@ -10,8 +10,8 @@ PADDING = "--------------------------------------------------------------"
 MIDDLE = int(len(PADDING)/2)
 
 class Tournament():
-    def __init__(self, id=None, type=None, name=None, rounds=None, players=None, game_counter=None, players_list=None, new=False):
-        self.database = DatabaseSearcher()
+    def __init__(self, database, id=None, type=None, name=None, rounds=None, players=None, game_counter=None, players_list=None, new=False):
+        self.database = database
 
         if id:
             self.id = id
@@ -181,10 +181,7 @@ class Tournament():
             game = value[0]
             home, away = game
             # played = value[1]
-            print(hex(id(self.database)), "Þetta er memoadressan fyrir tournament")
             played = self.database.is_played(tournament_id, game_number)
-            print(played, "þetta er played frá tournament")
-
             if not played:
                 self.database.updated_played(tournament_id, game_number)
                 if home.name != 'Day Off' and away.name != 'Day Off':

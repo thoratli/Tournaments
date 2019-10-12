@@ -62,7 +62,7 @@ def main():
     #todo: refactor, make more simple
     #if new game, create instance and get the random team form
     if users_pick == '1':
-        new_game = Tournament()
+        new_game = Tournament(database)
         type = new_game.get_type()
 
         if type == 'Soccer':
@@ -94,7 +94,7 @@ def main():
                 new_game.total_rounds, new_game.password, new_game.players_list, fixed)
                 database.add_to_sport_table(type, database.get_newest_id())
 
-            fixtures = Fixtures()
+            fixtures = Fixtures(database)
             the_fixtures = fixtures.generate_fixture_list(new_game.players_list)
             database.insert_fixtures(the_fixtures, id)
             fixt_dixt = fixtures.insert_fixture_into_dict(the_fixtures)

@@ -1,6 +1,6 @@
 import mysql.connector
 from mysql.connector import Error
-from team import *
+# from team import *
 
 from validation import Validation
 
@@ -18,7 +18,7 @@ class DatabaseSearcher:
             self.connection = mysql.connector.connect(host='localhost',
                                                       database='tournament',
                                                       user='root',
-                                                      password='atli2369')
+                                                      password='Klemmisinn?') #atli2369
             self.curs = self.connection.cursor(buffered=True)
         except Error as e:
             print("Error reading data from MySQL table", e)
