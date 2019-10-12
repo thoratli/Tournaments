@@ -2,7 +2,6 @@ from validation import Validation
 from team import Team
 from options import Options
 from mysqldata import DatabaseSearcher
-from fixtures import Fixtures
 import random
 import getpass
 import operator
@@ -174,8 +173,6 @@ class Tournament():
     def play_next_game(self, tournament_id, game_counter):
         """Plays the next game and returns the fixtures"""
         print("Next game is: \n")
-
-        # self.fixtures = self.database.get_fixtures(tournament_id)
 
         for game_number, value in self.fixtures.items():
             game = value[0]
