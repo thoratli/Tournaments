@@ -38,13 +38,28 @@ class Fixtures():
         for fixture in fixtures:
             for i in fixture:
                 #zero represents not played
-                self.fixtures[game] = [i, 0]
+                self.fixtures[game] = [i, []]
                 game += 1
         return self.fixtures
 
+<<<<<<< Updated upstream
     def show_fixtures(self, tournament_id):
 
         games = 1
+=======
+
+    def insert_score_to_fixture(self, score, gamenr):
+        gamenr += 1
+        self.fixtures[gamenr][1].append(score)
+
+
+        # for key,value in self.fixtures.items():
+        #     print(key, value)
+
+    def show_fixtures(self, tournament_id, game = None):
+        # print(self.fixtures[1][1], "Er þetta staðan????")
+        games = 0
+>>>>>>> Stashed changes
         i = 0
 
         for key, value in self.fixtures.items():
@@ -55,14 +70,20 @@ class Fixtures():
             played = self.database.is_played(tournament_id, str(key))
 
             if home.name != 'Day Off' and away.name != 'Day Off':
+                games += 1
                 if not played:
                     print("Game:", games, end=" ")
                     print(home, "VS", away, end=" ")
-                    games += 1
                     print("NOT played")
 
                 else:
+<<<<<<< Updated upstream
                     print("What to do here? ")
+=======
+                    print("Game:", games, end=" ")
+                    print(home, "VS", away, end=" ")
+                    print(self.fixtures[games][1][0][0], " - ",  self.fixtures[games][1][0][1])
+>>>>>>> Stashed changes
         print()
 
     def __str__(self):
