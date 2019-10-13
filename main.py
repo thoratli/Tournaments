@@ -123,7 +123,7 @@ def main():
 
             #todo: refactor this part
             fixtures = Fixtures(database)
-            the_fixtures = fixtures.generate_fixture_list(new_game.players_list)
+            the_fixtures = fixtures.generate_fixture_list(new_game.players_list,new_game.total_rounds)
             database.insert_fixtures(the_fixtures, id)
             fixt_dixt = fixtures.insert_fixture_into_dict(the_fixtures)
             new_game.fixtures = fixt_dixt
