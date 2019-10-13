@@ -11,7 +11,7 @@ class Fixtures():
             self.database = DatabaseSearcher()
             self.fixtures = self.database.get_fixtures(id)
 
-    def generate_fixture_list(self, teams: list):
+    def generate_fixture_list(self, teams: list, total_rounds):
         """Generate fixtures from a list of teams, and returns the fixtures
         as a list"""
 
@@ -29,8 +29,8 @@ class Fixtures():
             return_match = []
 
         #insert the list into self.fixture dict
-        self.insert_fixture_into_dict(fixtures)
-        return fixtures
+        self.insert_fixture_into_dict(fixtures * total_rounds)
+        return fixtures * total_rounds
 
     def insert_fixture_into_dict(self, fixtures: list):
         """Inserts fixtures from a list to a dictionary of fixtures were game number
