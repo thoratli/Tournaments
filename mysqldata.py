@@ -73,8 +73,14 @@ class DatabaseSearcher:
 
         for i, v in enumerate(records):
             print("ID: ", records[i][0])
-            print("Tournament: ", records[i][1])
-            print("Players: ", records[i][2], "\n")
+            print("Tournament name: ", records[i][1].capitalize())
+            print("Players: ", records[i][2])
+            print("Played games: ", records[i][5])
+            if records[i][6] == 1:
+                print("Form: Each player has assigned team")
+            else:
+                print("Form: Not using fixed teams")
+            print()
 
     def update_played_games_in_tournament_by_id(self, ID=int, played_games=int):
 
