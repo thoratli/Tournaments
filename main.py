@@ -49,6 +49,21 @@ def freeze_screen(sleep_time:int, message=None, newlines=1):
 def initialize():
     print(f'{PADDING}\n{WELCOME}\n{PADDING}')
 
+def get_inputs(input_text, options: list):
+    """Takes in the input text and the list of options
+    and returns the input if valid"""
+    for i in options:
+        print(i)
+
+    while True:
+        user_input = input(input_text).strip()
+        print()
+        print(user_input)
+        if user_input in options:
+            return user_input
+        else:
+            print()
+
 def main():
     # initialize instances and print intro.
     #todo: make sure you only print intro (def initalize) once
@@ -60,16 +75,13 @@ def main():
     #first menu
     print_message("[1] Play a new game\n[2] Continue with a league")
 
-    while True:
-        users_pick = input("Enter choice: ").strip()
-
-        if users_pick == '1' or users_pick == '2':
-            break
-        else:
-            print_message("Please try to enter 1 or 2")
+    #get user input from first menu above
+    users_pick = get_inputs("Enter choice: ", ['1', '2'])
 
     if users_pick == '1':
-        new_game = Tournament(database, new=True)
+        new_game = Tournament(database=database, new=True)
+
+        #the type of sport to have the option to scale the software
         type = new_game.get_type()
 
         if type == 'Soccer':
@@ -78,28 +90,37 @@ def main():
             new_game.get_total_players()
             new_game.get_rounds()
             new_game.set_players_name()
-            encryption = input("You want password protection [y/N] ").lower()
-            if encryption == 'y':
-                new_game.get_password()
-            form = new_game.get_form()
+            new_game.set_total_games()
 
-            #if form returns an emptylist, user doesn't want fixed teams
+            #checks if user wants password in his tournament
+            encryption = get_inputs("You want password protection [y/N] ", ['y', 'Y', 'N', 'n', ""])
+            if encryption.lower() == "y":
+                new_game.get_password()
+
+            # if form returns an emptylist, user doesn't want fixed teams
+            # else it a a list of random teams to put in database
+            form = new_game.get_form()
             if form == []:
                 fixed = False
             else:
                 fixed = True
 
-            total_games = int(new_game.__total_games_per_round__())*int(new_game.total_rounds)
+            #from the instance, init total_games and game_counter variables for the playLOOP
+            total_games = new_game.total_games
             game_counter = new_game.game_counter
-            if fixed:
-                id = database.create_new_tournament(new_game.name, new_game.total_players,
-                new_game.total_rounds, new_game.password, new_game.players_list, fixed, form)
-                database.add_to_sport_table(type, database.get_newest_id())
-            else:
-                id = database.create_new_tournament(new_game.name, new_game.total_players,
-                new_game.total_rounds, new_game.password, new_game.players_list, fixed)
-                database.add_to_sport_table(type, database.get_newest_id())
 
+            #database insertion, insert into tournament and insert into sport table
+            id = database.create_new_tournament(name=new_game.name,
+                                                total_players=new_game.total_players,
+                                                total_rounds=new_game.total_rounds,
+                                                password=new_game.password,
+                                                namelist=new_game.players_list,
+                                                fixed=fixed,
+                                                rand_list=form)
+
+            database.add_to_sport_table(type, database.get_newest_id())
+
+            #todo: refactor this part
             fixtures = Fixtures(database)
             the_fixtures = fixtures.generate_fixture_list(new_game.players_list)
             database.insert_fixtures(the_fixtures, id)
