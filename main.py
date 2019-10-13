@@ -155,14 +155,15 @@ def main():
                 name, players, rounds, game_counter = database.get_tournament_by_id(id)
                 type = database.get_type(id)
                 print("LeagueName:", name, "\nTotal Players: ", players, "\nTotal Rounds: ", rounds)
-                players_dict = database.get_players_data(id, players)
+                players_dict = database.get_players_data(id=id,
+                                                         total_players=players)
                 break
 
         #password protection
         while True:
-            if database.is_password_protected(id) is True:
+            if database.is_password_protected(tournament_id=id) is True:
                 password = input("Enter password: ")
-                if database.validate_password(id, password) is True:
+                if database.validate_password(id=id,password=password) is True:
                     freeze_screen(2, "Collecting data from database ...")
                     break
                 else:
@@ -173,8 +174,15 @@ def main():
                 break
 
         #setting up new instance of tournament as new.game
-        new_game = Tournament(database, id, type, name, rounds, players, game_counter, None, False)
-        new_game.set_players_name(players_dict)
+        new_game = Tournament(database=database,
+                              id=id,type=type,
+                              name=name,
+                              rounds=rounds,
+                              players=players,
+                              game_counter=game_counter,
+                              players_list=None,
+                              new=False)
+        new_game.set_players_name(players_dict=players_dict)
 
         print(LINES)
         print_message(f"WELCOME BACK TO {new_game.name}")
@@ -195,8 +203,8 @@ def main():
     #playing a game with new_game as instance of Tournament
     while game_counter < total_games:
         new_game.game_counter += 1
-        print(option.show_options())
-        the_option = option.get_option()
+        print(option.show())
+        the_option = option.get()
         if validate.validate_limit(the_option, 1, 4) or the_option == "":
             if the_option == '':
                 # game_number = game_counter%int(new_game.__total_games_per_round__())
@@ -238,7 +246,7 @@ def main():
                 freeze_screen(2)
 
             elif the_option == '3':
-                print(option.show_stat_options())
+                print(option.show_stats())
                 stat_option = input("Pick your stat: ")
 
                 if stat_option == '1':
@@ -261,6 +269,12 @@ def main():
 
     # the end of the loop, it shows the league standings
     print(new_game)
+    print("\n\n\n", LINES)
+    print("CONGRATULATIONS\n", end=" ")
+    #needs some fine tuning, get the tie, tiebreakers...
+    print(new_game.get_winner())
+
+    print("\n\n", LINES)
 
 main()
 
