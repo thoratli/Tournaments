@@ -103,7 +103,7 @@ class DatabaseSearcher:
         self.connection.commit()
         tournament_id = self.get_newest_id()
 
-        if rand_list:
+        if rand_list != []:
             self.__add_players_to_tournament(namelist, tournament_id, rand_list)
         else:
             self.__add_players_to_tournament(namelist, tournament_id)
