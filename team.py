@@ -8,7 +8,6 @@ class Team:
         __USER_ID = 1
     def __init__(self, name=str, points=None, played=None, scored=None, conceded=None):
 
-
         #works if team is random from start
         self.id = Team.__USER_ID
         Team.__USER_ID += 1

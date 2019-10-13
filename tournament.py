@@ -48,6 +48,8 @@ class Tournament():
         else:
             self.players_list = []
 
+        self.total_games = self.set_total_games()
+
         self.password = None
         self.options = Options()
         self.validate = Validation()
@@ -87,6 +89,9 @@ class Tournament():
             else:
                 print("Didn't match. Try again: ")
 
+    def set_total_games(self):
+        self.total_games = int(self.total_rounds) * int(self.__total_games_per_round__())
+        return self.total_games
 
     def get_type(self):
         """Gets the type of sport from menu options. Returns the type"""
@@ -227,49 +232,10 @@ class Tournament():
 
     def __total_games_per_round__(self):
         """Returns total games per round"""
-
         return f"{round(((self.total_players*(self.total_players-1))/2))}"
-
-    def create_game(self, team_list):
-        """Creates a list of games"""
-
-        game = []
-        while len(game) < 2:
-            team = random.choice(self.players_list)
-            if team not in game:
-                game.append(team)
-
-        return game
-
-    def get_fixtures(self):
-
-        checklist = []
-        counter = 0
-        while counter < int(self.__total_games_per_round__()):
-            game = self.create_game(self.players_list)
-
-            if game not in checklist:
-                checklist.append(game)
-                self.fixtures[counter] = game
-                counter += 1
-
-    def print_fixtures(self):
-        """Prints all fixtures for tournament"""
-
-        for game,teams in self.fixtures.items():
-            print(f"Game nr {game+1}: ", end="")
-            number_of_teams = 0
-            for team in teams:
-                if number_of_teams == 0:
-                    print(f"{str(team).capitalize()} ", end="VS ")
-                    number_of_teams += 1
-                else:
-                    print(f"{str(team).capitalize()}", end=" ")
-            print("")
 
     def __print_starting_info__(self):
         """Returns a starting info before the tournament starts"""
-
         retval = f'So {self.total_players} players are competing.\n'
         retval += f'You wanted to play {self.total_rounds} rounds.\n'
         retval += f'In total you will play {int(self.__total_games_per_round__())*int(self.total_rounds)} games'
@@ -293,6 +259,37 @@ class Tournament():
                 retval += f"{i}, "
 
         print(retval, "\n")
+
+    def get_winner(self):
+        """Winner is decided by points but secondary decided on goal difference"""
+        max = 0
+        maxdiff_origin = 0
+        goal_difference = False
+
+        counter = 0
+        for index, i in enumerate(self.players_list):
+            print("INDEXAR: ", index)
+            if i.name != 'Day Off':
+                curr_diff = int(i.scored_goals) - int(i.conceded_goals)
+                print("TEAM:", i.name, "DIFFERENCE:", curr_diff)
+                if int(i.points) > max:
+                    max = int(i.points)
+                    name = str(i.name)
+
+
+                elif int(i.points) == max:
+                    if curr_diff > maxdiff_origin:
+                        max = int(i.points)
+                        name = str(i.name)
+                        maxdiff_origin = curr_diff
+                        goal_difference = True
+
+                else:
+                    tied = True
+
+        if goal_difference:
+            return f'{name} with {str(max)} points, on GOAL DIFFERENCE!'
+        return f'{name} with {str(max)} points'
 
     def __str__(self):
         #todo: Refactor __str__ function for tournament
