@@ -11,7 +11,6 @@ MIDDLE = int(len(PADDING)/2)
 class Tournament():
     def __init__(self, database, id=None, type=None, name=None, rounds=None, players=None, game_counter=None, players_list=None, new=False):
         self.database = database
-
         if id:
             self.id = id
         else:
@@ -49,8 +48,6 @@ class Tournament():
         else:
             self.players_list = []
 
-        self.assigned_teams = self.get_random_teams()
-
         self.password = None
         self.options = Options()
         self.validate = Validation()
@@ -59,11 +56,6 @@ class Tournament():
             self.fixtures = {}
         else:
             self.fixtures = self.get_fixtures_from_db()
-
-
-
-
-
 
         self.randomlist = ['Real Madrid', 'Barcelona', 'Liverpool', 'Iceland', 'Brazil',
                            'PSG', '1 star', '2 star', 'Spain', '3 star', '4 star','Lowest star',

@@ -43,32 +43,19 @@ class Fixtures():
                 game += 1
         return self.fixtures
 
-<<<<<<< Updated upstream
-    def show_fixtures(self, tournament_id):
-        """Shows fixtures when user chooses 2 from menu. If game
-        is played it prints the score from the game, else it prints
-        not played. Returns nothing."""
-
-        games = 1
-=======
-
     def insert_score_to_fixture(self, score, gamenr):
+        """Inserts a score into the fixture dict with game number as parameter"""
         gamenr += 1
         self.fixtures[gamenr][1].append(score)
 
-
-        # for key,value in self.fixtures.items():
-        #     print(key, value)
-
     def show_fixtures(self, tournament_id, game = None):
-        # print(self.fixtures[1][1], "Er þetta staðan????")
-        games = 0
->>>>>>> Stashed changes
-        i = 0
+        """Shows fixtures when user chooses 2 from menu. If game
+            is played it prints the score from the game, else it prints
+            not played. Returns nothing."""
+        games = 0 #represent the game number taking day off into account
 
         for key, value in self.fixtures.items():
             #key from 1 to number of games
-            i += 1
             game = value[0]
             home, away = game #get values from tuple
             played = self.database.is_played(tournament_id, str(key))
@@ -81,13 +68,9 @@ class Fixtures():
                     print("NOT played")
 
                 else:
-<<<<<<< Updated upstream
-                    print("What to do here? ")
-=======
                     print("Game:", games, end=" ")
                     print(home, "VS", away, end=" ")
                     print(self.fixtures[games][1][0][0], " - ",  self.fixtures[games][1][0][1])
->>>>>>> Stashed changes
         print()
 
     def __str__(self):

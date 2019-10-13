@@ -7,6 +7,8 @@ from game import Game
 from fixtures import Fixtures
 from team import Team
 
+#todo: when read from database, showing fixtures and playing fixture doesn´t work
+
 SPACE = "                                             "
 LINES = "-----------------------------------------------\n"
 PADDING = "\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n"
@@ -58,11 +60,8 @@ def main():
         else:
             print_message("Please try to enter 1 or 2")
 
-
-    #todo: refactor, make more simple
-    #if new game, create instance and get the random team form
     if users_pick == '1':
-        new_game = Tournament(database)
+        new_game = Tournament(database, new=True)
         type = new_game.get_type()
 
         if type == 'Soccer':
@@ -101,7 +100,7 @@ def main():
             fixtures.show_fixtures(tournament_id=id)
 
 
-
+    #below is playing a league that already exists
     elif users_pick == '2':
         print_message("Reading from database ...")
         time.sleep(2)
@@ -112,6 +111,7 @@ def main():
             print_message("Available leagues:")
             database.print_available_leagues()
 
+        #picking tournament id from a list
         while True:
             id = input("Enter the ID for the league you want to play? ")
             if database.get_tournament_by_id(id):
@@ -121,41 +121,39 @@ def main():
                 players_dict = database.get_players_data(id, players)
                 break
 
-
         #password protection
         while True:
-            #todo: implement if user want password protection
-            if database.is_password_protected(id):
+            if database.is_password_protected(id) is True:
                 password = input("Enter password: ")
-
                 if database.validate_password(id, password) is True:
                     freeze_screen(2, "Collecting data from database ...")
-                    new_game = Tournament(id, type, name, rounds, players, game_counter, True)
-                    new_game.set_players_name(players_dict)
-
-                    print(LINES)
-                    print_message(f"WELCOME BACK TO {new_game.name}")
-                    print(LINES)
-                    total_games = int(new_game.__total_games_per_round__()) * int(new_game.total_rounds)
-                    fixtures = Fixtures(id)
-                    fixtures.show_fixtures(tournament_id=id)
-
                     break
                 else:
                     print_message("Incorrect password! Try again!")
+
             else:
-                new_game = Tournament(id, type, name, rounds, players, game_counter, False)
-                new_game.set_players_name(players_dict)
-                print(LINES)
-                print_message(f"WELCOME BACK TO {new_game.name}")
-                print(LINES)
-                total_games = int(new_game.__total_games_per_round__()) * int(new_game.total_rounds)
-                fixtures = Fixtures(id)
-                fixtures.show_fixtures(tournament_id=id)
+                print("\n\nMaybe you should use a password next time.\n ")
                 break
+
+        #setting up new instance of tournament as new.game
+        new_game = Tournament(database, id, type, name, rounds, players, game_counter, None, False)
+        new_game.set_players_name(players_dict)
+
+        print(LINES)
+        print_message(f"WELCOME BACK TO {new_game.name}")
+        print(LINES)
+
+        #getting the total games for the play loop
+        total_games = int(new_game.__total_games_per_round__()) * int(new_game.total_rounds)
+
+        #todo: needs to fix to its working with the old instance
+        fixtures = Fixtures(id)
+        fixtures.show_fixtures(tournament_id=id)
+
 
     else:
         exit("You don´t deserve us")
+
 
     while game_counter < total_games:
         new_game.game_counter += 1
@@ -165,10 +163,6 @@ def main():
             if the_option == '':
                 # game_number = game_counter%int(new_game.__total_games_per_round__())
                 print(LINES)
-                # home, away = new_game.play_next_game(game_counter)
-
-                #hérna þarf að skila instanci í home and away
-                print("NEXT GAME\n")
                 home, away = new_game.play_next_game(id, new_game.game_counter)
                 print("\n", LINES)
 
@@ -178,7 +172,6 @@ def main():
 
 
                 while True:
-
                     score = input("Enter results, two integers with space between: ")
                     if validate.validate_score_input(score):
                         score = score.split()
@@ -238,7 +231,7 @@ def main():
                 exit()
 
     # the end of the loop, it shows the league standings
-    # print(new_game)
+    print(new_game)
 
 main()
 

@@ -16,7 +16,7 @@ class DatabaseSearcher:
             self.connection = mysql.connector.connect(host='localhost',
                                                       database='tournament',
                                                       user='root',
-                                                      password='Klemmisinn?') #atli2369 Klemmisinn
+                                                      password='atli2369') #atli2369 Klemmisinn
             self.curs = self.connection.cursor(buffered=True)
         except Error as e:
             print("Error reading data from MySQL table", e)
@@ -243,10 +243,12 @@ class DatabaseSearcher:
             query = "SELECT password from tournament WHERE id = " + tournament_id + ";"
             self.curs.execute(query)
             records = self.curs.fetchone()
-            if len(records) == 0:
+            if records[0] != 'None':
+                return True
+            else:
                 return False
         except:
-            return True
+            return False
 
     def insert_fixtures(self, fixture_list, tournament_id):
 
