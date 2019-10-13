@@ -39,7 +39,7 @@ class Fixtures():
         for fixture in fixtures:
             for i in fixture:
                 #zero represents not played
-                self.fixtures[game] = [i, 0]
+                self.fixtures[game] = [i, []]
                 game += 1
         return self.fixtures
 
