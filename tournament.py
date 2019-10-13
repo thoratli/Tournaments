@@ -49,6 +49,8 @@ class Tournament():
         else:
             self.players_list = []
 
+        self.assigned_teams = self.get_random_teams()
+
         self.password = None
         self.options = Options()
         self.validate = Validation()
@@ -57,6 +59,8 @@ class Tournament():
             self.fixtures = {}
         else:
             self.fixtures = self.get_fixtures_from_db()
+
+
 
 
 
@@ -119,6 +123,7 @@ class Tournament():
             #Búa til lista með random liðum
             rand_teams = self.get_random_teams()
 
+
             # Prenta út hver er hvaða lið
             self.print_assigned_teams(self.players_list, rand_teams)
 
@@ -140,7 +145,6 @@ class Tournament():
             return random_team_choice # Returning this string if user wants random teams every game
         else:
             return False# Returning nothing if user chooses not to have random teams every game
-
 
     def get_tournament_name(self):
         """Returns the input of the tournament name"""
@@ -185,9 +189,8 @@ class Tournament():
                     print(home, "VS", away, end=" ")
                     return home, away
 
-        #Should reach here
+        #Should not reach here
         return home, away
-
 
     def set_players_name(self, players_dict=None):
         """Allows participants to enter names for themselves"""
@@ -226,24 +229,9 @@ class Tournament():
         while counter < self.total_players:
             random_team = random.choice(self.randomlist)
             if random_team not in randlist:
-                random_team = random_team.capitalize()
-                randlist.append(random_team)
+                randlist.append(random_team.capitalize())
                 counter += 1
         return randlist
-
-    def get_random_team(self):
-        """Assigns a team to a players from the randomlist """
-
-        players = 0
-        checklist = []
-        for i in range(int(self.total_players)):
-            while players == i:
-                team = Team(random.choice(self.randomlist))
-                if team not in checklist:
-                    checklist.append(team)
-                    self.player.add_team(team)
-                    self.players_list.append(team)
-                    players += 1
 
     def __total_games_per_round__(self):
         """Returns total games per round"""
