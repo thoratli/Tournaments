@@ -6,7 +6,7 @@ class Options:
     def __init__(self):
         self.total_options = TOTAL_OPTIONS
 
-    def show_options(self):
+    def show(self):
         retval = "\n------------------------\n[ENTER] PLAY NEXT GAME\n------------------------\n"
         retval += "[1] Show fixtures \n"
         retval += '[2] Show table \n'
@@ -14,12 +14,12 @@ class Options:
         retval += "[4} Leave application \n"
         return retval
 
-    def get_option(self):
+    def get(self):
         option = input("Enter an option: ").strip()
         return option
 
 
-    def show_stat_options(self):
+    def show_stats(self):
         retval = "[1] Biggest Win \n"
         retval += '[2] Biggest loss \n'
         retval += "[3] Most games won in a row\n"
