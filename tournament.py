@@ -260,6 +260,37 @@ class Tournament():
 
         print(retval, "\n")
 
+    def get_winner(self):
+        """Winner is decided by points but secondary decided on goal difference"""
+        max = 0
+        maxdiff_origin = 0
+        goal_difference = False
+
+        counter = 0
+        for index, i in enumerate(self.players_list):
+            print("INDEXAR: ", index)
+            if i.name != 'Day Off':
+                curr_diff = int(i.scored_goals) - int(i.conceded_goals)
+                print("TEAM:", i.name, "DIFFERENCE:", curr_diff)
+                if int(i.points) > max:
+                    max = int(i.points)
+                    name = str(i.name)
+
+
+                elif int(i.points) == max:
+                    if curr_diff > maxdiff_origin:
+                        max = int(i.points)
+                        name = str(i.name)
+                        maxdiff_origin = curr_diff
+                        goal_difference = True
+
+                else:
+                    tied = True
+
+        if goal_difference:
+            return f'{name} with {str(max)} points, on GOAL DIFFERENCE!'
+        return f'{name} with {str(max)} points'
+
     def __str__(self):
         #todo: Refactor __str__ function for tournament
 
