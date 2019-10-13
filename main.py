@@ -7,7 +7,15 @@ from game import Game
 from fixtures import Fixtures
 from team import Team
 
-#todo: when read from database, showing fixtures and playing fixture doesn´t work
+#new game
+#todo: we are not taking rounds into account when printing fixtures and scores with it, needs multiplication
+#todo: implement some stats
+#todo: implement generic code to add type of sports with different score rules
+#todo: when tournament finished, print a pretty WINNER and offer to play a new game and delete from database
+
+#old game
+#todo: when read from database, showing fixtures and playing fixture doesn´t work. Instance/DB problem
+
 
 SPACE = "                                             "
 LINES = "-----------------------------------------------\n"
@@ -155,6 +163,7 @@ def main():
         exit("You don´t deserve us")
 
 
+    #playing a game with new_game as instance of Tournament
     while game_counter < total_games:
         new_game.game_counter += 1
         print(option.show_options())
@@ -166,11 +175,7 @@ def main():
                 home, away = new_game.play_next_game(id, new_game.game_counter)
                 print("\n", LINES)
 
-                #this works when starting a game but not when starting an old game
-                # if isinstance(random_team, str) and random_team in 'Yy':
-                #     print(new_game.get_one_fixture() + "\n")
-
-
+                # getting the score for the game
                 while True:
                     score = input("Enter results, two integers with space between: ")
                     if validate.validate_score_input(score):
@@ -178,16 +183,11 @@ def main():
                         a_game = Game(score[0], score[1], home, away)
                         score_list = [int(a_game.home_score), int(a_game.away_score)]
                         fixtures.insert_score_to_fixture(score_list, game_counter)
-
-                        #fæ villu hér því str object á ekki play_game sem er inní handle scores
-                        #self.away_team er str object
                         a_game.handle_scores()
                         game_counter += 1
 
-                        #database update scores
-                        #database update fixtures
+                        #update played games for the tournament and attributes for the players
                         database.update_played_games_in_tournament_by_id(id, game_counter)
-
                         for i in new_game.players_list:
                             database.update_players_attributes(i.id, i.points, i.scored_goals, i.conceded_goals, i.played_games)
                         break
