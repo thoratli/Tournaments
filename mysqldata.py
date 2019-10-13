@@ -1,7 +1,5 @@
 import mysql.connector
 from mysql.connector import Error
-# from team import *
-
 from validation import Validation
 
 #todo: add fixturetable to database, how do we keep track on scores? Scorestable?
@@ -187,32 +185,10 @@ class DatabaseSearcher:
                 hometeam = value[3]
                 awayteam = value[4]
                 played = value[2]
-                # print("Game number:", value[0], end=" ")
-                # print("played:", value[2], end=" ")
-                # print("HomeTeam:", value[3], end=" VS ")
-                # print("AwayTeam:", value[4], end=" ")
-                # print()
                 return_dict[key] = [(hometeam, awayteam), played]
-
-            # print(return_dict)
-
 
             return return_dict
 
-        #     try:
-        #         # type = records[0][0]
-        #         name = records[0][1]
-        #         players = records[0][2]
-        #         rounds = records[0][3]
-        #         played_games = records[0][5]
-        #         return name, players, rounds, played_games
-        #
-        #     except IndexError:
-        #         print(f"\nTournament with ID {ID} doesn´t exists.\n")
-        #         return False
-        # else:
-        #     return False
-        # pass
 
     def updated_played(self, tournament_id, game_id):
         game_id = str(game_id)
@@ -239,23 +215,10 @@ class DatabaseSearcher:
 
         self.curs.execute(query)
         records = self.curs.fetchone()
-        # print(records, "þetta eru records")
-        # print(records[0], "þetta eru records[0]")
-        # print(type(records[0]), "týpan af records[0]")
         if records[0] == 0:
             return False
 
         return True
-
-        #     return False
-        # except:
-        #     return False
-        # if records:
-        #
-        # print(records[0], "ÞETTA ERU RECORDS")
-        #
-        # return records[0]
-
 
     def update_players_attributes(self, id, points, scored, conceded, played):
         id = str(id)
@@ -275,74 +238,6 @@ class DatabaseSearcher:
         self.curs.execute(query)
         self.connection.commit()
 
-
-
-
-        # def update_teams_attributes_in_tournament_by_id(self, ID=int, played_games=int):
-        #
-        #     if self.validation.validate_integer(ID):
-        #         ID = str(ID)
-        #         played = str(played_games)
-        #
-        #         query = "UPDATE tournament " + "SET played_games = " + played + " WHERE id = " + ID + ";"
-        #
-        #         self.curs.execute(query)
-        #         self.connection.commit()
-
-        #
-        # try:
-        #     id = '1'
-        #
-        #     connection = mysql.connector.connect(host='localhost',
-        #                                          database='tournament',
-        #                                          user='root',
-        #                                          password='atli2369')
-        #
-        #     sql_select_Query = "select * from tournament where id = " + id + ";"
-        #     cursor = connection.cursor()
-        #     cursor.execute(sql_select_Query)
-        #     records = cursor.fetchall()
-        #     print(records)
-        #     print("Total number of rows in team is: ", cursor.rowcount)
-        #
-        #     # print("\nPrinting each laptop record")
-        #     # for row in records:
-        #     #     print("Id = ", row[0], )
-        #     #     print("Name = ", row[1])
-        #     #     print("Price  = ", row[2])
-        #     #     print("Purchase date  = ", row[3], "\n")
-        #
-        # except Error as e:
-        #     print("Error reading data from MySQL table", e)
-        # # finally:
-        # #     if (connection.is_connected()):
-        # #         connection.close()
-        # #         cursor.close()
-        # #         print("MySQL connection is closed")
-        #
-        #
-        # def get_id(self, ID):
-        #     pass
-
-        # id = 1
-        # Database = DatabaseSearcher(id, 'john')
-        # name, players, rounds = Database.get_tournament_by_id(1)
-        #
-        #
-        # # password = tournamentdata[0][4]
-        # #testpassword
-        # password = '1234'
-        #
-        # if Database.validate_password(id, password):
-        #     print("Password matches!")
-        # else:
-        #     print("incorrect password")
-        #
-        #
-        # Database.get_players_data(id, players)
-        #
-        # Database.print_available_leagues()
-
     def is_password_protected(self, tournament_id):
         try:
             query = "SELECT password from tournament WHERE id = " + tournament_id + ";"
@@ -361,9 +256,6 @@ class DatabaseSearcher:
                 game_nr += 1
                 home = fixt[0].name
                 away = fixt[1].name
-                # print("GAMENUMBER", game_nr, "ASDADASDASDAS")
-
-
 
                 sql = "INSERT INTO fixtures (game_id, tournament_id, played, hometeamname, awayteamname) " \
                     "VALUES (%s, %s, %s, %s, %s)"

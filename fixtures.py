@@ -1,7 +1,6 @@
 from game import Game
 from team import Team
 from mysqldata import DatabaseSearcher
-# from tournament import Tournament
 
 class Fixtures():
     def __init__(self, database, id=None):
@@ -34,6 +33,8 @@ class Fixtures():
         return fixtures
 
     def insert_fixture_into_dict(self, fixtures: list):
+        """Inserts fixtures from a list to a dictionary of fixtures were game number
+        is the key"""
         game = 1
         for fixture in fixtures:
             for i in fixture:
@@ -44,6 +45,9 @@ class Fixtures():
 
 <<<<<<< Updated upstream
     def show_fixtures(self, tournament_id):
+        """Shows fixtures when user chooses 2 from menu. If game
+        is played it prints the score from the game, else it prints
+        not played. Returns nothing."""
 
         games = 1
 =======

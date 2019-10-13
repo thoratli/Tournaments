@@ -2,7 +2,6 @@ from validation import Validation
 from team import Team
 from options import Options
 from mysqldata import DatabaseSearcher
-from fixtures import Fixtures
 import random
 import getpass
 import operator
@@ -50,15 +49,18 @@ class Tournament():
         else:
             self.players_list = []
 
+        self.assigned_teams = self.get_random_teams()
+
         self.password = None
         self.options = Options()
         self.validate = Validation()
-        # self.player = Team()
 
         if new:
             self.fixtures = {}
         else:
             self.fixtures = self.get_fixtures_from_db()
+
+
 
 
 
@@ -71,11 +73,9 @@ class Tournament():
                            'Roma', 'Inter Milan', 'Colombia', 'England', 'Sweden', 'Scandinavia', 'Italy',
                            'Burnley', 'Sevilla']
 
-        # print("\n", PADDING)
-        # print(f"\n{self.name} is almost ready to start ...\n")
-        # print(PADDING)
 
     def get_fixtures_from_db(self):
+        """Reads the fixtures from database """
         database = DatabaseSearcher()
         self.fixtures = database.get_fixtures(self.id)
 
@@ -87,8 +87,6 @@ class Tournament():
 
         while True:
             password = getpass.getpass(prompt="Enter a easy password for later access: ")
-            # password = input("Enter a easy password to access the league later: ")
-            # print("\n", "Your password will be: ",password, "\n")
             password2 = getpass.getpass(prompt="Repeat your password:")
             if password == password2:
                 print("Remember: ", password)
@@ -99,6 +97,7 @@ class Tournament():
 
 
     def get_type(self):
+        """Gets the type of sport from menu options. Returns the type"""
         print(f"[1] Soccer/Fifa/PES\n[2] UFC\n[3] Darts")
         type = input().strip()
         if type in '123':
@@ -113,6 +112,8 @@ class Tournament():
 
 
     def get_form(self):
+        """Gets the form the user. If the form is one random team throughout the
+        league its assignes teams and returns the random_team list. Else it returns an empty list"""
 
         self.print_random_teamlist(6)
 
@@ -121,6 +122,7 @@ class Tournament():
         if play_random in "yY ":
             #Búa til lista með random liðum
             rand_teams = self.get_random_teams()
+
 
             # Prenta út hver er hvaða lið
             self.print_assigned_teams(self.players_list, rand_teams)
@@ -135,13 +137,14 @@ class Tournament():
             return []
 
     def random_every_game(self):
+        """Offers the user to play with random team per round, returns
+        random team if he wants, else returns False"""
 
         random_team_choice = input("\nYou want us to choose random teams for every game? [Y/n]:")
         if random_team_choice in "Yy ":
             return random_team_choice # Returning this string if user wants random teams every game
         else:
             return False# Returning nothing if user chooses not to have random teams every game
-
 
     def get_tournament_name(self):
         """Returns the input of the tournament name"""
@@ -175,8 +178,6 @@ class Tournament():
         """Plays the next game and returns the fixtures"""
         print("Next game is: \n")
 
-        # self.fixtures = self.database.get_fixtures(tournament_id)
-
         for game_number, value in self.fixtures.items():
             game = value[0]
             home, away = game
@@ -186,12 +187,10 @@ class Tournament():
                 self.database.updated_played(tournament_id, game_number)
                 if home.name != 'Day Off' and away.name != 'Day Off':
                     print(home, "VS", away, end=" ")
-                    #adjust database, played = 1, also for day off game
-                    # self.database.find_fixture_id(home.id, away.id)
                     return home, away
 
+        #Should not reach here
         return home, away
-
 
     def set_players_name(self, players_dict=None):
         """Allows participants to enter names for themselves"""
@@ -230,40 +229,9 @@ class Tournament():
         while counter < self.total_players:
             random_team = random.choice(self.randomlist)
             if random_team not in randlist:
-                random_team = random_team.capitalize()
-                randlist.append(random_team)
+                randlist.append(random_team.capitalize())
                 counter += 1
         return randlist
-
-    def get_random_team(self):
-        """Assigns a team to a players from the randomlist """
-
-        players = 0
-        checklist = []
-        for i in range(int(self.total_players)):
-            while players == i:
-                team = Team(random.choice(self.randomlist))
-                if team not in checklist:
-                    checklist.append(team)
-                    self.player.add_team(team)
-                    self.players_list.append(team)
-                    players += 1
-
-    # def play_next_game(self, game_nr):
-    #     """Plays the next game and returns the fixtures"""
-    #
-    #     first_done = False
-    #     print("\n\nNext game is: \n")
-    #     for team in self.fixtures[game_nr]:
-    #         if first_done is False:
-    #             print(f'{str(team).capitalize()} VS ', end="")
-    #
-    #             first_done = True
-    #         else:
-    #             print(str(team).capitalize())
-    #     print("")
-    #     return self.fixtures[game_nr][0], self.fixtures[game_nr][1]
-
 
     def __total_games_per_round__(self):
         """Returns total games per round"""
@@ -292,15 +260,6 @@ class Tournament():
                 checklist.append(game)
                 self.fixtures[counter] = game
                 counter += 1
-
-    # def get_one_fixture(self):
-    #     """Returns one fixture from randomlist"""
-    #
-    #     while True:
-    #         team1 = random.choice(self.randomlist)
-    #         team2 = random.choice(self.randomlist)
-    #         teams = f'{str(team1).capitalize()} VS {str(team2).capitalize()}'
-    #         return teams
 
     def print_fixtures(self):
         """Prints all fixtures for tournament"""
@@ -351,7 +310,6 @@ class Tournament():
         for i in range(MIDDLE-int(len(self.name)/2)):
             print(" ", end="")
 
-
         print(f'{self.name}')
 
         for i in range(MIDDLE-int(len(self.name)/2)):
@@ -368,23 +326,17 @@ class Tournament():
         print("{:<27}{:}{:<6}{:4}{:<7}{:<3}{:<3}{:<3}{:<3}{:<3}{:<3}"
               .format("----------", "",  "------", "",  "------", "","--------", "", "---", "",  "------"))
 
-
-        # print("PLAYER               PLAYED   SCORED   CONCEDED   +/-  POINTS")
-        # print("------               ------   ------   --------   ---  ------")
-
         sorted_x = sorted(self.players_list, key=operator.attrgetter('points'))
         sorted_x.reverse()
-
-        # print('{:>12.2f}'.format(num))
-
         retval = ""
 
         for team in sorted_x:
-            retval += "{:<27}".format(team.name).capitalize()
-            retval += "{:3}".format(team.played_games).capitalize()
-            retval += "{:10}".format(team.scored_goals).capitalize()
-            retval += "{:11}".format(team.conceded_goals).capitalize()
-            retval += "{:9}".format(team.scored_goals-team.conceded_goals).capitalize()
-            retval += "{:7}\n".format(team.points).capitalize()
+            if team.name != "Day Off":
+                retval += "{:<27}".format(team.name).capitalize()
+                retval += "{:3}".format(team.played_games).capitalize()
+                retval += "{:10}".format(team.scored_goals).capitalize()
+                retval += "{:11}".format(team.conceded_goals).capitalize()
+                retval += "{:9}".format(team.scored_goals-team.conceded_goals).capitalize()
+                retval += "{:7}\n".format(team.points).capitalize()
 
         return retval

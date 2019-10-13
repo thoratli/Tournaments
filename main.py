@@ -84,10 +84,9 @@ def main():
 
             total_games = int(new_game.__total_games_per_round__())*int(new_game.total_rounds)
             game_counter = new_game.game_counter
-
             if fixed:
                 id = database.create_new_tournament(new_game.name, new_game.total_players,
-                new_game.total_rounds, new_game.password, new_game.players_list, fixed, new_game.get_random_teams())
+                new_game.total_rounds, new_game.password, new_game.players_list, fixed, form)
                 database.add_to_sport_table(type, database.get_newest_id())
             else:
                 id = database.create_new_tournament(new_game.name, new_game.total_players,
