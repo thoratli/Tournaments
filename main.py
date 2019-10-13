@@ -183,6 +183,8 @@ def main():
                     if validate.validate_score_input(score):
                         score = score.split()
                         a_game = Game(score[0], score[1], home, away)
+                        score_list = [int(a_game.home_score), int(a_game.away_score)]
+                        fixtures.insert_score_to_fixture(score_list, game_counter)
 
                         #fæ villu hér því str object á ekki play_game sem er inní handle scores
                         #self.away_team er str object

@@ -16,7 +16,7 @@ class DatabaseSearcher:
             self.connection = mysql.connector.connect(host='localhost',
                                                       database='tournament',
                                                       user='root',
-                                                      password='atli2369') #atli2369 Klemmisinn
+                                                      password='Klemmisinn?') #atli2369 Klemmisinn
             self.curs = self.connection.cursor(buffered=True)
         except Error as e:
             print("Error reading data from MySQL table", e)
