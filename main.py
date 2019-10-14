@@ -205,7 +205,6 @@ def main():
         fixtures = Fixtures(id)
         fixtures.show_fixtures(tournament_id=id)
 
-
     else:
         exit("You don´t deserve us")
 
