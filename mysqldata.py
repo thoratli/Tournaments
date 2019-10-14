@@ -23,7 +23,7 @@ class DatabaseSearcher:
 
     def get_tournament_by_id(self, ID=int):
 
-        if self.validation.validate_integer(ID):
+        if self.validation.integer(ID):
             ID = str(ID)
             query = "select * from tournament where id = " + ID + ";"
             self.curs.execute(query)
@@ -178,7 +178,7 @@ class DatabaseSearcher:
 
     def get_fixtures(self, id):
         '''Should return a dict of fixtures {1: [liverpool, Arsenal], 2 [Chelsea ... ] '''
-        if self.validation.validate_integer(id):
+        if self.validation.integer(id):
             ID = str(id)
             query = "select * from fixtures where tournament_id = " + ID + ";"
             self.curs.execute(query)
