@@ -78,6 +78,7 @@ def main():
     #get user input from first menu above
     users_pick = get_inputs("Enter choice: ", ['1', '2'])
 
+    # starting new tournament
     if users_pick == '1':
         #create new instance of a tournament, using the database instance
         new_game = Tournament(database=database, new=True)
@@ -146,7 +147,6 @@ def main():
         elif type == 'Darts':
             freeze_screen(1, "Darts not ready. Application closing ...")
             quit()
-
 
     #below is playing a league that already exists
     elif users_pick == '2':
