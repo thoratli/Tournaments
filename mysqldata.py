@@ -166,7 +166,7 @@ class DatabaseSearcher:
         except:
             return False
 
-    def database_is_not_empty(self):
+    def is_not_empty(self):
         try:
             return_value = "SELECT * from tournament;"
             self.curs.execute(return_value)
