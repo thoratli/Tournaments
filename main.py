@@ -205,9 +205,8 @@ def main():
         new_game.game_counter += 1
         print(option.show())
         the_option = option.get()
-        if validate.validate_limit(the_option, 1, 4) or the_option == "":
+        if validate.limit(the_option, 1, 4) or the_option == "":
             if the_option == '':
-                # game_number = game_counter%int(new_game.__total_games_per_round__())
                 print(LINES)
                 home, away = new_game.play_next_game(id, new_game.game_counter)
                 print("\n", LINES)
@@ -215,7 +214,7 @@ def main():
                 # getting the score for the game
                 while True:
                     score = input("Enter results, two integers with space between: ")
-                    if validate.validate_score_input(score):
+                    if validate.scores(score):
                         score = score.split()
                         a_game = Game(score[0], score[1], home, away)
                         score_list = [int(a_game.home_score), int(a_game.away_score)]
