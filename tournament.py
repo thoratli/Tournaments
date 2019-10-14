@@ -154,9 +154,9 @@ class Tournament():
 
         while True:
             players = input("How many players: ")
-            if self.validate.validate_integer(players):
+            if self.validate.integer(players):
                 players = int(players)
-                if self.validate.validate_limit(players, 2):
+                if self.validate.limit(players, 2):
                     self.total_players = players
                     return int(players)
 
@@ -166,8 +166,8 @@ class Tournament():
 
         while True:
             number = input("How many rounds you want to play? ")
-            if self.validate.validate_integer(number):
-                if self.validate.validate_limit(number, 1):
+            if self.validate.integer(number):
+                if self.validate.limit(number, 1):
                     self.total_rounds = int(number)
                     return int(number)
 
