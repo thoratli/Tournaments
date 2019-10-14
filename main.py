@@ -122,11 +122,21 @@ def main():
             database.add_to_sport_table(type, database.get_newest_id())
 
             #todo: refactor this part
+
+            #new instance of fixtures
             fixtures = Fixtures(database)
-            the_fixtures = fixtures.generate_fixture_list(new_game.players_list,new_game.total_rounds)
-            database.insert_fixtures(the_fixtures, id)
+
+            #generate fixtures as list and then adding to dictionary
+            the_fixtures = fixtures.generate_fixture_list(new_game.players_list, new_game.total_rounds)
             fixt_dixt = fixtures.insert_fixture_into_dict(the_fixtures)
+
+            #insert into database
+            database.insert_fixtures(the_fixtures, id)
+
+            #assigning the fixt_dixt to the new_game instance self.fixtures
             new_game.fixtures = fixt_dixt
+
+            #showing all the fixtures
             fixtures.show_fixtures(tournament_id=id)
 
         elif type == 'UFC':
