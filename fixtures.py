@@ -1,7 +1,6 @@
 from game import Game
 from team import Team
 from mysqldata import DatabaseSearcher
-# from tournament import Tournament
 
 class Fixtures():
     def __init__(self, database, id=None):
@@ -12,7 +11,7 @@ class Fixtures():
             self.database = DatabaseSearcher()
             self.fixtures = self.database.get_fixtures(id)
 
-    def generate_fixture_list(self, teams: list):
+    def generate_fixture_list(self, teams: list, total_rounds):
         """Generate fixtures from a list of teams, and returns the fixtures
         as a list"""
 
@@ -30,10 +29,12 @@ class Fixtures():
             return_match = []
 
         #insert the list into self.fixture dict
-        self.insert_fixture_into_dict(fixtures)
-        return fixtures
+        self.insert_fixture_into_dict(fixtures * total_rounds)
+        return fixtures * total_rounds
 
     def insert_fixture_into_dict(self, fixtures: list):
+        """Inserts fixtures from a list to a dictionary of fixtures were game number
+        is the key"""
         game = 1
         for fixture in fixtures:
             for i in fixture:
@@ -42,26 +43,19 @@ class Fixtures():
                 game += 1
         return self.fixtures
 
-    def show_fixtures(self, tournament_id):
-
-        games = 1
-
     def insert_score_to_fixture(self, score, gamenr):
+        """Inserts a score into the fixture dict with game number as parameter"""
         gamenr += 1
         self.fixtures[gamenr][1].append(score)
 
-
-        # for key,value in self.fixtures.items():
-        #     print(key, value)
-
     def show_fixtures(self, tournament_id, game = None):
-        # print(self.fixtures[1][1], "Er þetta staðan????")
-        games = 0
-        i = 0
+        """Shows fixtures when user chooses 2 from menu. If game
+            is played it prints the score from the game, else it prints
+            not played. Returns nothing."""
+        games = 0 #represent the game number taking day off into account
 
         for key, value in self.fixtures.items():
             #key from 1 to number of games
-            i += 1
             game = value[0]
             home, away = game #get values from tuple
             played = self.database.is_played(tournament_id, str(key))
@@ -74,7 +68,6 @@ class Fixtures():
                     print("NOT played")
 
                 else:
-                    print("What to do here? ")
                     print("Game:", games, end=" ")
                     print(home, "VS", away, end=" ")
                     print(self.fixtures[games][1][0][0], " - ",  self.fixtures[games][1][0][1])
