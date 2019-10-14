@@ -151,7 +151,7 @@ def main():
     #below is playing a league that already exists
     elif users_pick == '2':
         freeze_screen(2, "Reading from database ...")
-        if database.database_is_not_empty():
+        if database.is_not_empty():
             freeze_screen(2, "No leagues in the database")
             main()
         else:
