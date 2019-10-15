@@ -1,5 +1,5 @@
 #toDo: atli implement validation class
-from options import Options
+from app.options import Options
 
 class Validation():
     def __init__(self):

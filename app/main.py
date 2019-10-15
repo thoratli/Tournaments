@@ -1,12 +1,9 @@
-import configparser
-from tournament import Tournament
-# from options import Options
-from validation import *
-from mysqldata import DatabaseSearcher
 import time
-from game import Game
-from fixtures import Fixtures
-from team import Team
+from app.tournament import Tournament
+from app.validation import *
+from app.game import Game
+from app.fixtures import Fixtures
+from app.mysqldata import DatabaseSearcher
 
 #new game
 #todo: we are not taking rounds into account when printing fixtures and scores with it, needs multiplication
@@ -65,15 +62,10 @@ def get_inputs(input_text, options: list):
         else:
             print()
 
-def main():
+def main(database: DatabaseSearcher):
     # initialize instances and print intro.
     #todo: make sure you only print intro (def initalize) once
-    config = configparser.ConfigParser()
-    config.read('./config.ini')
-    database = DatabaseSearcher(host=config['db']['host'],
-                                user=config['db']['user'],
-                                password=config['db']['password'],
-                                database=config['db']['database'])
+
     validate = Validation()
     option = Options()
     initialize()
@@ -281,9 +273,3 @@ def main():
     print(new_game.get_winner())
 
     print("\n\n", LINES)
-
-main()
-
-
-
-

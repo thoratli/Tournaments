@@ -1,6 +1,6 @@
-from game import Game
-from team import Team
-from mysqldata import DatabaseSearcher
+from app.game import Game
+from app.team import Team
+from app.mysqldata import DatabaseSearcher
 
 class Fixtures():
     def __init__(self, database, id=None):

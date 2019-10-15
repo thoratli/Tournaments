@@ -1,7 +1,7 @@
-from validation import Validation
-from team import Team
-from options import Options
-from mysqldata import DatabaseSearcher
+from app.validation import Validation
+from app.team import Team
+from app.options import Options
+from app.mysqldata import DatabaseSearcher
 import random
 import getpass
 import operator
