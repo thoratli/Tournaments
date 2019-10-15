@@ -2,21 +2,23 @@ import mysql.connector
 from mysql.connector import Error
 from validation import Validation
 
-#todo: add fixturetable to database, how do we keep track on scores? Scorestable?
+
+# todo: add fixturetable to database, how do we keep track on scores? Scorestable?
 
 
 class DatabaseSearcher:
-    def __init__(self):
-        self.validation = Validation()
-        self.connect()
 
-    def connect(self):
+    def __init__(self, user: str, password: str, database: str = 'tournament', host: str = 'localhost'):
+        self.validation = Validation()
+        self.connect(user, password, database, host)
+
+    def connect(self, user: str, password: str, database: str, host: str):
 
         try:
-            self.connection = mysql.connector.connect(host='localhost',
-                                                      database='tournament',
-                                                      user='root',
-                                                      password='atli2369') #atli2369 Klemmisinn
+            self.connection = mysql.connector.connect(host=host,
+                                                      database=database,
+                                                      user=user,
+                                                      password=password)
             self.curs = self.connection.cursor(buffered=True)
         except Error as e:
             print("Error reading data from MySQL table", e)

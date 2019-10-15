@@ -1,3 +1,4 @@
+import configparser
 from tournament import Tournament
 # from options import Options
 from validation import *
@@ -67,7 +68,12 @@ def get_inputs(input_text, options: list):
 def main():
     # initialize instances and print intro.
     #todo: make sure you only print intro (def initalize) once
-    database = DatabaseSearcher()
+    config = configparser.ConfigParser()
+    config.read('./config.ini')
+    database = DatabaseSearcher(host=config['db']['host'],
+                                user=config['db']['user'],
+                                password=config['db']['password'],
+                                database=config['db']['database'])
     validate = Validation()
     option = Options()
     initialize()
