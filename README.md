@@ -21,7 +21,6 @@ pip install -r requirements.txt (not yet)
 - database on the right
 - add data source
 - mysql
-- user root
-- your password
-- database: tournament
+- copy the config.ini.example to config.ini
+- update the config file with the correct information
 
