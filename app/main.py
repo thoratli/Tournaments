@@ -3,7 +3,7 @@ from app.tournament import Tournament
 from app.validation import *
 from app.game import Game
 from app.fixtures import Fixtures
-from app.mysqldata import DatabaseSearcher
+from sqlalchemy.orm.session import Session
 
 #new game
 #todo: we are not taking rounds into account when printing fixtures and scores with it, needs multiplication
@@ -62,13 +62,15 @@ def get_inputs(input_text, options: list):
         else:
             print()
 
-def main(database: DatabaseSearcher):
+
+def main(session: Session):
     # initialize instances and print intro.
     #todo: make sure you only print intro (def initalize) once
 
     validate = Validation()
     option = Options()
     initialize()
+    database = None
 
     #first menu
     print_message("[1] Play a new game\n[2] Continue with a league")
