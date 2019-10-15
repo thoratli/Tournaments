@@ -1,6 +1,7 @@
 
-class Game():
-    def __init__(self, home_score=int, away_score=int, home_team=None, away_team=None):
+class Game:
+    def __init__(self, id=id, home_score=int, away_score=int, home_team=None, away_team=None):
+        self.id = id
         self.home_score = home_score
         self.away_score = away_score
         self.home_team = home_team
