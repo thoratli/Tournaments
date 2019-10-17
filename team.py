@@ -1,7 +1,7 @@
 from mysqldata import DatabaseSearcher
 
 class Team:
-    def __init__(self, database, id=None, name=str, points=None, played=None, scored=None, conceded=None):
+    def __init__(self, database, id=None, name=str, points: int = None, played=None, scored=None, conceded=None):
 
         #works if team is random from start
         self.id = id

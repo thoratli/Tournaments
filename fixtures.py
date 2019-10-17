@@ -1,22 +1,23 @@
 from game import Game
 from team import Team
-from mysqldata import DatabaseSearcher
+# from mysqldata import DatabaseSearcher
+
 
 class Fixtures():
-    def __init__(self, database, id=None):
-        if id is None:
+    def __init__(self, database, tournament_id=None):
+        if tournament_id is None:
             self.fixtures = {}
             self.database = database
         else:
-            self.database = DatabaseSearcher()
-            self.fixtures = self.database.get_fixtures(id)
+            self.database = database
+            self.fixtures = self.database.get_fixtures(tournament_id)
 
     def generate_fixture_list(self, teams: list, total_rounds):
         """Generate fixtures from a list of teams, and returns the fixtures
         as a list"""
 
         if len(teams) % 2 != 0:
-            teams.append(Team('Day Off'))
+            teams.append(Team(self.database, 0, 'Day Off'))
         n = len(teams)
         fixtures = []
         return_match = []
@@ -32,46 +33,70 @@ class Fixtures():
         self.insert_fixture_into_dict(fixtures * total_rounds)
         return fixtures * total_rounds
 
-    def insert_fixture_into_dict(self, fixtures: list):
+
+    def insert_fixture_into_dict(self, fixtures: list, tournament_id=None):
         """Inserts fixtures from a list to a dictionary of fixtures were game number
         is the key"""
-        game = 1
+        game_nr = 0
         for fixture in fixtures:
-            for i in fixture:
-                #zero represents not played
-                self.fixtures[game] = [i, []]
-                game += 1
+            for teams in fixture:
+                    if teams[0].id != 0 and teams[1].id != 0:
+                        # if new game, all scores are empty
+                        if tournament_id != None:
+                            if self.database.is_played(game_id=game_nr, tournament_id=tournament_id):
+                                home_score, away_score = self.database.get_scores_for_game(game_id=game_nr)
+                                if home_score == 'VIRKAR' or away_score == "EKKI":
+                                    game_nr+=1
+                                    break
+                                else:
+                                    self.fixtures[game_nr] = [teams, [home_score, away_score]]
+                                    game_nr += 1
+                                    break
+                        else:
+                            self.fixtures[game_nr] = [teams, []]
+                            game_nr += 1
+                            break
+
         return self.fixtures
 
     def insert_score_to_fixture(self, score, gamenr):
         """Inserts a score into the fixture dict with game number as parameter"""
-        gamenr += 1
         self.fixtures[gamenr][1].append(score)
 
-    def show_fixtures(self, tournament_id, game = None):
+    def show_fixtures(self, tournament_id, old=False):
         """Shows fixtures when user chooses 2 from menu. If game
             is played it prints the score from the game, else it prints
             not played. Returns nothing."""
-        games = 0 #represent the game number taking day off into account
-
+        print()
+        # print(dict.keys(self.fixtures))
+        # print(self.fixtures)
         for key, value in self.fixtures.items():
-            #key from 1 to number of games
+            #key from 0 to number of games
+
             game = value[0]
             home, away = game #get values from tuple
-            played = self.database.is_played(tournament_id, str(key))
+            # print(home, away, "aasdasd")
+            played = self.database.is_played(tournament_id, int(key))
+            # print(played, "played lína 60 fixtures")
+            # games += 1
+            if not played:
+                print("Game:", key+1, end=" ")
+                print(home, "VS", away, end=" ")
+                print("NOT played")
 
-            if home.name != 'Day Off' and away.name != 'Day Off':
-                games += 1
-                if not played:
-                    print("Game:", games, end=" ")
-                    print(home, "VS", away, end=" ")
-                    print("NOT played")
-
+            else:
+                print("Game:", key+1, end=" ")
+                print(home, "VS", away, end=" ")
+                if self.fixtures[key][1] != []:
+                    print("PLAYED, list missing score")
+                    # print(self.fixtures[key])
+                    # print(self.fixtures[key][1][0][0], " - ",  self.fixtures[key][1][0][1])
                 else:
-                    print("Game:", games, end=" ")
-                    print(home, "VS", away, end=" ")
-                    print(self.fixtures[games][1][0][0], " - ",  self.fixtures[games][1][0][1])
-        print()
+                    print("PLAYED, list has scores")
+            #     print("else lína 70 fixt[key],", self.fixtures[key])
+            #         print("else lína 70 fixt[key][1][0],", self.fixtures[key][1])
+                # print(self.fixtures[key][1][0][0], " - ",  self.fixtures[key][1][0][1])
+
 
     def __str__(self):
         retval = ""
