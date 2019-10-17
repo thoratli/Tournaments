@@ -34,7 +34,6 @@ class DatabaseSearcher:
                 players = records[0][2]
                 rounds = records[0][3]
                 played_games = records[0][5]
-                # print(played_games, "PLAYED --------------")
                 return name, players, rounds, played_games
 
             except IndexError:
@@ -170,7 +169,6 @@ class DatabaseSearcher:
         return_value = f"SELECT id FROM {table} ORDER BY id DESC LIMIT 1;"
         self.curs.execute(return_value)
         records = self.curs.fetchone()
-        # print(records, "Records 172")
         try:
             if records[0] == 'None':
                 return 0
@@ -207,9 +205,6 @@ class DatabaseSearcher:
 
             return_dict = {}
 
-            # print("^^^^^^ line 207")
-            # print(records)
-
             for value in records:
                 game_number = value[7]
                 played = value[2]
@@ -240,27 +235,12 @@ class DatabaseSearcher:
             home, away = records
             return home, away
 
-        # try:
-        #     name = records[0][1]
-        #     players = records[0][2]
-        #     rounds = records[0][3]
-        #     played_games = records[0][5]
-        #     return name, players, rounds, played_games
-        #
-        # except:
-        #     print("exception")
-    #
-    # else:
-    # return False
-
-
     def get_team_name_by_id(self, team_id):
         team_id = str(team_id)
         query = "SELECT t.name FROM fixtures f INNER JOIN TEAM t WHERE t.id = " + team_id + ";"
         self.curs.execute(query)
         records = self.curs.fetchone()
         return records[0]
-
 
     def is_played(self, tournament_id, game_id):
         game_id = str(game_id)
@@ -272,7 +252,6 @@ class DatabaseSearcher:
         self.curs.execute(query)
         records = self.curs.fetchone()
 
-        # return records[0] == 1
         try:
             if records[0] == 0:
                 return False
@@ -296,9 +275,6 @@ class DatabaseSearcher:
                 ", conceded_goals = " + conceded +\
                 " WHERE id = " + team_id + ";"
 
-
-        # print("MYSQL 258")
-        # print(query)
         self.curs.execute(query)
         self.connection.commit()
 
@@ -325,9 +301,7 @@ class DatabaseSearcher:
                 if home != 0 and away != 0:
                     sql = "INSERT INTO fixtures (game_id, tournament_id, home_id, away_id) " \
                         "VALUES (%s, %s, %s, %s)"
-                    # print("SQL:, ", sql)
                     val = (game_nr, tournament_id, home, away)
-                    # print("VALUES:", val)
                     game_nr += 1
 
                     self.curs.execute(sql, val)
