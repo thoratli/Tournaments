@@ -1,6 +1,5 @@
 from game import Game
 from team import Team
-# from mysqldata import DatabaseSearcher
 
 
 class Fixtures():
@@ -63,28 +62,25 @@ class Fixtures():
         """Inserts a score into the fixture dict with game number as parameter"""
         self.fixtures[gamenr][1].append(score)
 
-    def show_fixtures(self, tournament_id, old=False):
+    def show_fixtures(self, tournament_id):
         """Shows fixtures when user chooses 2 from menu. If game
             is played it prints the score from the game, else it prints
             not played. Returns nothing."""
         print()
-        # print(dict.keys(self.fixtures))
-        # print(self.fixtures)
         for key, value in self.fixtures.items():
             #key from 0 to number of games
 
             game = value[0]
             home, away = game #get values from tuple
-            # print(home, away, "aasdasd")
             played = self.database.is_played(tournament_id, int(key))
-            # print(played, "played lína 60 fixtures")
-            # games += 1
+
             if not played:
                 print("Game:", key+1, end=" ")
                 print(home, "VS", away, end=" ")
-                print("NOT played")
+                print("Not played")
 
             else:
+                #need to implement the else statement
                 print("Game:", key+1, end=" ")
                 print(home, "VS", away, end=" ")
                 if self.fixtures[key][1] != []:
