@@ -52,17 +52,14 @@ def initialize():
 def get_inputs(input_text, options: list):
     """Takes in the input text and the list of options
     and returns the input if valid"""
-    for i in options:
-        print(i)
 
     while True:
         user_input = input(input_text).strip()
         print()
-        print(user_input)
         if user_input in options:
             return user_input
         else:
-            print()
+            print("Please try again!")
 
 def main():
     # initialize instances and print intro.
@@ -78,12 +75,18 @@ def main():
     #get user input from first menu above
     users_pick = get_inputs("Enter choice: ", ['1', '2'])
 
+    # starting new tournament
     if users_pick == '1':
         #create new instance of a tournament, using the database instance
         new_game = Tournament(database=database, new=True)
 
         #the type of sport to have the option to scale the software
-        type = new_game.get_type()
+        while True:
+            type = new_game.get_type()
+            if type in ['Soccer', 'UFC', 'Darts']:
+                break
+            else:
+                print("Stay focused")
 
         if type == 'Soccer':
             #get all inputs from user
@@ -111,7 +114,7 @@ def main():
             game_counter = new_game.game_counter
 
             #database insertion, insert into tournament and insert into sport table
-            id = database.create_new_tournament(name=new_game.name,
+            tournament_id = database.create_new_tournament(name=new_game.name,
                                                 total_players=new_game.total_players,
                                                 total_rounds=new_game.total_rounds,
                                                 password=new_game.password,
@@ -119,15 +122,25 @@ def main():
                                                 fixed=fixed,
                                                 rand_list=form)
 
-            database.add_to_sport_table(type, database.get_newest_id())
+            database.add_to_sport_table(type, database.get_newest_id('Tournament'))
 
             #todo: refactor this part
+
+            #new instance of fixtures
             fixtures = Fixtures(database)
-            the_fixtures = fixtures.generate_fixture_list(new_game.players_list,new_game.total_rounds)
-            database.insert_fixtures(the_fixtures, id)
+
+            #generate fixtures as list and then adding to dictionary
+            the_fixtures = fixtures.generate_fixture_list(new_game.players_list, new_game.total_rounds)
             fixt_dixt = fixtures.insert_fixture_into_dict(the_fixtures)
+
+            #insert into database
+            database.insert_fixtures(the_fixtures, tournament_id)
+
+            #assigning the fixt_dixt to the new_game instance self.fixtures
             new_game.fixtures = fixt_dixt
-            fixtures.show_fixtures(tournament_id=id)
+
+            #showing all fixtures before tournament starts
+            fixtures.show_fixtures(tournament_id=database.get_newest_id('Tournament'))
 
         elif type == 'UFC':
             freeze_screen(1, "UFC not ready. Application closing ...")
@@ -137,33 +150,32 @@ def main():
             freeze_screen(1, "Darts not ready. Application closing ...")
             quit()
 
-
     #below is playing a league that already exists
     elif users_pick == '2':
         freeze_screen(2, "Reading from database ...")
-        if database.database_is_not_empty():
+        if database.is_not_empty():
             freeze_screen(2, "No leagues in the database")
             main()
         else:
             print_message("Available leagues:")
             database.print_available_leagues()
 
-        #picking tournament id from a list
+        #picking tournament tournament_id from a list
         while True:
-            id = input("Enter the ID for the league you want to play? ")
-            if database.get_tournament_by_id(id):
-                name, players, rounds, game_counter = database.get_tournament_by_id(id)
-                type = database.get_type(id)
+            tournament_id = input("Enter the ID for the league you want to play? ")
+            if database.get_tournament_by_id(tournament_id):
+                name, players, rounds, game_counter = database.get_tournament_by_id(tournament_id)
+                type = database.get_type(tournament_id)
                 print("LeagueName:", name, "\nTotal Players: ", players, "\nTotal Rounds: ", rounds)
-                players_dict = database.get_players_data(id=id,
+                players_dict = database.get_players_data(id=tournament_id,
                                                          total_players=players)
                 break
 
         #password protection
         while True:
-            if database.is_password_protected(tournament_id=id) is True:
+            if database.is_password_protected(tournament_id=tournament_id) is True:
                 password = input("Enter password: ")
-                if database.validate_password(id=id,password=password) is True:
+                if database.validate_password(id=tournament_id,password=password) is True:
                     freeze_screen(2, "Collecting data from database ...")
                     break
                 else:
@@ -173,15 +185,20 @@ def main():
                 print("\n\nMaybe you should use a password next time.\n ")
                 break
 
+
+        #create players list
+
         #setting up new instance of tournament as new.game
         new_game = Tournament(database=database,
-                              id=id,type=type,
+                              tournament_id=tournament_id,
+                              type=type,
                               name=name,
                               rounds=rounds,
                               players=players,
                               game_counter=game_counter,
                               players_list=None,
                               new=False)
+
         new_game.set_players_name(players_dict=players_dict)
 
         print(LINES)
@@ -189,44 +206,76 @@ def main():
         print(LINES)
 
         #getting the total games for the play loop
-        total_games = int(new_game.__total_games_per_round__()) * int(new_game.total_rounds)
+        # total_games = int(new_game.__total_games_per_round__()) * int(new_game.total_rounds)
+        total_games = new_game.total_games
+
+        # new instance of fixtures
+        fixtures = Fixtures(database=database, tournament_id=new_game.tournament_id)
+
+        # generate fixtures as list and then adding to dictionary
+        the_fixtures = fixtures.generate_fixture_list(new_game.players_list, new_game.total_rounds)
+        fixt_dixt = fixtures.insert_fixture_into_dict(the_fixtures, tournament_id=tournament_id)
+
+        new_game.fixtures = fixt_dixt
+
+        print(new_game.fixtures)
 
         #todo: needs to fix to its working with the old instance
-        fixtures = Fixtures(id)
-        fixtures.show_fixtures(tournament_id=id)
+        # fixtures = Fixtures(database=database, tournament_id=tournament_id)
+        # new_game.fixtures = database.get_fixtures(tournament_id)
+
+        # print(new_game.fixtures)
+        fixtures.show_fixtures(tournament_id=tournament_id)
+
 
 
     else:
         exit("You don´t deserve us")
-
 
     #playing a game with new_game as instance of Tournament
     while game_counter < total_games:
         new_game.game_counter += 1
         print(option.show())
         the_option = option.get()
-        if validate.validate_limit(the_option, 1, 4) or the_option == "":
+        if validate.limit(the_option, 1, 4) or the_option == "":
             if the_option == '':
-                # game_number = game_counter%int(new_game.__total_games_per_round__())
                 print(LINES)
-                home, away = new_game.play_next_game(id, new_game.game_counter)
+                home, away = new_game.play_next_game(tournament_id=new_game.tournament_id,
+                                                     game_counter=new_game.game_counter)
                 print("\n", LINES)
 
                 # getting the score for the game
                 while True:
                     score = input("Enter results, two integers with space between: ")
-                    if validate.validate_score_input(score):
+                    if validate.scores(score):
                         score = score.split()
-                        a_game = Game(score[0], score[1], home, away)
+                        a_game = Game(game_counter, score[0], score[1], home, away)
                         score_list = [int(a_game.home_score), int(a_game.away_score)]
+
+
                         fixtures.insert_score_to_fixture(score_list, game_counter)
+                        database.update_fixture_table(game_id=a_game.id,
+                                                      tournament_id=tournament_id,
+                                                      home_id=home.id,
+                                                      away_id=away.id,
+                                                      scores=score_list)
                         a_game.handle_scores()
+                        #updating fixtures
+                        database.updated_played(tournament_id=tournament_id,
+                                                game_id=game_counter)
                         game_counter += 1
+                        new_game.game_counter += 1
+                        database.update_played_games_in_tournament_by_id(tournament_id=int(new_game.tournament_id)+1,
+                                                                         played_games=game_counter)
+
 
                         #update played games for the tournament and attributes for the players
-                        database.update_played_games_in_tournament_by_id(id, game_counter)
                         for i in new_game.players_list:
-                            database.update_players_attributes(i.id, i.points, i.scored_goals, i.conceded_goals, i.played_games)
+                            database.update_players_attributes(i.id,
+                                                               i.points,
+                                                               i.scored_goals,
+                                                               i.conceded_goals,
+                                                               i.played_games)
                         break
 
             elif the_option == '1':
@@ -236,7 +285,7 @@ def main():
                 print(LINES)
 
                 #todo: print only unplayed games or games with scores
-                fixtures.show_fixtures(tournament_id=id)
+                fixtures.show_fixtures(tournament_id=tournament_id)
                 print(LINES)
                 freeze_screen(2)
 

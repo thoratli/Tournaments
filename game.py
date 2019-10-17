@@ -1,6 +1,7 @@
 
-class Game():
-    def __init__(self, home_score=int, away_score=int, home_team=None, away_team=None):
+class Game:
+    def __init__(self, id=id, home_score=int, away_score=int, home_team=None, away_team=None):
+        self.id = id
         self.home_score = home_score
         self.away_score = away_score
         self.home_team = home_team
@@ -13,13 +14,16 @@ class Game():
             self.away_team.win()
         elif self.away_score < self.home_score:
             self.home_team.win()
-
-
-    def _draw(self):
-        """Checks for draw and add relevant points to teams"""
-        if self.home_score == self.away_score:
+        else:
             self.away_team.draw()
             self.home_team.draw()
+
+
+    #
+    # def _draw(self):
+    #     """Checks for draw and add relevant points to teams"""
+    #     if self.home_score == self.away_score:
+    #
 
 
     def _played(self):
@@ -42,7 +46,7 @@ class Game():
         """Handles all the scores for one game"""
         self._played()
         self._win()
-        self._draw()
+        # self._draw()
         self._add_goals()
 
 

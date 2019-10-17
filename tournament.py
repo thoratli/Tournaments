@@ -9,12 +9,13 @@ PADDING = "--------------------------------------------------------------"
 MIDDLE = int(len(PADDING)/2)
 
 class Tournament():
-    def __init__(self, database, id=None, type=None, name=None, rounds=None, players=None, game_counter=None, players_list=None, new=False):
+    def __init__(self, database, tournament_id=None, type=None, name=None, rounds=None, players=None, game_counter=None, players_list=None, new=False):
         self.database = database
-        if id:
-            self.id = id
+
+        if tournament_id is None:
+            self.tournament_id = self.database.get_newest_id('Tournament')
         else:
-            self.id = None
+            self.tournament_id = tournament_id
 
         if type:
             self.type = type
@@ -71,7 +72,7 @@ class Tournament():
     def get_fixtures_from_db(self):
         """Reads the fixtures from database """
         database = DatabaseSearcher()
-        self.fixtures = database.get_fixtures(self.id)
+        self.fixtures = database.get_fixtures(self.tournament_id)
 
     def get_password(self):
         """Gets the passwords from user and returns it"""
@@ -102,7 +103,7 @@ class Tournament():
                 self.type = 'Soccer'
             elif type == '2':
                 self.type = 'UFC'
-            else:
+            elif type == '3':
                 self.type = 'Darts'
 
         return self.type
@@ -154,9 +155,9 @@ class Tournament():
 
         while True:
             players = input("How many players: ")
-            if self.validate.validate_integer(players):
+            if self.validate.integer(players):
                 players = int(players)
-                if self.validate.validate_limit(players, 2):
+                if self.validate.limit(players, 2):
                     self.total_players = players
                     return int(players)
 
@@ -166,8 +167,8 @@ class Tournament():
 
         while True:
             number = input("How many rounds you want to play? ")
-            if self.validate.validate_integer(number):
-                if self.validate.validate_limit(number, 1):
+            if self.validate.integer(number):
+                if self.validate.limit(number, 1):
                     self.total_rounds = int(number)
                     return int(number)
 
@@ -178,13 +179,14 @@ class Tournament():
         for game_number, value in self.fixtures.items():
             game = value[0]
             home, away = game
-            # played = value[1]
-            played = self.database.is_played(tournament_id, game_number)
-            if not played:
+
+            #this is the score from the dict
+            played = value[1]
+            # if played == []:
+            if not self.database.is_played(tournament_id, game_number):
                 self.database.updated_played(tournament_id, game_number)
-                if home.name != 'Day Off' and away.name != 'Day Off':
-                    print(home, "VS", away, end=" ")
-                    return home, away
+                print(home, "VS", away, end=" ")
+                return home, away
 
         #Should not reach here
         return home, away
@@ -194,13 +196,21 @@ class Tournament():
         players = 0
         if players_dict:
             for key, value in players_dict.items():
-                name = key
+                id = key
                 for attr in value:
-                    points = attr[0]
-                    scored = attr[1]
-                    conceded = attr[2]
-                    played = attr[3]
-                    new_team = Team(name, points, played, scored, conceded)
+                    print(value, "þetta er value in set players name")
+                    name = attr[0]
+                    points = attr[1]
+                    scored = attr[2]
+                    conceded = attr[3]
+                    played = attr[4]
+                    new_team = Team(self.database,
+                                    id=id,
+                                    name=name,
+                                    points=points,
+                                    scored=scored,
+                                    played=played,
+                                    conceded=conceded)
                     self.players_list.append(new_team)
 
         else:
@@ -208,7 +218,7 @@ class Tournament():
                 while players == i:
                     team_name = input(f'Participant nr {players +1}: ')
                     # if self.validate.validate_name_input(team_name):
-                    new_team = Team(team_name)
+                    new_team = Team(self.database, players+1, team_name)
                     self.players_list.append(new_team)
                     players += 1
 
@@ -275,21 +285,19 @@ class Tournament():
                 if int(i.points) > max:
                     max = int(i.points)
                     name = str(i.name)
-
-
                 elif int(i.points) == max:
                     if curr_diff > maxdiff_origin:
                         max = int(i.points)
                         name = str(i.name)
                         maxdiff_origin = curr_diff
                         goal_difference = True
-
                 else:
                     tied = True
-
-        if goal_difference:
-            return f'{name} with {str(max)} points, on GOAL DIFFERENCE!'
-        return f'{name} with {str(max)} points'
+                    name = "ATLI"
+        return "ATLI WANN"
+        # if goal_difference:
+        #     return f'{name} with {str(max)} points, on GOAL DIFFERENCE!'
+        # return f'{name} with {str(max)} points'
 
     def __str__(self):
         #todo: Refactor __str__ function for tournament
