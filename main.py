@@ -220,14 +220,7 @@ def main():
 
         print(new_game.fixtures)
 
-        #todo: needs to fix to its working with the old instance
-        # fixtures = Fixtures(database=database, tournament_id=tournament_id)
-        # new_game.fixtures = database.get_fixtures(tournament_id)
-
-        # print(new_game.fixtures)
         fixtures.show_fixtures(tournament_id=tournament_id)
-
-
 
     else:
         exit("You don´t deserve us")
