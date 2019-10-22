@@ -176,16 +176,12 @@ class Tournament():
         """Plays the next game and returns the fixtures"""
         print("Next game is: \n")
 
-        print(self.fixtures)
         for game_number, value in self.fixtures.items():
             game = value[0]
             home, away = game
-            print(home, "!!!!!!!!!!!!!!!!!!!!!!!!!11")
 
-            print(value, "value!!!!!!!!!!")
             #this is the score from the dict
             played = value[1]
-            print(played, "þetta er played")
             # if played == []:
             if not self.database.is_played(tournament_id, game_number) or played == []:
                 self.database.updated_played(tournament_id, game_number)
@@ -221,8 +217,9 @@ class Tournament():
             for i in range(int(self.total_players)):
                 while players == i:
                     team_name = input(f'Participant nr {players +1}: ')
-                    # if self.validate.validate_name_input(team_name):
-                    new_team = Team(self.database, players+1, team_name)
+                    new_team = Team(database=self.database,
+                                    id=players+1,
+                                    name=team_name)
                     self.players_list.append(new_team)
                     players += 1
 
