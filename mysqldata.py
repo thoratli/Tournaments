@@ -292,19 +292,17 @@ class DatabaseSearcher:
 
     def insert_fixtures(self, fixture_list, tournament_id):
 
-        # print("TOURNAMENTID,", tournament_id)
         game_nr = 0
-        for rounds in fixture_list:
-            for index, fixt in enumerate(rounds):
-                home = fixt[0].id
-                away = fixt[1].id
-                if home != 0 and away != 0:
-                    sql = "INSERT INTO fixtures (game_id, tournament_id, home_id, away_id) " \
-                        "VALUES (%s, %s, %s, %s)"
-                    val = (game_nr, tournament_id, home, away)
-                    game_nr += 1
+        for game in fixture_list:
+            home = game[0].id
+            away = game[1].id
+            if home != 0 and away != 0:
+                sql = "INSERT INTO fixtures (game_id, tournament_id, home_id, away_id) " \
+                    "VALUES (%s, %s, %s, %s)"
+                val = (game_nr, tournament_id, home, away)
+                game_nr += 1
 
-                    self.curs.execute(sql, val)
+                self.curs.execute(sql, val)
         self.connection.commit()
 
 
