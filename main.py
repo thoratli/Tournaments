@@ -167,8 +167,8 @@ def main():
                 name, players, rounds, game_counter = database.get_tournament_by_id(tournament_id)
                 type = database.get_type(tournament_id)
                 print("LeagueName:", name, "\nTotal Players: ", players, "\nTotal Rounds: ", rounds)
-                players_dict = database.get_players_data(id=tournament_id,
-                                                         total_players=players)
+                players_dict = database.get_players_data(tournament_id=tournament_id)
+                print(players_dict, "þetta er elísa")
                 break
 
         #password protection
@@ -199,7 +199,11 @@ def main():
                               players_list=None,
                               new=False)
 
+        #inserting into team instances
         new_game.set_players_name(players_dict=players_dict)
+
+        # new_game.set_fixtures(players_dict)
+
 
         print(LINES)
         print_message(f"WELCOME BACK TO {new_game.name}")
@@ -210,9 +214,15 @@ def main():
         total_games = new_game.total_games
 
         # new instance of fixtures
-        fixtures = Fixtures(database=database, tournament_id=new_game.tournament_id)
+        fixtures = Fixtures(database=database,
+                            tournament_id=new_game.tournament_id)
+
+
 
         # generate fixtures as list and then adding to dictionary
+        # print(new_game.players_list, "þetta eru players list")
+
+        #þetta eru instances
         the_fixtures = fixtures.generate_fixture_list(new_game.players_list, new_game.total_rounds)
         fixt_dixt = fixtures.insert_fixture_into_dict(the_fixtures, tournament_id=tournament_id)
 
@@ -227,7 +237,6 @@ def main():
 
     #playing a game with new_game as instance of Tournament
     while game_counter < total_games:
-        new_game.game_counter += 1
         print(option.show())
         the_option = option.get()
         if validate.limit(the_option, 1, 4) or the_option == "":
