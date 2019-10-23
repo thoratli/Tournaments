@@ -5,6 +5,7 @@ from mysqldata import DatabaseSearcher
 import random
 import getpass
 import operator
+from fixtures import Fixtures
 PADDING = "--------------------------------------------------------------"
 MIDDLE = int(len(PADDING)/2)
 
@@ -56,7 +57,8 @@ class Tournament():
         self.validate = Validation()
 
         if new:
-            self.fixtures = {}
+            self.fixtures = Fixtures(database)
+            # self.fixtures = {}
         else:
             self.fixtures = self.get_fixtures_from_db()
 
@@ -68,11 +70,26 @@ class Tournament():
                            'Roma', 'Inter Milan', 'Colombia', 'England', 'Sweden', 'Scandinavia', 'Italy',
                            'Burnley', 'Sevilla']
 
+    # def set_fixtures(self, fixture_dict):
+    #
+    #     for key,value in fixture_dict.items():
+    #         print(key, value, "þetta er key value pair")
+
+
+
 
     def get_fixtures_from_db(self):
         """Reads the fixtures from database """
-        database = DatabaseSearcher()
-        self.fixtures = database.get_fixtures(self.tournament_id)
+        # database = DatabaseSearcher()
+        dict = self.database.get_fixtures(self.tournament_id)
+
+        for game_nr, value in dict.items():
+            print(value, "þetta er value atliatliatli")
+
+        # self.fixtures =
+        print("þetta er dict,", dict)
+        return dict
+        # return self.fixtures
 
     def get_password(self):
         """Gets the passwords from user and returns it"""
@@ -177,16 +194,17 @@ class Tournament():
         print("Next game is: \n")
 
         for game_number, value in self.fixtures.items():
-            game = value[0]
-            home, away = game
+            if game_number == game_counter:
+                game = value[0]
+                home, away = game
 
-            #this is the score from the dict
-            played = value[1]
-            # if played == []:
-            if not self.database.is_played(tournament_id, game_number) or played == []:
-                self.database.updated_played(tournament_id, game_number)
-                print(home, "VS", away, end=" ")
-                return home, away
+                #this is the score from the dict
+                played = value[1]
+                # if played == []:
+                if not self.database.is_played(tournament_id, game_counter) or played == []:
+                    self.database.updated_played(tournament_id, game_counter)
+                    print(home, "VS", away, end=" ")
+                    return home, away
 
         #Should not reach here
         return home, away
@@ -198,7 +216,6 @@ class Tournament():
             for key, value in players_dict.items():
                 id = key
                 for attr in value:
-                    print(value, "þetta er value in set players name")
                     name = attr[0]
                     points = attr[1]
                     scored = attr[2]
