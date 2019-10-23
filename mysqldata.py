@@ -43,7 +43,7 @@ class DatabaseSearcher:
             return False
 
     def validate_password(self, id, password):
-
+        """Validates if user has the correct password for his tournament"""
         ID = str(id)
         query = "select * from tournament where id = " + ID + ";"
         self.curs.execute(query)
@@ -51,7 +51,8 @@ class DatabaseSearcher:
         return password == records[0][4]
 
     def get_players_data(self, tournament_id):
-
+        """Gets all data about players from the database, given a tournament_id and
+        returns a dict of the data"""
         ID = str(tournament_id)
         query = "select * from team where tournament_id = " + ID + ";"
         self.curs.execute(query)
@@ -65,6 +66,7 @@ class DatabaseSearcher:
         return namedict
 
     def print_available_leagues(self):
+        """Prints all leagues in the DB"""
         query = "select * from tournament"
         self.curs.execute(query)
         records = self.curs.fetchall()
@@ -81,16 +83,15 @@ class DatabaseSearcher:
             print()
 
     def update_played_games_in_tournament_by_id(self, tournament_id=int, played_games=int):
-
+        """Sets played games correct in the database """
         tournament_id = str(tournament_id)
         played = str(played_games)
-
         query = "UPDATE tournament " + "SET played_games = " + played + " WHERE id = " + tournament_id + ";"
-        # print("QUERIA: " , query)
         self.curs.execute(query)
         self.connection.commit()
 
     def updated_played(self, tournament_id, game_id):
+        """A game is played in a tournament and here we update it"""
         game_id = str(game_id)
         t_id = str(tournament_id)
         played = str(1)
@@ -105,12 +106,11 @@ class DatabaseSearcher:
         self.connection.commit()
 
     def create_new_tournament(self,name:str,total_players:str,total_rounds:str, password:str, namelist:list, fixed:bool, rand_list=None):
-
+        """Creates a new tournament with all needed parameters"""
         total_players = str(total_players)
         rounds = str(total_rounds)
         password = str(password)
         name = str(name)
-
 
         sql = "INSERT INTO tournament (name, total_players, total_rounds, password, played_games, fixed_teams) " \
               "VALUES (%s, %s, %s, %s, %s, %s)"
@@ -120,7 +120,6 @@ class DatabaseSearcher:
         self.curs.execute(sql, val)
         self.connection.commit()
         tournament_id = self.get_newest_id('Tournament')
-        # print(tournament_id, "TASKTASKTAK")
 
         if rand_list != []:
             self.__add_players_to_tournament(namelist, tournament_id, rand_list)
@@ -130,7 +129,7 @@ class DatabaseSearcher:
         return tournament_id
 
     def __add_players_to_tournament(self, namelist, tournament_id, team=False):
-
+        """adds players to the database """
         points = 0
         scored = 0
         conceded = 0
@@ -152,6 +151,7 @@ class DatabaseSearcher:
                 self.connection.commit()
 
     def add_to_sport_table(self, sportname, tournament_id):
+        """Add sports to the sport table"""
         #todo: insert the sport type to the database
         sportname = str(sportname)
         tournament_id = str(tournament_id)
@@ -165,6 +165,7 @@ class DatabaseSearcher:
         self.connection.commit()
 
     def get_newest_id(self, table:str):
+        """Fetches the newest tournament_id created"""
         return_value = f"SELECT id FROM {table} ORDER BY id DESC LIMIT 1;"
         self.curs.execute(return_value)
         records = self.curs.fetchone()
@@ -175,16 +176,18 @@ class DatabaseSearcher:
         except TypeError:
             return 0
 
-    def find_next_player_id(self):
-        try:
-            return_value = "SELECT id FROM team ORDER BY id DESC LIMIT 1;"
-            self.curs.execute(return_value)
-            records = self.curs.fetchone()
-            return int(records[0])+1
-        except:
-            return False
+    # def find_next_player_id(self):
+    #     """Finds the id for the next player"""
+    #     try:
+    #         return_value = "SELECT id FROM team ORDER BY id DESC LIMIT 1;"
+    #         self.curs.execute(return_value)
+    #         records = self.curs.fetchone()
+    #         return int(records[0])+1
+    #     except:
+    #         return False
 
     def is_not_empty(self):
+        """Checks if the database is empty"""
         try:
             return_value = "SELECT * from tournament;"
             self.curs.execute(return_value)
@@ -222,19 +225,21 @@ class DatabaseSearcher:
 
             return return_dict
 
-    def get_scores_for_game(self, game_id):
+    def get_scores_for_game(self, game_id, tournament_id):
+        """Gets the score for a given game and return home and away scores"""
         game_id = str(game_id)
-        query = "select home_score, away_score FROM fixtures where game_id = " + game_id + ";"
+        tournament_id = str(tournament_id)
+        query = "select home_score, away_score FROM fixtures where " \
+                "game_id = " + game_id + " AND tournament_id = " + tournament_id + ";"
+        print(query)
         self.curs.execute(query)
         records = self.curs.fetchone()
 
-        if records is None:
-            return "VIRKAR", "EKKI"
-        else:
-            home, away = records
-            return home, away
+        home, away = records
+        return home, away
 
     def get_team_name_by_id(self, team_id):
+        """Fetches a team name with a given id"""
         team_id = str(team_id)
         query = "SELECT t.name FROM fixtures f INNER JOIN TEAM t WHERE t.id = " + team_id + ";"
         self.curs.execute(query)
@@ -242,6 +247,7 @@ class DatabaseSearcher:
         return records[0]
 
     def is_played(self, tournament_id, game_id):
+        """Checks if a game is played in the tournament"""
         game_id = str(game_id)
         t_id = str(tournament_id)
 
@@ -259,12 +265,14 @@ class DatabaseSearcher:
         except TypeError:
             return False
 
-    def update_players_attributes(self, team_id, points, scored, conceded, played):
+    def update_players_attributes(self,tournament_id, team_id, points, scored, conceded, played):
+        """Updates player attributes in the database"""
         team_id = str(team_id)
         points = str(points)
         scored = str(scored)
         conceded = str(conceded)
         played = str(played)
+        tournament_id = str(tournament_id)
 
         query = "UPDATE team " +\
                 "SET " \
@@ -272,7 +280,8 @@ class DatabaseSearcher:
                 ", points = " + points +\
                 ", scored_goals = " + scored +\
                 ", conceded_goals = " + conceded +\
-                " WHERE id = " + team_id + ";"
+                " WHERE id = " + team_id + \
+                " AND tournament_id = " + tournament_id + ";"
 
         self.curs.execute(query)
         self.connection.commit()
