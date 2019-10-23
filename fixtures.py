@@ -34,9 +34,7 @@ class Fixtures():
             for game in rounds:
                 fixtures.append(game)
 
-
         return fixtures * total_rounds
-
 
     def insert_fixture_into_dict(self, fixtures: list, tournament_id=None):
         """Inserts fixtures from a list to a dictionary of fixtures were game number
@@ -48,16 +46,11 @@ class Fixtures():
                 if tournament_id != None:
                     if self.database.is_played(game_id=game_nr,
                                                tournament_id=tournament_id):
-                        home_score, away_score = self.database.get_scores_for_game(game_id=game_nr)
-                        if home_score == 'VIRKAR' or away_score == "EKKI":
-                            self.fixtures[game_nr] = [teams, [99, 99]]
-
-                            game_nr+=1
-                            continue
-                        else:
-                            self.fixtures[game_nr] = [teams, [home_score, away_score]]
-                            game_nr += 1
-                            continue
+                        home_score, away_score = self.database.get_scores_for_game(game_id=game_nr,
+                                                                                   tournament_id=tournament_id)
+                        self.fixtures[game_nr] = [teams, [home_score, away_score]]
+                        game_nr += 1
+                        continue
                     else:
                         self.fixtures[game_nr] = [teams, []]
                         game_nr += 1
