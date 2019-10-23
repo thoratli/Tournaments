@@ -8,13 +8,12 @@ from fixtures import Fixtures
 from team import Team
 
 #new game
-#todo: we are not taking rounds into account when printing fixtures and scores with it, needs multiplication
 #todo: implement some stats
 #todo: implement generic code to add type of sports with different score rules
 #todo: when tournament finished, print a pretty WINNER and offer to play a new game and delete from database
 
 #old game
-#todo: when read from database, showing fixtures and playing fixture doesn´t work. Instance/DB problem
+#todo: when starting an old game, the table doesn´t work the second time. Definitely something in mysqldata!
 
 
 SPACE = "                                             "
@@ -273,11 +272,13 @@ def main():
 
                         #update played games for the tournament and attributes for the players
                         for i in new_game.players_list:
-                            database.update_players_attributes(i.id,
-                                                               i.points,
-                                                               i.scored_goals,
-                                                               i.conceded_goals,
-                                                               i.played_games)
+                            print(i.name, "þetta er nafnið")
+                            database.update_players_attributes(tournament_id= tournament_id,
+                                                               team_id=i.id,
+                                                               points=i.points,
+                                                               scored=i.scored_goals,
+                                                               conceded=i.conceded_goals,
+                                                               played=i.played_games)
                         break
 
             elif the_option == '1':
