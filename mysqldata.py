@@ -50,10 +50,9 @@ class DatabaseSearcher:
         records = self.curs.fetchall()
         return password == records[0][4]
 
-    def get_players_data(self, id, total_players):
-        # print("Total Players:", total_players)
+    def get_players_data(self, tournament_id):
 
-        ID = str(id)
+        ID = str(tournament_id)
         query = "select * from team where tournament_id = " + ID + ";"
         self.curs.execute(query)
         records = self.curs.fetchall()
@@ -63,7 +62,6 @@ class DatabaseSearcher:
             name = records[i][0]
             namedict[name] = []
             namedict[name].append(attrib[1:])
-        # print("SKOÐA:", namedict)
         return namedict
 
     def print_available_leagues(self):
@@ -100,7 +98,8 @@ class DatabaseSearcher:
         query = "UPDATE fixtures " + \
                 "SET " \
                 "played = " + played + \
-                " WHERE game_id = " + game_id + ";"
+                " WHERE game_id = " + game_id + \
+                " AND tournament_id = " + t_id + ";"
 
         self.curs.execute(query)
         self.connection.commit()
@@ -323,7 +322,10 @@ class DatabaseSearcher:
                 ", away_id = " + away_id + \
                 ", away_score = " + away_score + \
                 ", played = " + '1' + \
-                " WHERE game_id = " + str(game_id) + ";"
+                " WHERE game_id = " + str(game_id) + \
+                " AND tournament_id = " + str(tournament_id) + ";"
+
+        print("lína 328 í mysql:", query)
 
         self.curs.execute(query)
         self.connection.commit()
