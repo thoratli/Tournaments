@@ -73,7 +73,7 @@ class Fixtures():
 
     def insert_score_to_fixture(self, score, gamenr):
         """Inserts a score into the fixture dict with game number as parameter"""
-        self.fixtures[gamenr][1].append(score)
+        self.fixtures[gamenr][1] = score
 
     def show_fixtures(self, tournament_id):
         """Shows fixtures when user chooses 2 from menu. If game
@@ -85,6 +85,7 @@ class Fixtures():
 
             home, away = game[0] #get teams from list with tuple
 
+            #if not day off
             if home.id != 0 or away.id != 0:
                 played = self.database.is_played(tournament_id, int(game_number))
 
@@ -97,12 +98,9 @@ class Fixtures():
                     #need to implement the else statement
                     print("Game:", game_number+1, end=" ")
                     print(home.name, "VS", away.name, end=" ")
-                    print("PLAYED")
-                    # print(self.fixtures[game_number])
-                    # print(self.fixtures[key][1][0][0], " - ",  self.fixtures[key][1][0][1])
-                    #     print("else lína 70 fixt[key],", self.fixtures[key])
-                    #         print("else lína 70 fixt[key][1][0],", self.fixtures[key][1])
-                    # print(self.fixtures[key][1][0][0], " - ",  self.fixtures[key][1][0][1])
+                    home_score = self.fixtures[game_number][1][0]
+                    away_score = self.fixtures[game_number][1][1]
+                    print(home_score," - ", away_score)
 
 
     def __str__(self):
@@ -112,4 +110,4 @@ class Fixtures():
             for games in value:
                 retval += games
             retval += "\n"
-        return retval + "atli"
+        return retval + "atli---------------"
