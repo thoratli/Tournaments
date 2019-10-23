@@ -224,7 +224,7 @@ class DatabaseSearcher:
 
     def get_scores_for_game(self, game_id):
         game_id = str(game_id)
-        query = "select home_score, away_score FROM fixtures where id = " + game_id + ";"
+        query = "select home_score, away_score FROM fixtures where game_id = " + game_id + ";"
         self.curs.execute(query)
         records = self.curs.fetchone()
 
