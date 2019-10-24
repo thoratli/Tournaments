@@ -271,14 +271,21 @@ def main():
 
 
                         #update played games for the tournament and attributes for the players
-                        for i in new_game.players_list:
-                            print(i.name, "þetta er nafnið")
-                            database.update_players_attributes(tournament_id= tournament_id,
-                                                               team_id=i.id,
-                                                               points=i.points,
-                                                               scored=i.scored_goals,
-                                                               conceded=i.conceded_goals,
-                                                               played=i.played_games)
+                        # for i in new_game.players_list:
+                        #     print(i.name, "þetta er nafnið")
+                        database.update_players_attributes(tournament_id=tournament_id,
+                                                           team_id=home.id,
+                                                           points=home.points,
+                                                           scored=home.scored_goals,
+                                                           conceded=home.conceded_goals,
+                                                           played=home.played_games)
+
+                        database.update_players_attributes(tournament_id= tournament_id,
+                                                           team_id=away.id,
+                                                           points=away.points,
+                                                           scored=away.scored_goals,
+                                                           conceded=away.conceded_goals,
+                                                           played=away.played_games)
                         break
 
             elif the_option == '1':
