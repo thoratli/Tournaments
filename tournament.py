@@ -200,8 +200,7 @@ class Tournament():
 
                 #this is the score from the dict
                 played = value[1]
-                # if played == []:
-                if not self.database.is_played(tournament_id, game_counter) or played == []:
+                if played == []:
                     self.database.updated_played(tournament_id, game_counter)
                     print(home, "VS", away, end=" ")
                     return home, away
