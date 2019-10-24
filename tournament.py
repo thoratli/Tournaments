@@ -194,9 +194,9 @@ class Tournament():
         print("Next game is: \n")
 
         for game_number, value in self.fixtures.items():
-            if game_number == game_counter:
-                game = value[0]
-                home, away = game
+            game = value[0]
+            home, away = game
+            if home.id != 0 and away.id != 0:
 
                 #this is the score from the dict
                 played = value[1]
