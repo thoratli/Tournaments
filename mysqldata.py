@@ -59,10 +59,13 @@ class DatabaseSearcher:
         records = self.curs.fetchall()
         namedict = {}
 
+        print("records lína 62\n:",records)
+
         for i,attrib in enumerate(records):
             name = records[i][0]
             namedict[name] = []
             namedict[name].append(attrib[1:])
+        print("line 66 mysql, ", namedict)
         return namedict
 
     def print_available_leagues(self):
@@ -136,17 +139,17 @@ class DatabaseSearcher:
         played = 0
         tournament_id = str(tournament_id)
 
-        sql = "INSERT INTO team (name, points, scored_goals, conceded_goals, played_games, tournament_id, assigned_team) " \
-              "VALUES (%s, %s, %s, %s, %s, %s, %s)"
+        sql = "INSERT INTO team (name, points, scored_goals, conceded_goals, played_games, tournament_id, assigned_team, team_id) " \
+              "VALUES (%s, %s, %s, %s, %s, %s, %s, %s)"
 
         if team:
             for index, value in enumerate(namelist):
-                val = (str(value), points, scored, conceded, played, tournament_id, team[index])
+                val = (str(value), points, scored, conceded, played, tournament_id, team[index], index+1)
                 self.curs.execute(sql, val)
                 self.connection.commit()
         else:
             for index, value in enumerate(namelist):
-                val = (str(value), points, scored, conceded, played, tournament_id, None)
+                val = (str(value), points, scored, conceded, played, tournament_id, None, index+1)
                 self.curs.execute(sql, val)
                 self.connection.commit()
 
@@ -280,7 +283,7 @@ class DatabaseSearcher:
                 ", points = " + points +\
                 ", scored_goals = " + scored +\
                 ", conceded_goals = " + conceded +\
-                " WHERE id = " + team_id + \
+                " WHERE team_id = " + team_id + \
                 " AND tournament_id = " + tournament_id + ";"
 
         self.curs.execute(query)
