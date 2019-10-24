@@ -32,7 +32,8 @@ class Fixtures():
 
         for rounds in fixtures_in_rounds:
             for game in rounds:
-                fixtures.append(game)
+                if game[0].name != 'Day Off' and game[1].name != 'Day Off':
+                    fixtures.append(game)
 
         return fixtures * total_rounds
 
@@ -41,26 +42,24 @@ class Fixtures():
         is the key"""
         game_nr = 0
         for teams in fixtures:
-            home, away = teams
-            if home.id != 0 or away.id != 0:
-                if tournament_id != None:
-                    if self.database.is_played(game_id=game_nr,
-                                               tournament_id=tournament_id):
-                        home_score, away_score = self.database.get_scores_for_game(game_id=game_nr,
-                                                                                   tournament_id=tournament_id)
-                        self.fixtures[game_nr] = [teams, [home_score, away_score]]
-                        game_nr += 1
-                        continue
-                    else:
-                        self.fixtures[game_nr] = [teams, []]
-                        game_nr += 1
-                        continue
-
+            if tournament_id != None:
+                if self.database.is_played(game_id=game_nr,
+                                           tournament_id=tournament_id):
+                    home_score, away_score = self.database.get_scores_for_game(game_id=game_nr,
+                                                                               tournament_id=tournament_id)
+                    self.fixtures[game_nr] = [teams, [home_score, away_score]]
+                    game_nr += 1
+                    continue
                 else:
-                    #tournament_id is none, new game
                     self.fixtures[game_nr] = [teams, []]
                     game_nr += 1
                     continue
+
+            else:
+                #tournament_id is none, new game
+                self.fixtures[game_nr] = [teams, []]
+                game_nr += 1
+                continue
 
         return self.fixtures
 
@@ -78,22 +77,20 @@ class Fixtures():
 
             home, away = game[0] #get teams from list with tuple
 
-            #if not day off
-            if home.id != 0 or away.id != 0:
-                played = self.database.is_played(tournament_id, int(game_number))
+            played = self.database.is_played(tournament_id, int(game_number))
 
-                if not played:
-                    print("Game:", game_number+1, end=" ")
-                    print(home.name, "VS", away.name, end=" ")
-                    print("Not played")
+            if not played:
+                print("Game:", game_number+1, end=" ")
+                print(home.name, "VS", away.name, end=" ")
+                print("Not played")
 
-                else:
-                    #need to implement the else statement
-                    print("Game:", game_number+1, end=" ")
-                    print(home.name, "VS", away.name, end=" ")
-                    home_score = self.fixtures[game_number][1][0]
-                    away_score = self.fixtures[game_number][1][1]
-                    print(home_score," - ", away_score)
+            else:
+                #need to implement the else statement
+                print("Game:", game_number+1, end=" ")
+                print(home.name, "VS", away.name, end=" ")
+                home_score = self.fixtures[game_number][1][0]
+                away_score = self.fixtures[game_number][1][1]
+                print(home_score," - ", away_score)
 
 
     def __str__(self):
