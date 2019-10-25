@@ -35,6 +35,12 @@ class Fixtures():
                 if game[0].name != 'Day Off' and game[1].name != 'Day Off':
                     fixtures.append(game)
 
+        for index, team in enumerate(teams):
+            if team.name == 'Day Off':
+                teams.pop(index)
+
+
+
         return fixtures * total_rounds
 
     def insert_fixture_into_dict(self, fixtures: list, tournament_id=None):
@@ -74,7 +80,6 @@ class Fixtures():
         print()
         for game_number, game in self.fixtures.items():
             #game_nr from 0 to number of games
-
             home, away = game[0] #get teams from list with tuple
 
             played = self.database.is_played(tournament_id, int(game_number))
@@ -91,6 +96,8 @@ class Fixtures():
                 home_score = self.fixtures[game_number][1][0]
                 away_score = self.fixtures[game_number][1][1]
                 print(home_score," - ", away_score)
+
+
 
 
     def __str__(self):
