@@ -1,7 +1,6 @@
 from game import Game
 from team import Team
 
-
 class Fixtures():
     def __init__(self, database, tournament_id=None):
         if tournament_id is None:
@@ -15,6 +14,7 @@ class Fixtures():
         """Generate fixtures from a list of teams, and returns the fixtures
         as a list"""
 
+        #adding a team to create the fixtures
         if len(teams) % 2 != 0:
             teams.append(Team(self.database, 0, 'Day Off'))
         n = len(teams)
@@ -30,11 +30,13 @@ class Fixtures():
 
         fixtures = []
 
+        #changing the structure to a list of fixtures
         for rounds in fixtures_in_rounds:
             for game in rounds:
                 if game[0].name != 'Day Off' and game[1].name != 'Day Off':
                     fixtures.append(game)
 
+        #removing day off from the class teams list
         for index, team in enumerate(teams):
             if team.name == 'Day Off':
                 teams.pop(index)
@@ -46,8 +48,10 @@ class Fixtures():
     def insert_fixture_into_dict(self, fixtures: list, tournament_id=None):
         """Inserts fixtures from a list to a dictionary of fixtures were game number
         is the key"""
+
         game_nr = 0
         for teams in fixtures:
+            #it´s an old tournament
             if tournament_id != None:
                 if self.database.is_played(game_id=game_nr,
                                            tournament_id=tournament_id):
@@ -62,7 +66,7 @@ class Fixtures():
                     continue
 
             else:
-                #tournament_id is none, new game
+                #tournament_id is none, new game --> no scores
                 self.fixtures[game_nr] = [teams, []]
                 game_nr += 1
                 continue
@@ -77,7 +81,7 @@ class Fixtures():
         """Shows fixtures when user chooses 2 from menu. If game
             is played it prints the score from the game, else it prints
             not played. Returns nothing."""
-        print()
+
         for game_number, game in self.fixtures.items():
             #game_nr from 0 to number of games
             home, away = game[0] #get teams from list with tuple
@@ -90,15 +94,11 @@ class Fixtures():
                 print("Not played")
 
             else:
-                #need to implement the else statement
                 print("Game:", game_number+1, end=" ")
                 print(home.name, "VS", away.name, end=" ")
                 home_score = self.fixtures[game_number][1][0]
                 away_score = self.fixtures[game_number][1][1]
                 print(home_score," - ", away_score)
-
-
-
 
     def __str__(self):
         retval = ""
