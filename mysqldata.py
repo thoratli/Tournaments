@@ -59,13 +59,10 @@ class DatabaseSearcher:
         records = self.curs.fetchall()
         namedict = {}
 
-        print("records lína 62\n:",records)
-
         for i,attrib in enumerate(records):
             name = records[i][0]
             namedict[name] = []
             namedict[name].append(attrib[1:])
-        print("line 66 mysql, ", namedict)
         return namedict
 
     def print_available_leagues(self):
@@ -234,7 +231,6 @@ class DatabaseSearcher:
         tournament_id = str(tournament_id)
         query = "select home_score, away_score FROM fixtures where " \
                 "game_id = " + game_id + " AND tournament_id = " + tournament_id + ";"
-        print(query)
         self.curs.execute(query)
         records = self.curs.fetchone()
 
@@ -336,8 +332,6 @@ class DatabaseSearcher:
                 ", played = " + '1' + \
                 " WHERE game_id = " + str(game_id) + \
                 " AND tournament_id = " + str(tournament_id) + ";"
-
-        print("lína 328 í mysql:", query)
 
         self.curs.execute(query)
         self.connection.commit()
