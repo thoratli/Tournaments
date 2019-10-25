@@ -58,7 +58,6 @@ class Tournament():
 
         if new:
             self.fixtures = Fixtures(database)
-            # self.fixtures = {}
         else:
             self.fixtures = self.get_fixtures_from_db()
 
@@ -70,24 +69,10 @@ class Tournament():
                            'Roma', 'Inter Milan', 'Colombia', 'England', 'Sweden', 'Scandinavia', 'Italy',
                            'Burnley', 'Sevilla']
 
-    # def set_fixtures(self, fixture_dict):
-    #
-    #     for key,value in fixture_dict.items():
-    #         print(key, value, "þetta er key value pair")
-
-
-
-
     def get_fixtures_from_db(self):
         """Reads the fixtures from database """
         # database = DatabaseSearcher()
         dict = self.database.get_fixtures(self.tournament_id)
-
-        for game_nr, value in dict.items():
-            print(value, "þetta er value atliatliatli")
-
-        # self.fixtures =
-        print("þetta er dict,", dict)
         return dict
         # return self.fixtures
 
@@ -163,8 +148,13 @@ class Tournament():
 
     def get_tournament_name(self):
         """Returns the input of the tournament name"""
-        name = input("What is the name of your League: ")
-        self.name = name
+        while True:
+            name = input("What is the name of your League: ").strip()
+            if len(name) <= 30:
+                self.name = name
+                break
+            else:
+                print("Please try again. Max length is 30")
         return name
 
     def get_total_players(self):
@@ -174,7 +164,7 @@ class Tournament():
             players = input("How many players: ")
             if self.validate.integer(players):
                 players = int(players)
-                if self.validate.limit(players, 2):
+                if self.validate.limit(players, min=2, max=10):
                     self.total_players = players
                     return int(players)
 
@@ -185,7 +175,7 @@ class Tournament():
         while True:
             number = input("How many rounds you want to play? ")
             if self.validate.integer(number):
-                if self.validate.limit(number, 1):
+                if self.validate.limit(number, min=1, max=100):
                     self.total_rounds = int(number)
                     return int(number)
 
@@ -338,6 +328,18 @@ class Tournament():
 
         return retval
 
+    def get_biggest_win(self):
+        max_difference = 0
+        max_string = ""
+        for game_number, game in self.fixtures.items():
+            home, away = game[0]
+
+            if (int(home.scored_goals) - int(away.scored_goals)) >= max_difference:
+                max_difference = int(home.scored_goals) - int(away.scored_goals)
+                max_string = f'{home.name} had {home.scored_goals} and {away.name} has {away.scored_goals}'
+
+        return max_string
+
     def __str__(self):
         #todo: Refactor __str__ function for tournament
 
@@ -362,17 +364,21 @@ class Tournament():
         print("{:<27}{:}{:<6}{:4}{:<7}{:<3}{:<3}{:<3}{:<3}{:<3}{:<3}"
               .format("----------", "",  "------", "",  "------", "","--------", "", "---", "",  "------"))
 
-        sorted_x = sorted(self.players_list, key=operator.attrgetter('points'))
-        sorted_x.reverse()
+        sorted_x = self.multisort(list(self.players_list), (('points', True), ('name', False)))
         retval = ""
 
         for team in sorted_x:
-            if team.name != "Day Off":
-                retval += "{:<27}".format(team.name).capitalize()
-                retval += "{:3}".format(team.played_games).capitalize()
-                retval += "{:10}".format(team.scored_goals).capitalize()
-                retval += "{:11}".format(team.conceded_goals).capitalize()
-                retval += "{:9}".format(team.scored_goals-team.conceded_goals).capitalize()
-                retval += "{:7}\n".format(team.points).capitalize()
+            retval += "{:<27}".format(team.name).capitalize()
+            retval += "{:3}".format(team.played_games).capitalize()
+            retval += "{:10}".format(team.scored_goals).capitalize()
+            retval += "{:11}".format(team.conceded_goals).capitalize()
+            retval += "{:9}".format(team.scored_goals-team.conceded_goals).capitalize()
+            retval += "{:7}\n".format(team.points).capitalize()
 
         return retval
+
+    def multisort(self, xs, specs):
+        for key, reverse in reversed(specs):
+            xs.sort(key=operator.attrgetter(key), reverse=reverse)
+
+        return xs
