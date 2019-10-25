@@ -201,15 +201,12 @@ def main():
         #inserting into team instances
         new_game.set_players_name(players_dict=players_dict)
 
-        # new_game.set_fixtures(players_dict)
-
 
         print(LINES)
         print_message(f"WELCOME BACK TO {new_game.name}")
         print(LINES)
 
         #getting the total games for the play loop
-        # total_games = int(new_game.__total_games_per_round__()) * int(new_game.total_rounds)
         total_games = new_game.total_games
 
         # new instance of fixtures
@@ -217,11 +214,7 @@ def main():
                             tournament_id=new_game.tournament_id)
 
 
-
-        # generate fixtures as list and then adding to dictionary
-        # print(new_game.players_list, "þetta eru players list")
-
-        #þetta eru instances
+        #generate one list of fixtures from team instances in players list and excludes the day off
         the_fixtures = fixtures.generate_fixture_list(new_game.players_list, new_game.total_rounds)
         fixt_dixt = fixtures.insert_fixture_into_dict(the_fixtures, tournament_id=tournament_id)
 
@@ -270,9 +263,6 @@ def main():
                                                                          played_games=game_counter)
 
 
-                        #update played games for the tournament and attributes for the players
-                        # for i in new_game.players_list:
-                        #     print(i.name, "þetta er nafnið")
                         database.update_players_attributes(tournament_id=tournament_id,
                                                            team_id=home.id,
                                                            points=home.points,
@@ -309,7 +299,7 @@ def main():
                 stat_option = input("Pick your stat: ")
 
                 if stat_option == '1':
-                    print("Biggest Win(Jóhannes): X vs Y, 5 - 1.")
+                    print(new_game.get_biggest_win())
 
                 elif stat_option == '2':
                     print("Biggest loss(Birnir): X vs Y, 5 - 1.")
@@ -332,6 +322,7 @@ def main():
     print("CONGRATULATIONS\n", end=" ")
     #needs some fine tuning, get the tie, tiebreakers...
     print(new_game.get_winner())
+
 
     print("\n\n", LINES)
 
