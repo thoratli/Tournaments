@@ -184,19 +184,16 @@ class Tournament():
         print("Next game is: \n")
 
         for game_number, value in self.fixtures.items():
-            game = value[0]
-            home, away = game
-            if home.id != 0 and away.id != 0:
+            #self.fixtures {game_number: [(a, b), [score]]
+            home, away = value[0]
 
-                #this is the score from the dict
-                played = value[1]
-                if played == []:
-                    self.database.updated_played(tournament_id, game_counter)
-                    print(home, "VS", away, end=" ")
-                    return home, away
+            #this is the score from the dict
+            played = value[1]
 
-        #Should not reach here
-        return home, away
+            if played == []:
+                self.database.updated_played(tournament_id, game_counter)
+                print(home, "VS", away, end=" ")
+                return home, away
 
     def set_players_name(self, players_dict=None):
         """Allows participants to enter names for themselves"""
@@ -277,6 +274,7 @@ class Tournament():
 
         print(retval, "\n")
 
+    #todo: implement a pretty print for the winner
     def get_winner(self):
         """Winner is decided by points but secondary decided on goal difference"""
         winner = self.players_list[0].name
@@ -286,31 +284,22 @@ class Tournament():
         tied = []
 
         for index, i in enumerate(self.players_list):
-            print(i.name, "nafn number ", index)
-            if i.name != 'Day Off':
-                curr_diff = int(i.scored_goals) - int(i.conceded_goals)
-                if int(i.points) > max_points:
-                    max_goal_diff = int(i.points)
-                    winner = str(i.name)
+            curr_diff = int(i.scored_goals) - int(i.conceded_goals)
+            if int(i.points) > max_points:
+                max_goal_diff = int(i.points)
+                winner = str(i.name)
+                max_points = int(i.points)
+            elif int(i.points) == max_points:
+                if curr_diff > max_goal_diff:
                     max_points = int(i.points)
-                elif int(i.points) == max_points:
-                    print(i.points, "i points")
-                    print(max_points, "max points")
-                    print("how")
-                    if curr_diff > max_goal_diff:
-                        print("the hell")
-                        max_points = int(i.points)
-                        winner = str(i.name)
-                        max_goal_diff = curr_diff
-                        goal_difference = True
-                    elif max_goal_diff > curr_diff:
-                        print("did you")
-                        continue
-                    else:
-                        print("get here")
-                        winner = str(i.name)
-                        tied.append(winner)
-
+                    winner = str(i.name)
+                    max_goal_diff = curr_diff
+                    goal_difference = True
+                elif max_goal_diff > curr_diff:
+                    continue
+                else:
+                    winner = str(i.name)
+                    tied.append(winner)
 
         retval = ""
         if tied != []:
@@ -320,7 +309,7 @@ class Tournament():
             retval += tied[-1]
 
         elif goal_difference:
-            retval += "\n\n\n CONGRATS \n\n"
+            retval = "\n\n\n CONGRATS \n\n"
             retval +=f'{winner} with {str(max_goal_diff)} points, on GOAL DIFFERENCE!'
 
         else:
@@ -337,7 +326,6 @@ class Tournament():
             if (int(home.scored_goals) - int(away.scored_goals)) >= max_difference:
                 max_difference = int(home.scored_goals) - int(away.scored_goals)
                 max_string = f'{home.name} had {home.scored_goals} and {away.name} has {away.scored_goals}'
-
         return max_string
 
     def __str__(self):
