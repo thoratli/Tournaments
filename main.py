@@ -167,7 +167,6 @@ def main():
                 type = database.get_type(tournament_id)
                 print("LeagueName:", name, "\nTotal Players: ", players, "\nTotal Rounds: ", rounds)
                 players_dict = database.get_players_data(tournament_id=tournament_id)
-                print(players_dict, "þetta er elísa")
                 break
 
         #password protection
@@ -220,7 +219,7 @@ def main():
 
         new_game.fixtures = fixt_dixt
 
-        print(new_game.fixtures)
+        # print(new_game.fixtures)
 
         fixtures.show_fixtures(tournament_id=tournament_id)
 
@@ -254,6 +253,7 @@ def main():
                                                       away_id=away.id,
                                                       scores=score_list)
                         a_game.handle_scores()
+
                         #updating fixtures
                         database.updated_played(tournament_id=tournament_id,
                                                 game_id=game_counter)
