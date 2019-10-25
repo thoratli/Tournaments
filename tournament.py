@@ -5,6 +5,7 @@ from mysqldata import DatabaseSearcher
 import random
 import getpass
 import operator
+from fixtures import Fixtures
 PADDING = "--------------------------------------------------------------"
 MIDDLE = int(len(PADDING)/2)
 
@@ -56,7 +57,7 @@ class Tournament():
         self.validate = Validation()
 
         if new:
-            self.fixtures = {}
+            self.fixtures = Fixtures(database)
         else:
             self.fixtures = self.get_fixtures_from_db()
 
@@ -68,11 +69,12 @@ class Tournament():
                            'Roma', 'Inter Milan', 'Colombia', 'England', 'Sweden', 'Scandinavia', 'Italy',
                            'Burnley', 'Sevilla']
 
-
     def get_fixtures_from_db(self):
         """Reads the fixtures from database """
-        database = DatabaseSearcher()
-        self.fixtures = database.get_fixtures(self.tournament_id)
+        # database = DatabaseSearcher()
+        dict = self.database.get_fixtures(self.tournament_id)
+        return dict
+        # return self.fixtures
 
     def get_password(self):
         """Gets the passwords from user and returns it"""
@@ -146,8 +148,13 @@ class Tournament():
 
     def get_tournament_name(self):
         """Returns the input of the tournament name"""
-        name = input("What is the name of your League: ")
-        self.name = name
+        while True:
+            name = input("What is the name of your League: ").strip()
+            if len(name) <= 30:
+                self.name = name
+                break
+            else:
+                print("Please try again. Max length is 30")
         return name
 
     def get_total_players(self):
@@ -157,7 +164,7 @@ class Tournament():
             players = input("How many players: ")
             if self.validate.integer(players):
                 players = int(players)
-                if self.validate.limit(players, 2):
+                if self.validate.limit(players, min=2, max=10):
                     self.total_players = players
                     return int(players)
 
@@ -168,7 +175,7 @@ class Tournament():
         while True:
             number = input("How many rounds you want to play? ")
             if self.validate.integer(number):
-                if self.validate.limit(number, 1):
+                if self.validate.limit(number, min=1, max=100):
                     self.total_rounds = int(number)
                     return int(number)
 
@@ -177,19 +184,16 @@ class Tournament():
         print("Next game is: \n")
 
         for game_number, value in self.fixtures.items():
-            game = value[0]
-            home, away = game
+            #self.fixtures {game_number: [(a, b), [score]]
+            home, away = value[0]
 
             #this is the score from the dict
             played = value[1]
-            # if played == []:
-            if not self.database.is_played(tournament_id, game_number) or played == []:
-                self.database.updated_played(tournament_id, game_number)
+
+            if played == []:
+                self.database.updated_played(tournament_id, game_counter)
                 print(home, "VS", away, end=" ")
                 return home, away
-
-        #Should not reach here
-        return home, away
 
     def set_players_name(self, players_dict=None):
         """Allows participants to enter names for themselves"""
@@ -198,7 +202,6 @@ class Tournament():
             for key, value in players_dict.items():
                 id = key
                 for attr in value:
-                    print(value, "þetta er value in set players name")
                     name = attr[0]
                     points = attr[1]
                     scored = attr[2]
@@ -271,6 +274,7 @@ class Tournament():
 
         print(retval, "\n")
 
+    #todo: implement a pretty print for the winner
     def get_winner(self):
         """Winner is decided by points but secondary decided on goal difference"""
         winner = self.players_list[0].name
@@ -280,31 +284,22 @@ class Tournament():
         tied = []
 
         for index, i in enumerate(self.players_list):
-            print(i.name, "nafn number ", index)
-            if i.name != 'Day Off':
-                curr_diff = int(i.scored_goals) - int(i.conceded_goals)
-                if int(i.points) > max_points:
-                    max_goal_diff = int(i.points)
-                    winner = str(i.name)
+            curr_diff = int(i.scored_goals) - int(i.conceded_goals)
+            if int(i.points) > max_points:
+                max_goal_diff = int(i.points)
+                winner = str(i.name)
+                max_points = int(i.points)
+            elif int(i.points) == max_points:
+                if curr_diff > max_goal_diff:
                     max_points = int(i.points)
-                elif int(i.points) == max_points:
-                    print(i.points, "i points")
-                    print(max_points, "max points")
-                    print("how")
-                    if curr_diff > max_goal_diff:
-                        print("the hell")
-                        max_points = int(i.points)
-                        winner = str(i.name)
-                        max_goal_diff = curr_diff
-                        goal_difference = True
-                    elif max_goal_diff > curr_diff:
-                        print("did you")
-                        continue
-                    else:
-                        print("get here")
-                        winner = str(i.name)
-                        tied.append(winner)
-
+                    winner = str(i.name)
+                    max_goal_diff = curr_diff
+                    goal_difference = True
+                elif max_goal_diff > curr_diff:
+                    continue
+                else:
+                    winner = str(i.name)
+                    tied.append(winner)
 
         retval = ""
         if tied != []:
@@ -314,13 +309,24 @@ class Tournament():
             retval += tied[-1]
 
         elif goal_difference:
-            retval += "\n\n\n CONGRATS \n\n"
+            retval = "\n\n\n CONGRATS \n\n"
             retval +=f'{winner} with {str(max_goal_diff)} points, on GOAL DIFFERENCE!'
 
         else:
             retval = f'{winner} with {str(max_goal_diff)} points'
 
         return retval
+
+    def get_biggest_win(self):
+        max_difference = 0
+        max_string = ""
+        for game_number, game in self.fixtures.items():
+            home, away = game[0]
+
+            if (int(home.scored_goals) - int(away.scored_goals)) >= max_difference:
+                max_difference = int(home.scored_goals) - int(away.scored_goals)
+                max_string = f'{home.name} had {home.scored_goals} and {away.name} has {away.scored_goals}'
+        return max_string
 
     def __str__(self):
         #todo: Refactor __str__ function for tournament
@@ -346,17 +352,21 @@ class Tournament():
         print("{:<27}{:}{:<6}{:4}{:<7}{:<3}{:<3}{:<3}{:<3}{:<3}{:<3}"
               .format("----------", "",  "------", "",  "------", "","--------", "", "---", "",  "------"))
 
-        sorted_x = sorted(self.players_list, key=operator.attrgetter('points'))
-        sorted_x.reverse()
+        sorted_x = self.multisort(list(self.players_list), (('points', True), ('name', False)))
         retval = ""
 
         for team in sorted_x:
-            if team.name != "Day Off":
-                retval += "{:<27}".format(team.name).capitalize()
-                retval += "{:3}".format(team.played_games).capitalize()
-                retval += "{:10}".format(team.scored_goals).capitalize()
-                retval += "{:11}".format(team.conceded_goals).capitalize()
-                retval += "{:9}".format(team.scored_goals-team.conceded_goals).capitalize()
-                retval += "{:7}\n".format(team.points).capitalize()
+            retval += "{:<27}".format(team.name).capitalize()
+            retval += "{:3}".format(team.played_games).capitalize()
+            retval += "{:10}".format(team.scored_goals).capitalize()
+            retval += "{:11}".format(team.conceded_goals).capitalize()
+            retval += "{:9}".format(team.scored_goals-team.conceded_goals).capitalize()
+            retval += "{:7}\n".format(team.points).capitalize()
 
         return retval
+
+    def multisort(self, xs, specs):
+        for key, reverse in reversed(specs):
+            xs.sort(key=operator.attrgetter(key), reverse=reverse)
+
+        return xs

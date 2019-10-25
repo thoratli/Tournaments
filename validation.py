@@ -46,6 +46,7 @@ class Validation():
                     print(f"\nThe lowest number available is {min}.")
             else:
                 print(f"\nThe highest number available is {max}.")
+                return False
 
 
         if number < min:

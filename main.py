@@ -8,13 +8,12 @@ from fixtures import Fixtures
 from team import Team
 
 #new game
-#todo: we are not taking rounds into account when printing fixtures and scores with it, needs multiplication
 #todo: implement some stats
 #todo: implement generic code to add type of sports with different score rules
 #todo: when tournament finished, print a pretty WINNER and offer to play a new game and delete from database
 
 #old game
-#todo: when read from database, showing fixtures and playing fixture doesn´t work. Instance/DB problem
+#todo: when starting an old game, the table doesn´t work the second time. Definitely something in mysqldata!
 
 
 SPACE = "                                             "
@@ -167,8 +166,8 @@ def main():
                 name, players, rounds, game_counter = database.get_tournament_by_id(tournament_id)
                 type = database.get_type(tournament_id)
                 print("LeagueName:", name, "\nTotal Players: ", players, "\nTotal Rounds: ", rounds)
-                players_dict = database.get_players_data(id=tournament_id,
-                                                         total_players=players)
+                players_dict = database.get_players_data(tournament_id=tournament_id)
+                print(players_dict, "þetta er elísa")
                 break
 
         #password protection
@@ -199,20 +198,23 @@ def main():
                               players_list=None,
                               new=False)
 
+        #inserting into team instances
         new_game.set_players_name(players_dict=players_dict)
+
 
         print(LINES)
         print_message(f"WELCOME BACK TO {new_game.name}")
         print(LINES)
 
         #getting the total games for the play loop
-        # total_games = int(new_game.__total_games_per_round__()) * int(new_game.total_rounds)
         total_games = new_game.total_games
 
         # new instance of fixtures
-        fixtures = Fixtures(database=database, tournament_id=new_game.tournament_id)
+        fixtures = Fixtures(database=database,
+                            tournament_id=new_game.tournament_id)
 
-        # generate fixtures as list and then adding to dictionary
+
+        #generate one list of fixtures from team instances in players list and excludes the day off
         the_fixtures = fixtures.generate_fixture_list(new_game.players_list, new_game.total_rounds)
         fixt_dixt = fixtures.insert_fixture_into_dict(the_fixtures, tournament_id=tournament_id)
 
@@ -227,7 +229,6 @@ def main():
 
     #playing a game with new_game as instance of Tournament
     while game_counter < total_games:
-        new_game.game_counter += 1
         print(option.show())
         the_option = option.get()
         if validate.limit(the_option, 1, 4) or the_option == "":
@@ -262,13 +263,19 @@ def main():
                                                                          played_games=game_counter)
 
 
-                        #update played games for the tournament and attributes for the players
-                        for i in new_game.players_list:
-                            database.update_players_attributes(i.id,
-                                                               i.points,
-                                                               i.scored_goals,
-                                                               i.conceded_goals,
-                                                               i.played_games)
+                        database.update_players_attributes(tournament_id=tournament_id,
+                                                           team_id=home.id,
+                                                           points=home.points,
+                                                           scored=home.scored_goals,
+                                                           conceded=home.conceded_goals,
+                                                           played=home.played_games)
+
+                        database.update_players_attributes(tournament_id= tournament_id,
+                                                           team_id=away.id,
+                                                           points=away.points,
+                                                           scored=away.scored_goals,
+                                                           conceded=away.conceded_goals,
+                                                           played=away.played_games)
                         break
 
             elif the_option == '1':
@@ -292,7 +299,7 @@ def main():
                 stat_option = input("Pick your stat: ")
 
                 if stat_option == '1':
-                    print("Biggest Win(Jóhannes): X vs Y, 5 - 1.")
+                    print(new_game.get_biggest_win())
 
                 elif stat_option == '2':
                     print("Biggest loss(Birnir): X vs Y, 5 - 1.")
@@ -315,6 +322,7 @@ def main():
     print("CONGRATULATIONS\n", end=" ")
     #needs some fine tuning, get the tie, tiebreakers...
     print(new_game.get_winner())
+
 
     print("\n\n", LINES)
 
